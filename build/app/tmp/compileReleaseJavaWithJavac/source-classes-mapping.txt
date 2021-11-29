@@ -1,0 +1,4 @@
+io/flutter/plugins/GeneratedPluginRegistrant.java
+ io.flutter.plugins.GeneratedPluginRegistrant
+com/pran/alzapp/alzapp/BuildConfig.java
+ com.pran.alzapp.alzapp.BuildConfig

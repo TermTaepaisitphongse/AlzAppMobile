@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "410639423757",
+    "project_id": "alzapp-6213d",
+    "storage_bucket": "alzapp-6213d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410639423757:android:c9030a9cf3e84c6edc3844",
+        "android_client_info": {
+          "package_name": "com.pran.alzapp.alzapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410639423757-sasa1tsp17lr2dloaubb51buj0gsduuf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrGb41IQgddZw3Ixo5qu8j_zffMR73RTw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410639423757-sasa1tsp17lr2dloaubb51buj0gsduuf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "410639423757-a9m5micc3oprsufn3o9icgnndk661kpd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pran.alzapp.alzapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

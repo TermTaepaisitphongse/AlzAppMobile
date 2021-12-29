@@ -5,8 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
-import 'BloodPressurePage.dart';
 import 'PatientRecordPage.dart';
+import 'BloodPressurePage.dart';
+import 'package:alzapp/PulsePage.dart';
+import 'package:alzapp/RespiratoryRatePage.dart';
+import 'package:alzapp/TemperaturePage.dart';
+import 'package:alzapp/DextrostixPage.dart';
+import 'package:alzapp/BladderBowelPage.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -37,9 +43,6 @@ class _PatientItemState extends State<PatientItem> {
 
   // #docregion _buildSuggestions
   Widget _buildPatientList() {
-    /* for (int i=0;i<2;i++){
-      patients.add(Patient(name:'John $i'));
-    } */
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         itemCount: filteredPatients.length,
@@ -51,9 +54,6 @@ class _PatientItemState extends State<PatientItem> {
 
   // #docregion _buildRow
   Widget _buildRow(Patient p) {
-    final colors = Colors.accents;
-    final _random = new Random();
-    var randomColor = colors[_random.nextInt(colors.length)];
 
     return GestureDetector(
       onTap: (){
@@ -75,7 +75,7 @@ class _PatientItemState extends State<PatientItem> {
       child: ListTile(
         title: Material(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: randomColor,
+          color: p.color,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
             child: Row(
@@ -218,6 +218,9 @@ class _PatientItemState extends State<PatientItem> {
     final _formKey = GlobalKey<FormState>();
     String currentName = "";
     String currentCaretakerName = "";
+    final colors = Colors.accents;
+    final _random = new Random();
+    Color currentColor = colors[_random.nextInt(colors.length)];
     // flutter defined function
     showDialog(
       context: context,
@@ -273,7 +276,7 @@ class _PatientItemState extends State<PatientItem> {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('Added Successfully!')));
                   setState(() {
-                    patients.add(Patient(name:currentName, caretakerName: currentCaretakerName));
+                    patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, color: currentColor));
                     _updatePatientToLocal();
                     _resetFiltered();
                   });
@@ -305,29 +308,61 @@ class PatientItem extends StatefulWidget {
 }
 
 class Patient {
-  Patient({required this.name, required this.caretakerName});
+  Patient({required this.name, required this.caretakerName, required this.color});
   String name;
   String caretakerName;
+  Color color;
   List<Record> records = [];
   List<BloodPressure> bloodPressures = [];
+  List<Pulse> pulse = [];
+  List<RespiratoryRate> respiratoryRate = [];
+  List<Temperature> temperature = [];
+  List<Dextrostix> dextrostix = [];
+  List<BladderBowel> bladderBowel = [];
 
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     data['name'] = name;
     data['caretakerName'] = caretakerName;
+    data['color'] = color;
     final dataRecord = records.map((e) => e.toJson()).toList();
     final bloodPressureRecord = bloodPressures.map((e) => e.toJson()).toList();
+    final pulseRecord = pulse.map((e) => e.toJson()).toList();
+    final respiratoryRateRecord = respiratoryRate.map((e) => e.toJson()).toList();
+    final temperatureRecord = temperature.map((e) => e.toJson()).toList();
+    final dextrostixRecord = dextrostix.map((e) => e.toJson()).toList();
+    final bladderBowelRecord = bladderBowel.map((e) => e.toJson()).toList();
     data['records'] = dataRecord;
     data['bloodPressures'] = bloodPressureRecord;
+    data['pulse'] = pulseRecord;
+    data['respiratoryRate'] = respiratoryRateRecord;
+    data['temperature'] = temperatureRecord;
+    data['dextrostix'] = dextrostixRecord;
+    data['bladderBowel'] = bladderBowelRecord;
     return data;
   }
 
   static Patient fromJson(Map<String, dynamic> json) {
-    final jsonRecords = json['bloodPressures'] as List<dynamic>;
-    final bloodPressureRecord = jsonRecords.map((e) => BloodPressure.fromJson(e)).toList();
+    final jsonBP = json['bloodPressures'] as List<dynamic>;
+    final jsonPulse = json['pulse'] as List<dynamic>;
+    final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>;
+    final jsonTemperature = json['temperature'] as List<dynamic>;
+    final jsonDextrostix = json['dextrostix'] as List<dynamic>;
+    final jsonBladderBowel = json['bladderBowel'] as List<dynamic>;
+    final bloodPressureRecord = jsonBP.map((e) => BloodPressure.fromJson(e)).toList();
+    final pulseRecord = jsonPulse.map((e) => Pulse.fromJson(e)).toList();
+    final respiratoryRateRecord = jsonRespiratoryRate.map((e) => RespiratoryRate.fromJson(e)).toList();
+    final temperatureRecord = jsonTemperature.map((e) => Temperature.fromJson(e)).toList();
+    final dextrostixRecord = jsonDextrostix.map((e) => Dextrostix.fromJson(e)).toList();
+    final bladderBowelRecord = jsonBladderBowel.map((e) => BladderBowel.fromJson(e)).toList();
     print("bprecord = $bloodPressureRecord");
-    final patient = Patient(name: json['name'], caretakerName: json['caretakerName']);
+    final patient = Patient(name: json['name'], caretakerName: json['caretakerName'], color: json['color']);
     patient.bloodPressures = bloodPressureRecord;
+    patient.pulse = pulseRecord;
+    patient.respiratoryRate = respiratoryRateRecord;
+    patient.temperature = temperatureRecord;
+    patient.dextrostix = dextrostixRecord;
+    patient.bladderBowel = bladderBowelRecord;
     return patient;
   }
 }

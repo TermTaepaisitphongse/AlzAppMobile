@@ -1,4 +1,4 @@
-#Sun Nov 28 08:18:33 EST 2021
-base.0=/Users/prantaepaisitphongse/StudioProjects/alzapp/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+#Tue Dec 21 13:24:50 ICT 2021
+base.0=/Users/prantaepaisitphongse/StudioProjects/alzapp/AlzAppMobile/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

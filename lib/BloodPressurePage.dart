@@ -111,7 +111,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                             child: Text('${record.systolic} / ${record.diastolic}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           ),
                           SizedBox(width: 8),
-                          Text('bpm', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
+                          Text('mmHg', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
                           Expanded(child: Text('${record.date.hour}:${record.date.minute}', style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
                           SizedBox(width: 8,),
 

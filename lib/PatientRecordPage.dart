@@ -1,9 +1,15 @@
+import 'package:alzapp/RespiratoryRatePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'BloodPressurePage.dart';
+import 'PulsePage.dart';
+import 'RespiratoryRatePage.dart';
+import 'TemperaturePage.dart';
+import 'DextrostixPage.dart';
+import 'BladderBowelPage.dart';
 import 'main.dart';
 
 void main() => runApp(MyApp());
@@ -13,7 +19,7 @@ class MyApp extends StatelessWidget {
   // #docregion build
   @override
   Widget build(BuildContext context) {
-    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName');
+    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', color: Colors.white);
     return MaterialApp(
       title: 'AlzApp Health Records',
       theme: ThemeData(
@@ -104,27 +110,43 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                 ),
                 SizedBox(width: 24.0),
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/pulse.svg', height: 38.0),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Pulse',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PulsePage(
+                              pulseRecords: widget.patient.pulse,
+                              onPulseRecordUpdated: (newRecords){widget.patient.pulse = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/pulse.svg', height: 38.0),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'Pulse',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.purpleAccent,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.purpleAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ],
@@ -136,54 +158,84 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/respiratoryRate.svg',
-                              height: 38.0, color: Colors.white),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Respiratory Rate',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RespiratoryRatePage(
+                              respiratoryRecords: widget.patient.respiratoryRate,
+                              onRespiratoryRecordUpdated: (newRecords){widget.patient.respiratoryRate = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/respiratoryRate.svg', height: 38.0, color: Colors.white),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'Respiratory Rate',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.yellowAccent,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.amberAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 SizedBox(width: 24.0),
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/temperature.svg',
-                              height: 38.0),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Temperature',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TemperaturePage(
+                              temperatureRecords: widget.patient.temperature,
+                              onTemperatureRecordUpdated: (newRecords){widget.patient.temperature = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/temperature.svg', height: 38.0),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'Temperature',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ],
@@ -195,54 +247,84 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/dextrostix.svg',
-                              height: 38.0, color: Colors.white),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Dextrostix',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DextrostixPage(
+                              dextrostixRecords: widget.patient.dextrostix,
+                              onDextrostixRecordUpdated: (newRecords){widget.patient.dextrostix = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/dextrostix.svg', height: 38.0, color: Colors.white),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'Dextrostix',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.deepPurpleAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 SizedBox(width: 24.0),
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/bladderBowel.svg',
-                              height: 38.0, color: Colors.white),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Bladder & Bowel',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BladderBowelPage(
+                              bladderBowelRecords: widget.patient.bladderBowel,
+                              onBladderBowelRecordUpdated: (newRecords){widget.patient.bladderBowel = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/bladderBowel.svg', height: 38.0, color: Colors.white),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'Bladder & Bowel',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.orangeAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ],

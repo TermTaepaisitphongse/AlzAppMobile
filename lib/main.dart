@@ -75,7 +75,7 @@ class _PatientItemState extends State<PatientItem> {
       child: ListTile(
         title: Material(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: p.color,
+          color: Color.fromARGB(255, p.RGBcolor[0], p.RGBcolor[1], p.RGBcolor[2]),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
             child: Row(
@@ -276,7 +276,7 @@ class _PatientItemState extends State<PatientItem> {
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text('Added Successfully!')));
                   setState(() {
-                    patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, color: currentColor));
+                    patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
                     _updatePatientToLocal();
                     _resetFiltered();
                   });
@@ -308,10 +308,10 @@ class PatientItem extends StatefulWidget {
 }
 
 class Patient {
-  Patient({required this.name, required this.caretakerName, required this.color});
+  Patient({required this.name, required this.caretakerName, required this.RGBcolor});
   String name;
   String caretakerName;
-  Color color;
+  List<int> RGBcolor;
   List<Record> records = [];
   List<BloodPressure> bloodPressures = [];
   List<Pulse> pulse = [];
@@ -324,7 +324,7 @@ class Patient {
     final data = Map<String, dynamic>();
     data['name'] = name;
     data['caretakerName'] = caretakerName;
-    data['color'] = color;
+    data['color'] = RGBcolor;
     final dataRecord = records.map((e) => e.toJson()).toList();
     final bloodPressureRecord = bloodPressures.map((e) => e.toJson()).toList();
     final pulseRecord = pulse.map((e) => e.toJson()).toList();
@@ -343,6 +343,8 @@ class Patient {
   }
 
   static Patient fromJson(Map<String, dynamic> json) {
+    final jsonRGBcolor = json['color'] as List<dynamic>;
+    final color = jsonRGBcolor.map((e) => e as int).toList();
     final jsonBP = json['bloodPressures'] as List<dynamic>;
     final jsonPulse = json['pulse'] as List<dynamic>;
     final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>;
@@ -356,7 +358,7 @@ class Patient {
     final dextrostixRecord = jsonDextrostix.map((e) => Dextrostix.fromJson(e)).toList();
     final bladderBowelRecord = jsonBladderBowel.map((e) => BladderBowel.fromJson(e)).toList();
     print("bprecord = $bloodPressureRecord");
-    final patient = Patient(name: json['name'], caretakerName: json['caretakerName'], color: json['color']);
+    final patient = Patient(name: json['name'], caretakerName: json['caretakerName'], RGBcolor: color);
     patient.bloodPressures = bloodPressureRecord;
     patient.pulse = pulseRecord;
     patient.respiratoryRate = respiratoryRateRecord;

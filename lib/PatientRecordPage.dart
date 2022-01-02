@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   // #docregion build
   @override
   Widget build(BuildContext context) {
-    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', color: Colors.white);
+    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', RGBcolor: [Colors.white.red, Colors.white.green, Colors.white.blue]);
     return MaterialApp(
       title: 'AlzApp Health Records',
       theme: ThemeData(

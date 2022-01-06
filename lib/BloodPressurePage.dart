@@ -115,7 +115,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                             padding: const EdgeInsets.symmetric(vertical: 40),
                             child: Align(child: Text('mmHg', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
                           ),
-                          Expanded(child: Text('${record.date.hour}:${record.date.minute}', style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
+                          Expanded(child: Text(DateFormat('HH:mm').format(DateTime(record.date.year, record.date.month, record.date.day, record.date.hour, record.date.minute)), style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
                           SizedBox(width: 8,),
                         ],
                         mainAxisSize: MainAxisSize.max,

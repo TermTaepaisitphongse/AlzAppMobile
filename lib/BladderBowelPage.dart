@@ -122,7 +122,7 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
                           ),
                           SizedBox(width: 8),
                           Text('ฉี่', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
-                          Expanded(child: Text('${record.date.hour}:${record.date.minute}', style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
+                          Expanded(child: Text(DateFormat('HH:mm').format(DateTime(record.date.year, record.date.month, record.date.day, record.date.hour, record.date.minute)), style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
                         ],
                         mainAxisSize: MainAxisSize.max,
                         ),
@@ -196,7 +196,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     final _formKey = GlobalKey<FormState>();
     DateTime now = DateTime.now();
     String formattedTime = DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
-    String formattedDate = DateFormat('dd/MM').format(selectedDate);
+    String formattedDate = DateFormat('dd MMM').format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
       title: new Text("บันทึกใหม่"),

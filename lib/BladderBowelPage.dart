@@ -11,10 +11,10 @@ class MyApp extends StatelessWidget {
   // #docregion build
   @override
   Widget build(BuildContext context) {
-    var p1 = BladderBowel(date: DateTime.now().subtract(Duration(days: 1)), bladderBowel: 121);
-    var p2 = BladderBowel(date: DateTime.now(), bladderBowel: 106);
-    var p3 = BladderBowel(date: DateTime.now().subtract(Duration(days: 3)), bladderBowel: 97);
-    var p4 = BladderBowel(date: DateTime.now().subtract(Duration(days: 3)), bladderBowel: 116);
+    var p1 = BladderBowel(date: DateTime.now().subtract(Duration(days: 1)), bowel: 121, bladder: 62);
+    var p2 = BladderBowel(date: DateTime.now(), bowel: 134, bladder: 53);
+    var p3 = BladderBowel(date: DateTime.now().subtract(Duration(days: 3)), bowel: 97, bladder: 72);
+    var p4 = BladderBowel(date: DateTime.now().subtract(Duration(days: 3)), bowel: 87, bladder: 09);
     return MaterialApp(
       title: 'AlzApp - Bladder & Bowel',
       theme: ThemeData(
@@ -43,7 +43,7 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('Bladder & Bowel'),
+        title: Text('ถ่ายและฉี่'),
       ),
       body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
@@ -86,11 +86,11 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
                   final record = dateMap[dateMap.keys.toList()[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
-                  if(record!.bladderBowel > 120){
+                  if(record!.bowel > 120 && record.bladder < 60){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
                   }
-                  else if(record.bladderBowel < 100){
+                  else if (record.bowel < 100 && record.bladder > 70){
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
                   }
@@ -108,13 +108,21 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
                           SizedBox(width: 24),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Text('${record.bladderBowel}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                            child: Text('${record.bowel}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           ),
                           SizedBox(width: 8),
-                          Text('???', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: Align(child: Text('ถ่าย', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
+                          ),
+                          SizedBox(width: 12),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Text('${record.bladder}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                          ),
+                          SizedBox(width: 8),
+                          Text('ฉี่', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
                           Expanded(child: Text('${record.date.hour}:${record.date.minute}', style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
-                          SizedBox(width: 8,),
-
                         ],
                         mainAxisSize: MainAxisSize.max,
                         ),
@@ -181,7 +189,8 @@ class NewRecordPage extends StatefulWidget {
 class _NewRecordPageState extends State<NewRecordPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-  int bladderBowel = 0;
+  int bowel = 0;
+  int bladder = 0;
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -190,7 +199,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     String formattedDate = DateFormat('dd/MM').format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("Add new record"),
+      title: new Text("บันทึกใหม่"),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -199,7 +208,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("Type", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -209,7 +218,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("Bladder & Bowel", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text("ถ่ายและฉี่", style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -222,7 +231,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Date", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -264,7 +273,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Time", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -302,7 +311,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("Value", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text("ถ่ายและฉี่", style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -310,7 +319,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     width: 64,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: 'bladder & bowel',
+                        hintText: 'ถ่าย',
                         isDense: true,
                         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                         enabledBorder: OutlineInputBorder(
@@ -323,7 +332,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                         ),
                       ),
                       onChanged: (input) {
-                        bladderBowel = int.parse(input);
+                        bowel = int.parse(input);
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
@@ -332,6 +341,45 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     ),
                   ),
                   SizedBox(width: 4,),
+                  Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Text('ถ่าย', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                    ],
+                  ),
+                  SizedBox(width: 4,),
+                  Container(
+                    width: 64,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: 'ฉี่',
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onChanged: (input) {
+                        bladder = int.parse(input);
+                      },
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 4,),
+                  Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Text('ฉี่', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                    ],
+                  ),
                 ],
               ),
               Padding(
@@ -348,10 +396,10 @@ class _NewRecordPageState extends State<NewRecordPage> {
             // Validate returns true if the form is valid, or false otherwise.
             if (_formKey.currentState!.validate()) {
               DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
-              widget.onRecordAdded(BladderBowel(date: dateTime, bladderBowel: bladderBowel));
+              widget.onRecordAdded(BladderBowel(date: dateTime, bowel: bowel, bladder: bladder));
               Navigator.pop(context);
             }
-          }, child: Text("Add"),
+          }, child: Text("เพิ่ม"),
         ),
       ],
     );
@@ -361,25 +409,29 @@ class _NewRecordPageState extends State<NewRecordPage> {
 
 class BladderBowel {
   BladderBowel(
-      {required this.date, required this.bladderBowel});
+      {required this.date, required this.bowel, required this.bladder});
 
   final DateTime date;
-  final int bladderBowel;
+  final int bowel;
+  final int bladder;
 
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     data['date'] = date.millisecondsSinceEpoch;
-    data['bladderBowel'] = bladderBowel;
+    data['bowel'] = bowel;
+    data['bladder'] = bladder;
     return data;
   }
 
   static BladderBowel fromJson(Map<String, dynamic> json) {
     int date = json['date'];
-    int bladderBowel = json['bladderBowel'];
+    int bowel = json['bowel'];
+    int bladder = json['bladder'];
     print("json = $json");
     final record = BladderBowel(
         date: DateTime.fromMillisecondsSinceEpoch(date),
-        bladderBowel: bladderBowel,
+        bowel: bowel,
+        bladder: bladder,
     );
     return record;
   }

@@ -227,7 +227,7 @@ class _PatientItemState extends State<PatientItem> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Add a new patient"),
+          title: new Text("เพิ่มรายชื่อใหม่"),
           content: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -237,10 +237,10 @@ class _PatientItemState extends State<PatientItem> {
 
                 children: <Widget>[
                   TextFormField(
-                    decoration: new InputDecoration(labelText: "Patient's Name:"),
+                    decoration: new InputDecoration(labelText: "ชื่อ Patient's:"),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'กรุณากรอกข้อความนี่';
                       }
                       else{
                         currentName = value;
@@ -249,10 +249,10 @@ class _PatientItemState extends State<PatientItem> {
                     },
                   ),
                   TextFormField(
-                    decoration: new InputDecoration(labelText: "Caretaker's Name"),
+                    decoration: new InputDecoration(labelText: "ชื่อ Caretaker's"),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
+                        return 'กรุณากรอกข้อความนี่';
                       }
                       else{
                         currentCaretakerName = value;
@@ -274,7 +274,7 @@ class _PatientItemState extends State<PatientItem> {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
                   ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Added Successfully!')));
+                      .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
                   setState(() {
                     patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
                     _updatePatientToLocal();

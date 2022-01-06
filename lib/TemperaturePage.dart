@@ -43,7 +43,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('Temperature'),
+        title: Text('อุณหภูมิร่างกาย'),
       ),
       body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
@@ -111,7 +111,10 @@ class _TemperaturePageState extends State<TemperaturePage> {
                             child: Text('${record.temperature}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           ),
                           SizedBox(width: 8),
-                          Text('°C', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: Align(child: Text('°C', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
+                          ),
                           Expanded(child: Text('${record.date.hour}:${record.date.minute}', style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
                           SizedBox(width: 8,),
 
@@ -190,7 +193,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     String formattedDate = DateFormat('dd/MM').format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("Add new record"),
+      title: new Text("บันทึกใหม่"),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -199,7 +202,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("Type", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -209,7 +212,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("Temperature", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text("อุณหภูมิร่างกาย", style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -222,7 +225,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Date", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -264,7 +267,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Time", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -302,7 +305,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("Value", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text("อุณหภูมิร่างกาย", style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -332,6 +335,12 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     ),
                   ),
                   SizedBox(width: 4,),
+                  Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Text('°C', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                    ],
+                  ),
                 ],
               ),
               Padding(
@@ -351,7 +360,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
               widget.onRecordAdded(Temperature(date: dateTime, temperature: temperature));
               Navigator.pop(context);
             }
-          }, child: Text("Add"),
+          }, child: Text("เพิ่ม"),
         ),
       ],
     );

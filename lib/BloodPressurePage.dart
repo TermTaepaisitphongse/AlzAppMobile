@@ -43,7 +43,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('Blood Pressure'),
+        title: Text('ความดันเลือด'),
       ),
       body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
@@ -111,10 +111,12 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                             child: Text('${record.systolic} / ${record.diastolic}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           ),
                           SizedBox(width: 8),
-                          Text('mmHg', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: Align(child: Text('mmHg', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
+                          ),
                           Expanded(child: Text('${record.date.hour}:${record.date.minute}', style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
                           SizedBox(width: 8,),
-
                         ],
                         mainAxisSize: MainAxisSize.max,
                         ),
@@ -188,10 +190,10 @@ class _NewRecordPageState extends State<NewRecordPage> {
     final _formKey = GlobalKey<FormState>();
     DateTime now = DateTime.now();
     String formattedTime = DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
-    String formattedDate = DateFormat('dd/MM').format(selectedDate);
+    String formattedDate = DateFormat('dd MMM').format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("Add new record"),
+      title: new Text("บันทึกใหม่"),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -200,7 +202,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("Type", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -210,7 +212,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("Blood Pressure", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text("ความดันเลือด", style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -223,7 +225,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Date", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -265,7 +267,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Time", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -303,7 +305,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("Value", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text("ความดันเลือด", style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -360,6 +362,12 @@ class _NewRecordPageState extends State<NewRecordPage> {
                       ],
                     ),
                   ),
+                  Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Text(' mmHg', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                    ],
+                  ),
                 ],
               ),
               Padding(
@@ -379,7 +387,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
               widget.onRecordAdded(BloodPressure(date: dateTime, systolic: sys, diastolic: dia));
               Navigator.pop(context);
             }
-          }, child: Text("Add"),
+          }, child: Text("เพิ่ม"),
         ),
       ],
     );

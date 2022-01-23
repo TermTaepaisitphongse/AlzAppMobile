@@ -188,6 +188,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
   TimeOfDay selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
   int sys = 0;
   int dia = 0;
+  String errorMessage = '';
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -373,6 +374,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   ),
                 ],
               ),
+              Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12),),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
               ),
@@ -385,10 +387,16 @@ class _NewRecordPageState extends State<NewRecordPage> {
         ElevatedButton(
           onPressed: () {
             // Validate returns true if the form is valid, or false otherwise.
-            if (_formKey.currentState!.validate()) {
+            if (sys >= dia && sys != 0 && dia != 0) {
               DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
               widget.onRecordAdded(BloodPressure(date: dateTime, systolic: sys, diastolic: dia));
               Navigator.pop(context);
+            }
+            else {
+              //show red text that says invalid value
+              setState(() {
+                errorMessage = "กรุณากรอกค่าค่ี่ถูกต้อง";
+              });
             }
           }, child: Text("เพิ่ม"),
         ),

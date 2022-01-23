@@ -89,17 +89,21 @@ class _PulsePageState extends State<PulsePage> {
                   final record = dateMap[dateMap.keys.toList()[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
+                  var tooltipMessage = null;
                   if(record!.pulse > 120){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
+                    tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
                   }
                   else if(record.pulse < 100){
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
+                    tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
                   }
                   else {
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
+                    tooltipMessage = "ค่าปกติที่คาดหมาย";
                   }
                   return Dismissible(
                     child: Padding(
@@ -107,7 +111,9 @@ class _PulsePageState extends State<PulsePage> {
                       child: Container(height: 100, child: Padding(
                         padding: const EdgeInsets.only(left: 24),
                         child: Row(children: [
-                          Icon(iconCheck, color: iconColor),
+                          Tooltip(
+                              child: Icon(iconCheck, color: iconColor),
+                              message: tooltipMessage),
                           SizedBox(width: 24),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),

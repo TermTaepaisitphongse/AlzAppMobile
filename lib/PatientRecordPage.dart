@@ -1,9 +1,15 @@
+import 'package:alzapp/RespiratoryRatePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'BloodPressurePage.dart';
+import 'PulsePage.dart';
+import 'RespiratoryRatePage.dart';
+import 'TemperaturePage.dart';
+import 'DextrostixPage.dart';
+import 'BladderBowelPage.dart';
 import 'main.dart';
 
 void main() => runApp(MyApp());
@@ -13,7 +19,7 @@ class MyApp extends StatelessWidget {
   // #docregion build
   @override
   Widget build(BuildContext context) {
-    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName');
+    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', RGBcolor: [Colors.white.red, Colors.white.green, Colors.white.blue]);
     return MaterialApp(
       title: 'AlzApp Health Records',
       theme: ThemeData(
@@ -52,7 +58,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              'Records',
+              'บันทึกสุขภาพ',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
           ),
@@ -89,7 +95,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                               height: 16.0,
                             ),
                             Text(
-                              'Blood Pressure',
+                              'ความดันเลือด',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -104,27 +110,43 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                 ),
                 SizedBox(width: 24.0),
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/pulse.svg', height: 38.0),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Pulse',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PulsePage(
+                              pulseRecords: widget.patient.pulse,
+                              onPulseRecordUpdated: (newRecords){widget.patient.pulse = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/pulse.svg', height: 38.0),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'ชีพจร',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.purpleAccent,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.purpleAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ],
@@ -136,54 +158,84 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/respiratoryRate.svg',
-                              height: 38.0, color: Colors.white),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Respiratory Rate',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RespiratoryRatePage(
+                              respiratoryRecords: widget.patient.respiratoryRate,
+                              onRespiratoryRecordUpdated: (newRecords){widget.patient.respiratoryRate = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/respiratoryRate.svg', height: 38.0, color: Colors.white),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'อัตราการหายใจ',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.yellowAccent,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.amberAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 SizedBox(width: 24.0),
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/temperature.svg',
-                              height: 38.0),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Temperature',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TemperaturePage(
+                              temperatureRecords: widget.patient.temperature,
+                              onTemperatureRecordUpdated: (newRecords){widget.patient.temperature = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/temperature.svg', height: 38.0),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'อุณหภูมิร่างกาย',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.blueAccent,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.blueAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ],
@@ -195,54 +247,84 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/dextrostix.svg',
-                              height: 38.0, color: Colors.white),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Dextrostix',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DextrostixPage(
+                              dextrostixRecords: widget.patient.dextrostix,
+                              onDextrostixRecordUpdated: (newRecords){widget.patient.dextrostix = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/dextrostix.svg', height: 38.0, color: Colors.white),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'น้ำตาลในเลือด',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.deepPurpleAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 SizedBox(width: 24.0),
                 Expanded(
-                  child: Material(
-                    elevation: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          SvgPicture.asset('assets/bladderBowel.svg',
-                              height: 38.0, color: Colors.white),
-                          SizedBox(
-                            height: 16.0,
-                          ),
-                          Text(
-                            'Bladder & Bowel',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BladderBowelPage(
+                              bladderBowelRecords: widget.patient.bladderBowel,
+                              onBladderBowelRecordUpdated: (newRecords){widget.patient.bladderBowel = newRecords;
+                              print(newRecords);
+                              print(widget.patient.toJson().toString());
+                              widget.onPatientChange(widget.patient);
+                              },
+                            )),
+                      );
+                    },
+                    child: Material(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/bladderBowel.svg', height: 38.0, color: Colors.white),
+                            SizedBox(
+                              height: 16.0,
+                            ),
+                            Text(
+                              'ถ่ายและฉี่',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    color: Colors.orangeAccent,
-                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ],
@@ -252,170 +334,6 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
       ),
       // floatingActionButton: FloatingActionButton(
       //     child: Icon(Icons.add), onPressed: () => _showDialog(context)),
-    );
-  }
-
-  void _showDialog(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    final padding = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-    );
-    double? currentTemperature;
-    double? currentBloodPressure;
-    double? currentPulse;
-    double? currentRR;
-    double? currentDTX;
-    String? currentNotes;
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("Add a new record"),
-          content: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextFormField(
-                  decoration:
-                      new InputDecoration(labelText: "Temperature (°C):"),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a value';
-                    } else {
-                      try {
-                        currentTemperature = double.parse(value);
-                      } catch (Exception) {
-                        return "Please enter a valid number";
-                      }
-                    }
-                    return null;
-                  },
-                ),
-                padding,
-                TextFormField(
-                  decoration:
-                      new InputDecoration(labelText: "Blood Pressure (mmHg):"),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a number';
-                    } else {
-                      try {
-                        currentBloodPressure = double.parse(value);
-                      } catch (Exception) {
-                        return "Please enter a valid number";
-                      }
-                    }
-                    return null;
-                  },
-                ),
-                padding,
-                TextFormField(
-                  decoration: new InputDecoration(
-                      labelText: "Pulse (beats per minute):"),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a number';
-                    } else {
-                      try {
-                        currentPulse = double.parse(value);
-                      } catch (Exception) {
-                        return "Please enter a valid number";
-                      }
-                    }
-                    return null;
-                  },
-                ),
-                padding,
-                TextFormField(
-                  decoration: new InputDecoration(
-                      labelText: "Respiratory Rate (breaths per minute):"),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a number';
-                    } else {
-                      try {
-                        currentRR = double.parse(value);
-                      } catch (Exception) {
-                        return "Please enter a valid number";
-                      }
-                    }
-                    return null;
-                  },
-                ),
-                padding,
-                TextFormField(
-                  decoration:
-                      new InputDecoration(labelText: "Dextrostix (mg%):"),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a number';
-                    } else {
-                      try {
-                        currentDTX = double.parse(value);
-                      } catch (Exception) {
-                        return "Please enter a valid number";
-                      }
-                    }
-                    return null;
-                  },
-                ),
-                padding,
-                TextFormField(
-                  decoration: new InputDecoration(labelText: "Notes/Symptoms:"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    } else {
-                      currentNotes = value;
-                    }
-                    return null;
-                  },
-                ),
-                padding,
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Added Successfully!')));
-                  setState(() {
-                    final temperature = currentTemperature;
-                    final bloodPressure = currentBloodPressure;
-                    final pulse = currentPulse;
-                    final rr = currentRR;
-                    final dtx = currentDTX;
-                    final notes = currentNotes;
-                    widget.patient.records.add(Record(
-                        dateTime: DateTime.now(),
-                        temperature: temperature,
-                        bloodPressure: bloodPressure,
-                        pulse: pulse,
-                        rr: rr,
-                        dtx: dtx,
-                        notes: notes));
-                    widget.onPatientChange(widget.patient);
-                  });
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Add"),
-            ),
-          ],
-        );
-      },
     );
   }
 }

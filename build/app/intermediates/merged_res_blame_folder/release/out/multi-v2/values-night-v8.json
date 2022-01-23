@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/prantaepaisitphongse/StudioProjects/alzapp/build/app/intermediates/incremental/mergeReleaseResources/merged.dir/values-night-v8/values-night-v8.xml",
+            "outputFile": "/Users/prantaepaisitphongse/StudioProjects/alzapp/AlzAppMobile/build/app/intermediates/incremental/mergeReleaseResources/merged.dir/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "/Users/prantaepaisitphongse/StudioProjects/alzapp/android/app/src/main/res/values-night/styles.xml",
+                    "source": "/Users/prantaepaisitphongse/StudioProjects/alzapp/AlzAppMobile/android/app/src/main/res/values-night/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

@@ -43,7 +43,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('Blood Pressure'),
+        title: Text('ความดันเลือด'),
       ),
       body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
@@ -57,6 +57,9 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     Map<String, List<BloodPressure>> dateMap = HashMap();
     final list = widget.bloodPressureRecords;
     list.sort((record1, record2) {
+      if (record1.date.year == record2.date.year && record1.date.month == record2.date.month && record1.date.day == record2.date.day) {
+        return record1.date.millisecondsSinceEpoch - record2.date.millisecondsSinceEpoch;
+      }
       return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
     });
     list.forEach((element) {
@@ -86,17 +89,31 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                   final record = dateMap[dateMap.keys.toList()[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
-                  if(record!.systolic > 120 && record.diastolic < 60){
+                  var tooltipMessage = null;
+                  if(record!.systolic > 140 && record.diastolic > 140){
+                    iconCheck = Icons.warning_rounded;
+                    iconColor = Colors.red;
+                    tooltipMessage = "ควรไปพบแพทย์";
+                  }
+                  else if(record.systolic > 120 && record.diastolic > 120){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
+                    tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
                   }
-                  else if (record.systolic < 100 && record.diastolic > 70){
-                    iconCheck = Icons.arrow_circle_down_sharp;
-                    iconColor = Colors.red;
-                  }
-                  else {
+                  else if (record.systolic > 100 && record.diastolic > 100){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
+                    tooltipMessage = "ค่าปกติที่คาดหมาย";
+                  }
+                  else if (record.systolic > 80 && record.diastolic > 80) {
+                    iconCheck = Icons.arrow_circle_down_sharp;
+                    iconColor = Colors.red;
+                    tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
+                  }
+                  else {
+                    iconCheck = Icons.warning_rounded;
+                    iconColor = Colors.red;
+                    tooltipMessage = "ควรไปพบแพทย์";
                   }
                   return Dismissible(
                     child: Padding(
@@ -104,17 +121,21 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                       child: Container(height: 100, child: Padding(
                         padding: const EdgeInsets.only(left: 24),
                         child: Row(children: [
-                          Icon(iconCheck, color: iconColor),
+                          Tooltip(
+                              child: Icon(iconCheck, color: iconColor),
+                              message: tooltipMessage),
                           SizedBox(width: 24),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             child: Text('${record.systolic} / ${record.diastolic}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                           ),
                           SizedBox(width: 8),
-                          Text('bpm', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
-                          Expanded(child: Text('${record.date.hour}:${record.date.minute}', style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: Align(child: Text('mmHg', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
+                          ),
+                          Expanded(child: Text(DateFormat('HH:mm').format(DateTime(record.date.year, record.date.month, record.date.day, record.date.hour, record.date.minute)), style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
                           SizedBox(width: 8,),
-
                         ],
                         mainAxisSize: MainAxisSize.max,
                         ),
@@ -183,15 +204,16 @@ class _NewRecordPageState extends State<NewRecordPage> {
   TimeOfDay selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
   int sys = 0;
   int dia = 0;
+  String errorMessage = '';
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
     DateTime now = DateTime.now();
     String formattedTime = DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
-    String formattedDate = DateFormat('dd/MM').format(selectedDate);
+    String formattedDate = DateFormat('dd MMM').format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("Add new record"),
+      title: new Text("บันทึกใหม่"),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -200,7 +222,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("Type", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -210,7 +232,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("Blood Pressure", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text("ความดันเลือด", style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -223,7 +245,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Date", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -265,7 +287,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Time", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -303,7 +325,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("Value", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text("ความดันเลือด", style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -360,8 +382,15 @@ class _NewRecordPageState extends State<NewRecordPage> {
                       ],
                     ),
                   ),
+                  Column(
+                    children: [
+                      SizedBox(height: 10,),
+                      Text(' mmHg', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                    ],
+                  ),
                 ],
               ),
+              Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12),),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
               ),
@@ -374,12 +403,18 @@ class _NewRecordPageState extends State<NewRecordPage> {
         ElevatedButton(
           onPressed: () {
             // Validate returns true if the form is valid, or false otherwise.
-            if (_formKey.currentState!.validate()) {
+            if (sys >= dia && sys != 0 && dia != 0) {
               DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
               widget.onRecordAdded(BloodPressure(date: dateTime, systolic: sys, diastolic: dia));
               Navigator.pop(context);
             }
-          }, child: Text("Add"),
+            else {
+              //show red text that says invalid value
+              setState(() {
+                errorMessage = "กรุณากรอกค่าค่ี่ถูกต้อง";
+              });
+            }
+          }, child: Text("เพิ่ม"),
         ),
       ],
     );

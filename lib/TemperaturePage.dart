@@ -90,20 +90,30 @@ class _TemperaturePageState extends State<TemperaturePage> {
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;
-                  if(record!.temperature > 120){
+                  if(record!.temperature > 38.5){
+                    iconCheck = Icons.warning_rounded;
+                    iconColor = Colors.red;
+                    tooltipMessage = "ควรไปพบแพทย์";
+                  }
+                  else if(record.temperature > 37.5){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
                     tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
                   }
-                  else if(record.temperature < 100){
+                  else if (record.temperature > 36){
+                    iconCheck = Icons.check_circle;
+                    iconColor = Colors.green;
+                    tooltipMessage = "ค่าปกติที่คาดหมาย";
+                  }
+                  else if (record.temperature > 35.5) {
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
                     tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
                   }
                   else {
-                    iconCheck = Icons.check_circle;
-                    iconColor = Colors.green;
-                    tooltipMessage = "ค่าปกติที่คาดหมาย";
+                    iconCheck = Icons.warning_rounded;
+                    iconColor = Colors.red;
+                    tooltipMessage = "ควรไปพบแพทย์";
                   }
                   return Dismissible(
                     child: Padding(

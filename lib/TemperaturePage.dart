@@ -203,7 +203,7 @@ class NewRecordPage extends StatefulWidget {
 class _NewRecordPageState extends State<NewRecordPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-  int temperature = 0;
+  double temperature = 0;
   String errorMessage = '';
   @override
   Widget build(BuildContext context) {
@@ -346,12 +346,10 @@ class _NewRecordPageState extends State<NewRecordPage> {
                         ),
                       ),
                       onChanged: (input) {
-                        temperature = int.parse(input);
+                        temperature = double.parse(input);
                       },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),],
                     ),
                   ),
                   SizedBox(width: 4,),
@@ -400,7 +398,7 @@ class Temperature {
       {required this.date, required this.temperature});
 
   final DateTime date;
-  final int temperature;
+  final double temperature;
 
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
@@ -411,7 +409,7 @@ class Temperature {
 
   static Temperature fromJson(Map<String, dynamic> json) {
     int date = json['date'];
-    int temperature = json['temperature'];
+    double temperature = json['temperature'];
     print("json = $json");
     final record = Temperature(
         date: DateTime.fromMillisecondsSinceEpoch(date),

@@ -192,7 +192,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                           ],
                         ),
                       ),
-                      color: Colors.yellowAccent,
+                      color: Colors.green,
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),

@@ -90,30 +90,30 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;
-                  if(record!.systolic > 140 && record.diastolic > 140){
+                  if(record!.systolic >= 180 || record.diastolic >= 110){
                     iconCheck = Icons.warning_rounded;
+                    iconColor = Colors.red;
+                    tooltipMessage = "ควรไปพบแพทย์ทันที";
+                  }
+                  else if(record.systolic >= 140 || record.diastolic > 90){
+                    iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
                     tooltipMessage = "ควรไปพบแพทย์";
                   }
-                  else if(record.systolic > 120 && record.diastolic > 120){
-                    iconCheck = Icons.arrow_circle_up_sharp;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
-                  }
-                  else if (record.systolic > 100 && record.diastolic > 100){
+                    else if (record.systolic >= 100 || record.diastolic >= 70){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
                     tooltipMessage = "ค่าปกติที่คาดหมาย";
                   }
-                  else if (record.systolic > 80 && record.diastolic > 80) {
+                  else if (record.systolic > 90 || record.diastolic > 60) {
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
-                    tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
+                    tooltipMessage = "ควรไปพบแพทย์";
                   }
                   else {
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                    tooltipMessage = "ควรไปพบแพทย์ทันที";
                   }
                   return Dismissible(
                     child: Padding(

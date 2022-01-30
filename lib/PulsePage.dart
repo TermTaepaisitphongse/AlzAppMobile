@@ -90,30 +90,30 @@ class _PulsePageState extends State<PulsePage> {
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;
-                  if(record!.pulse > 140){
+                  if(record!.pulse >= 101){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                    tooltipMessage = "ควรไปพบแพทย์ทันที";
                   }
-                  else if(record.pulse > 120){
+                  else if(record.pulse > 90){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
-                    tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
+                    tooltipMessage = "ควรสังเกตอาการ";
                   }
-                  else if (record.pulse > 100){
+                  else if (record.pulse > 70){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
                     tooltipMessage = "ค่าปกติที่คาดหมาย";
                   }
-                  else if (record.pulse > 80) {
+                  else if (record.pulse > 60) {
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
-                    tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
+                    tooltipMessage = "ควรสังเกตอาการ";
                   }
                   else {
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                    tooltipMessage = "ควรไปพบแพทย์ทันที";
                   }
                   return Dismissible(
                     child: Padding(

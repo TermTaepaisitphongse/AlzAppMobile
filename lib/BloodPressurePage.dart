@@ -165,6 +165,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                 },
                 itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
                   shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],

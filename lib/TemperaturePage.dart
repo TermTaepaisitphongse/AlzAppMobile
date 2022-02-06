@@ -166,6 +166,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
                 },
                 itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
                   shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],

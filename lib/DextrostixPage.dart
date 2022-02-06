@@ -166,6 +166,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
                 },
                 itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
                   shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],

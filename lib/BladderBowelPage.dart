@@ -171,6 +171,7 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
                 },
                 itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
                   shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],

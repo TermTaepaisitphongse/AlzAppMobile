@@ -166,6 +166,7 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
                 },
                 itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
                   shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],

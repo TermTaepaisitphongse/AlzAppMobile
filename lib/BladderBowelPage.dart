@@ -117,8 +117,8 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
                   }
                   return Dismissible(
                     child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Container(height: 100, child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(height: 75, child: Padding(
                         padding: const EdgeInsets.only(left: 24),
                         child: Row(children: [
                           Tooltip(
@@ -171,6 +171,7 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
                 },
                 itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
                   shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],

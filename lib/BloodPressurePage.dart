@@ -117,8 +117,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                   }
                   return Dismissible(
                     child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Container(height: 100, child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(height: 75, child: Padding(
                         padding: const EdgeInsets.only(left: 24),
                         child: Row(children: [
                           Tooltip(
@@ -165,6 +165,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                 },
                 itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
                   shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],

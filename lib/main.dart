@@ -54,8 +54,60 @@ class _PatientItemState extends State<PatientItem> {
 
   // #docregion _buildRow
   Widget _buildRow(Patient p) {
-
-    return GestureDetector(
+    return ListTile(
+      title: Material(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        color: Color.fromARGB(255, p.RGBcolor[0], p.RGBcolor[1], p.RGBcolor[2]),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                flex: 8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${p.name}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      "${p.caretakerName}",
+                      style: TextStyle(fontSize: 14, color: Colors.black38),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: (){
+                    setState(() {
+                      patients.remove(p);
+                      _updatePatientToLocal();
+                      _resetFiltered();
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       onTap: (){
         Navigator.push(
           context,
@@ -67,66 +119,6 @@ class _PatientItemState extends State<PatientItem> {
           })),
         );
       },
-      onPanUpdate: (details){
-        if (details.delta.dx < -2) {
-          print('pan');
-        }
-      },
-      child: ListTile(
-        title: Material(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: Color.fromARGB(255, p.RGBcolor[0], p.RGBcolor[1], p.RGBcolor[2]),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  flex: 8,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${p.name}",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        "${p.caretakerName}",
-                        style: TextStyle(fontSize: 14, color: Colors.black38),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: (){
-                      setState(() {
-                        patients.remove(p);
-                        _updatePatientToLocal();
-                        _resetFiltered();
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
   // #enddocregion _buildRow

@@ -260,7 +260,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                                     initialDate: selectedDate,
                                     initialDatePickerMode: DatePickerMode.day,
                                     firstDate: DateTime.now().subtract(Duration(days: 6*31)),
-                                    lastDate: DateTime.now().add(Duration(days: 6*31)),
+                                    lastDate: DateTime.now(),
                                 );
                                 if (chosenDate != null){
                                   setState(() {
@@ -376,9 +376,14 @@ class _NewRecordPageState extends State<NewRecordPage> {
         // usually buttons at the bottom of the dialog
         ElevatedButton(
           onPressed: () {
+            DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
             // Validate returns true if the form is valid, or false otherwise.
-            if (respiratory > 0) {
-              DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+            if (dateTime.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
+              setState(() {
+                errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
+              });
+            }
+            else if (respiratory > 0) {
               widget.onRecordAdded(RespiratoryRate(date: dateTime, respiratory: respiratory));
               Navigator.pop(context);
             }

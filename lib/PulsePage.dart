@@ -1,31 +1,9 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    var p1 = Pulse(date: DateTime.now().subtract(Duration(days: 1)), pulse: 121);
-    var p2 = Pulse(date: DateTime.now(), pulse: 106);
-    var p3 = Pulse(date: DateTime.now().subtract(Duration(days: 3)), pulse: 97);
-    var p4 = Pulse(date: DateTime.now().subtract(Duration(days: 3)), pulse: 116);
-    return MaterialApp(
-      title: 'AlzApp - Pulse',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: PulsePage(pulseRecords: [p1,p2,p3,p4], onPulseRecordUpdated: (records){print(records);},),
-    );
-  }
-// #enddocregion build
-}
 
 class PulsePage extends StatefulWidget {
   Function onPulseRecordUpdated;
@@ -40,12 +18,18 @@ class _PulsePageState extends State<PulsePage> {
 
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+      mainAxisSize: MainAxisSize.min,));
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: Text('Pulse'),
       ),
-      body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.pulseRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

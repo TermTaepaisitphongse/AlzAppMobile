@@ -1,32 +1,10 @@
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    var p1 = BloodPressure(date: DateTime.now().subtract(Duration(days: 1)), systolic: 121, diastolic: 62);
-    var p2 = BloodPressure(date: DateTime.now(), systolic: 134, diastolic: 53);
-    var p3 = BloodPressure(date: DateTime.now().subtract(Duration(days: 3)), systolic: 97, diastolic: 72);
-    var p4 = BloodPressure(date: DateTime.now().subtract(Duration(days: 3)), systolic: 87, diastolic: 09);
-    return MaterialApp(
-      title: 'AlzApp - Blood Pressure',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: BloodPressurePage(bloodPressureRecords: [p1,p2,p3,p4], onBPRecordUpdated: (records){print(records);},),
-    );
-  }
-// #enddocregion build
-}
 
 class BloodPressurePage extends StatefulWidget {
   Function onBPRecordUpdated;
@@ -41,12 +19,19 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
 
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+    mainAxisSize: MainAxisSize.min,));
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: Text('ความดันเลือด'),
       ),
-      body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.bloodPressureRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

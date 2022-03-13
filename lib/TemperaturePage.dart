@@ -1,31 +1,9 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    var p1 = Temperature(date: DateTime.now().subtract(Duration(days: 1)), temperature: 121);
-    var p2 = Temperature(date: DateTime.now(), temperature: 106);
-    var p3 = Temperature(date: DateTime.now().subtract(Duration(days: 3)), temperature: 97);
-    var p4 = Temperature(date: DateTime.now().subtract(Duration(days: 3)), temperature: 116);
-    return MaterialApp(
-      title: 'AlzApp - Temperature',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: TemperaturePage(temperatureRecords: [p1,p2,p3,p4], onTemperatureRecordUpdated: (records){print(records);},),
-    );
-  }
-// #enddocregion build
-}
 
 class TemperaturePage extends StatefulWidget {
   Function onTemperatureRecordUpdated;
@@ -40,12 +18,18 @@ class _TemperaturePageState extends State<TemperaturePage> {
 
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+      mainAxisSize: MainAxisSize.min,));
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: Text('อุณหภูมิร่างกาย'),
       ),
-      body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.temperatureRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

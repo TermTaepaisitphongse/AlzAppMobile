@@ -1,31 +1,9 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    var p1 = Dextrostix(date: DateTime.now().subtract(Duration(days: 1)), dextrostix: 121);
-    var p2 = Dextrostix(date: DateTime.now(), dextrostix: 106);
-    var p3 = Dextrostix(date: DateTime.now().subtract(Duration(days: 3)), dextrostix: 97);
-    var p4 = Dextrostix(date: DateTime.now().subtract(Duration(days: 3)), dextrostix: 116);
-    return MaterialApp(
-      title: 'AlzApp - Dextrostix',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: DextrostixPage(dextrostixRecords: [p1,p2,p3,p4], onDextrostixRecordUpdated: (records){print(records);},),
-    );
-  }
-// #enddocregion build
-}
 
 class DextrostixPage extends StatefulWidget {
   Function onDextrostixRecordUpdated;
@@ -40,12 +18,18 @@ class _DextrostixPageState extends State<DextrostixPage> {
 
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+      mainAxisSize: MainAxisSize.min,));
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: Text('น้ำตาลในเลือด'),
       ),
-      body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.dextrostixRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

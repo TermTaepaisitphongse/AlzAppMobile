@@ -1,31 +1,9 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    var p1 = BladderBowel(date: DateTime.now().subtract(Duration(days: 1)), bowel: 121, bladder: 62);
-    var p2 = BladderBowel(date: DateTime.now(), bowel: 134, bladder: 53);
-    var p3 = BladderBowel(date: DateTime.now().subtract(Duration(days: 3)), bowel: 97, bladder: 72);
-    var p4 = BladderBowel(date: DateTime.now().subtract(Duration(days: 3)), bowel: 87, bladder: 09);
-    return MaterialApp(
-      title: 'AlzApp - Bladder & Bowel',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: BladderBowelPage(bladderBowelRecords: [p1,p2,p3,p4], onBladderBowelRecordUpdated: (records){print(records);},),
-    );
-  }
-// #enddocregion build
-}
 
 class BladderBowelPage extends StatefulWidget {
   Function onBladderBowelRecordUpdated;
@@ -40,12 +18,18 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
 
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+      mainAxisSize: MainAxisSize.min,));
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: Text('ถ่ายและฉี่'),
       ),
-      body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.bladderBowelRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

@@ -90,22 +90,22 @@ class _DextrostixPageState extends State<DextrostixPage> {
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;
-                  if(record!.dextrostix > 140){
+                  if(record!.dextrostix > 100){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
                     tooltipMessage = "ควรไปพบแพทย์";
                   }
-                  else if(record.dextrostix > 120){
+                  else if(record.dextrostix > 20){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
                     tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
                   }
-                  else if (record.dextrostix > 100){
+                  else if (record.dextrostix > 12){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
                     tooltipMessage = "ค่าปกติที่คาดหมาย";
                   }
-                  else if (record.dextrostix > 80) {
+                  else if (record.dextrostix > 0) {
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
                     tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";

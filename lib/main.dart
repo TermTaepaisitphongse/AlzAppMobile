@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:collection/collection.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -213,11 +214,13 @@ class _PatientItemState extends State<PatientItem> {
     final colors = Colors.accents;
     final _random = new Random();
     Color currentColor = colors[_random.nextInt(colors.length)];
+    String errorMessage = "";
     // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
+        print(errorMessage);
         return AlertDialog(
           title: new Text("เพิ่มรายชื่อใหม่"),
           content: Form(
@@ -261,20 +264,35 @@ class _PatientItemState extends State<PatientItem> {
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
-                  setState(() {
-                    patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
-                    _updatePatientToLocal();
-                    _resetFiltered();
-                  });
-                  Navigator.pop(context);
-                }
-              }, child: Text("Add"),
+            Row(
+              children: [
+                Expanded(child: Text(errorMessage, textAlign: TextAlign.end,)),
+                SizedBox(width: 4,),
+                ElevatedButton(
+                  onPressed: () {
+                    // Validate returns true if the form is valid, or false otherwise.
+                    if (_formKey.currentState!.validate()) {
+                      final patientWithSameName = patients.firstWhereOrNull((element) => element.name == currentName);
+                      print(patientWithSameName);
+                      if (patientWithSameName!=null){
+                        setState(() {
+                          errorMessage = "มีผู้ป่วยชื่อนี้แล้ว กรุณาใช้ชื่ออื่น";
+                        });
+                      }
+                      else {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
+                        setState(() {
+                          patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
+                          _updatePatientToLocal();
+                          _resetFiltered();
+                        });
+                        Navigator.pop(context);
+                      }
+                    }
+                  }, child: Text("Add"),
+                ),
+              ],
             ),
           ],
         );

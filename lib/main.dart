@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:collection/collection.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,8 +55,60 @@ class _PatientItemState extends State<PatientItem> {
 
   // #docregion _buildRow
   Widget _buildRow(Patient p) {
-
-    return GestureDetector(
+    return ListTile(
+      title: Material(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        color: Color.fromARGB(255, p.RGBcolor[0], p.RGBcolor[1], p.RGBcolor[2]),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                flex: 8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${p.name}",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      "${p.caretakerName}",
+                      style: TextStyle(fontSize: 14, color: Colors.black38),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: (){
+                    setState(() {
+                      patients.remove(p);
+                      _updatePatientToLocal();
+                      _resetFiltered();
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       onTap: (){
         Navigator.push(
           context,
@@ -67,66 +120,6 @@ class _PatientItemState extends State<PatientItem> {
           })),
         );
       },
-      onPanUpdate: (details){
-        if (details.delta.dx < -2) {
-          print('pan');
-        }
-      },
-      child: ListTile(
-        title: Material(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: Color.fromARGB(255, p.RGBcolor[0], p.RGBcolor[1], p.RGBcolor[2]),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  flex: 8,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${p.name}",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        "${p.caretakerName}",
-                        style: TextStyle(fontSize: 14, color: Colors.black38),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: (){
-                      setState(() {
-                        patients.remove(p);
-                        _updatePatientToLocal();
-                        _resetFiltered();
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
   // #enddocregion _buildRow
@@ -215,77 +208,20 @@ class _PatientItemState extends State<PatientItem> {
     }
 
   void _showDialog(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    String currentName = "";
-    String currentCaretakerName = "";
-    final colors = Colors.accents;
-    final _random = new Random();
-    Color currentColor = colors[_random.nextInt(colors.length)];
     // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
-        return AlertDialog(
-          title: new Text("เพิ่มรายชื่อใหม่"),
-          content: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-
-                children: <Widget>[
-                  TextFormField(
-                    decoration: new InputDecoration(labelText: "ชื่อ Patient's:"),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'กรุณากรอกข้อความนี่';
-                      }
-                      else{
-                        currentName = value;
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: new InputDecoration(labelText: "ชื่อ Caretaker's"),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'กรุณากรอกข้อความนี่';
-                      }
-                      else{
-                        currentCaretakerName = value;
-                      }
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            ElevatedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
-                  setState(() {
-                    patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
-                    _updatePatientToLocal();
-                    _resetFiltered();
-                  });
-                  Navigator.pop(context);
-                }
-              }, child: Text("Add"),
-            ),
-          ],
-        );
+        return PatientForm(patients,(newPatient){
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
+          setState(() {
+            patients.add(newPatient);
+            _updatePatientToLocal();
+            _resetFiltered();
+          });
+        });
       },
     );
   }
@@ -371,6 +307,11 @@ class Patient {
 
 // Create a Form widget.
 class PatientForm extends StatefulWidget {
+  final List<Patient> patients;
+  PatientForm(this.patients, this.onAdded);
+
+  final Function onAdded;
+
   @override
   AddPatientForm createState() {
     return AddPatientForm();
@@ -379,39 +320,84 @@ class PatientForm extends StatefulWidget {
 
 class AddPatientForm extends State<PatientForm> {
   final _formKey = GlobalKey<FormState>();
+  String currentName = "";
+  String currentCaretakerName = "";
+  final colors = Colors.accents;
+  final _random = new Random();
+  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
+    Color currentColor = colors[_random.nextInt(colors.length)];
     // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+    return AlertDialog(
+      title: new Text("เพิ่มรายชื่อใหม่"),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+
+            children: <Widget>[
+              TextFormField(
+                decoration: new InputDecoration(labelText: "ชื่อ Patient's:"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกข้อความนี่';
+                  }
+                  else{
+                    currentName = value;
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: new InputDecoration(labelText: "ชื่อ Caretaker's"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกข้อความนี่';
+                  }
+                  else{
+                    currentCaretakerName = value;
+                  }
+                  return null;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
+        ),
+      ),
+      actions: <Widget>[
+        // usually buttons at the bottom of the dialog
+        Row(
+          children: [
+            Expanded(child: Text(errorMessage, textAlign: TextAlign.end, style: TextStyle(color: Colors.red),)),
+            SizedBox(width: 4,),
+            ElevatedButton(
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                  //patients.add(Patient(name:value));
+                  final patientWithSameName = widget.patients.firstWhereOrNull((element) => element.name == currentName);
+                  print(patientWithSameName);
+                  if (patientWithSameName!=null){
+                    setState(() {
+                      errorMessage = "มีผู้ป่วยชื่อนี้แล้ว กรุณาใช้ชื่ออื่น";
+                    });
+                  }
+                  else {
+                    widget.onAdded(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
+                    Navigator.pop(context);
+                  }
                 }
-              },
-              child: Text('Submit'),
+              }, child: Text("Add"),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }

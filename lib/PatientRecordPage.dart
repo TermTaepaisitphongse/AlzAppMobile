@@ -1,6 +1,5 @@
 import 'package:alzapp/RespiratoryRatePage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -303,27 +302,30 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                             )),
                       );
                     },
-                    child: Material(
-                      elevation: 8,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            SvgPicture.asset('assets/bladderBowel.svg', height: 38.0, color: Colors.white),
-                            SizedBox(
-                              height: 16.0,
-                            ),
-                            Text(
-                              'ถ่ายและฉี่',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                    child: Visibility(
+                      visible: false,
+                      child: Material(
+                        elevation: 8,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              SvgPicture.asset('assets/bladderBowel.svg', height: 38.0, color: Colors.white),
+                              SizedBox(
+                                height: 16.0,
+                              ),
+                              Text(
+                                'ถ่ายและฉี่',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
                         ),
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ),

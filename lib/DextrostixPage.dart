@@ -90,22 +90,22 @@ class _DextrostixPageState extends State<DextrostixPage> {
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;
-                  if(record!.dextrostix > 140){
+                  if(record!.dextrostix > 100){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
                     tooltipMessage = "ควรไปพบแพทย์";
                   }
-                  else if(record.dextrostix > 120){
+                  else if(record.dextrostix > 20){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
                     tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
                   }
-                  else if (record.dextrostix > 100){
+                  else if (record.dextrostix > 12){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
                     tooltipMessage = "ค่าปกติที่คาดหมาย";
                   }
-                  else if (record.dextrostix > 80) {
+                  else if (record.dextrostix > 0) {
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
                     tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
@@ -260,7 +260,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                                     initialDate: selectedDate,
                                     initialDatePickerMode: DatePickerMode.day,
                                     firstDate: DateTime.now().subtract(Duration(days: 6*31)),
-                                    lastDate: DateTime.now().add(Duration(days: 6*31)),
+                                    lastDate: DateTime.now(),
                                 );
                                 if (chosenDate != null){
                                   setState(() {
@@ -376,9 +376,14 @@ class _NewRecordPageState extends State<NewRecordPage> {
         // usually buttons at the bottom of the dialog
         ElevatedButton(
           onPressed: () {
+            DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
             // Validate returns true if the form is valid, or false otherwise.
-            if (dextrostix > 0) {
-              DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+            if (dateTime.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
+              setState(() {
+                errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
+              });
+            }
+            else if (dextrostix > 0) {
               widget.onRecordAdded(Dextrostix(date: dateTime, dextrostix: dextrostix));
               Navigator.pop(context);
             }

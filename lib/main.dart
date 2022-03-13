@@ -208,94 +208,20 @@ class _PatientItemState extends State<PatientItem> {
     }
 
   void _showDialog(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
-    String currentName = "";
-    String currentCaretakerName = "";
-    final colors = Colors.accents;
-    final _random = new Random();
-    Color currentColor = colors[_random.nextInt(colors.length)];
-    String errorMessage = "";
     // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
-        print(errorMessage);
-        return AlertDialog(
-          title: new Text("เพิ่มรายชื่อใหม่"),
-          content: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-
-                children: <Widget>[
-                  TextFormField(
-                    decoration: new InputDecoration(labelText: "ชื่อ Patient's:"),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'กรุณากรอกข้อความนี่';
-                      }
-                      else{
-                        currentName = value;
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: new InputDecoration(labelText: "ชื่อ Caretaker's"),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'กรุณากรอกข้อความนี่';
-                      }
-                      else{
-                        currentCaretakerName = value;
-                      }
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            Row(
-              children: [
-                Expanded(child: Text(errorMessage, textAlign: TextAlign.end,)),
-                SizedBox(width: 4,),
-                ElevatedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      final patientWithSameName = patients.firstWhereOrNull((element) => element.name == currentName);
-                      print(patientWithSameName);
-                      if (patientWithSameName!=null){
-                        setState(() {
-                          errorMessage = "มีผู้ป่วยชื่อนี้แล้ว กรุณาใช้ชื่ออื่น";
-                        });
-                      }
-                      else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
-                        setState(() {
-                          patients.add(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
-                          _updatePatientToLocal();
-                          _resetFiltered();
-                        });
-                        Navigator.pop(context);
-                      }
-                    }
-                  }, child: Text("Add"),
-                ),
-              ],
-            ),
-          ],
-        );
+        return PatientForm(patients,(newPatient){
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
+          setState(() {
+            patients.add(newPatient);
+            _updatePatientToLocal();
+            _resetFiltered();
+          });
+        });
       },
     );
   }
@@ -381,6 +307,11 @@ class Patient {
 
 // Create a Form widget.
 class PatientForm extends StatefulWidget {
+  final List<Patient> patients;
+  PatientForm(this.patients, this.onAdded);
+
+  final Function onAdded;
+
   @override
   AddPatientForm createState() {
     return AddPatientForm();
@@ -389,39 +320,84 @@ class PatientForm extends StatefulWidget {
 
 class AddPatientForm extends State<PatientForm> {
   final _formKey = GlobalKey<FormState>();
+  String currentName = "";
+  String currentCaretakerName = "";
+  final colors = Colors.accents;
+  final _random = new Random();
+  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
+    Color currentColor = colors[_random.nextInt(colors.length)];
     // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
+    return AlertDialog(
+      title: new Text("เพิ่มรายชื่อใหม่"),
+      content: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+
+            children: <Widget>[
+              TextFormField(
+                decoration: new InputDecoration(labelText: "ชื่อ Patient's:"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกข้อความนี่';
+                  }
+                  else{
+                    currentName = value;
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: new InputDecoration(labelText: "ชื่อ Caretaker's"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกข้อความนี่';
+                  }
+                  else{
+                    currentCaretakerName = value;
+                  }
+                  return null;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
+        ),
+      ),
+      actions: <Widget>[
+        // usually buttons at the bottom of the dialog
+        Row(
+          children: [
+            Expanded(child: Text(errorMessage, textAlign: TextAlign.end, style: TextStyle(color: Colors.red),)),
+            SizedBox(width: 4,),
+            ElevatedButton(
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                  //patients.add(Patient(name:value));
+                  final patientWithSameName = widget.patients.firstWhereOrNull((element) => element.name == currentName);
+                  print(patientWithSameName);
+                  if (patientWithSameName!=null){
+                    setState(() {
+                      errorMessage = "มีผู้ป่วยชื่อนี้แล้ว กรุณาใช้ชื่ออื่น";
+                    });
+                  }
+                  else {
+                    widget.onAdded(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
+                    Navigator.pop(context);
+                  }
                 }
-              },
-              child: Text('Submit'),
+              }, child: Text("Add"),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }

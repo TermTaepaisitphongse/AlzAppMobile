@@ -1,31 +1,10 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
-
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    var p1 = RespiratoryRate(date: DateTime.now().subtract(Duration(days: 1)), respiratory: 121);
-    var p2 = RespiratoryRate(date: DateTime.now(), respiratory: 106);
-    var p3 = RespiratoryRate(date: DateTime.now().subtract(Duration(days: 3)), respiratory: 97);
-    var p4 = RespiratoryRate(date: DateTime.now().subtract(Duration(days: 3)), respiratory: 116);
-    return MaterialApp(
-      title: 'AlzApp - Respiratory Rate',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: RespiratoryRatePage(respiratoryRecords: [p1,p2,p3,p4], onRespiratoryRecordUpdated: (records){print(records);},),
-    );
-  }
-// #enddocregion build
-}
 
 class RespiratoryRatePage extends StatefulWidget {
   Function onRespiratoryRecordUpdated;
@@ -40,12 +19,18 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
 
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+      mainAxisSize: MainAxisSize.min,));
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('Respiratory Rate'),
+        title: Text('อัตราการหายใจ (bpm)'),
       ),
-      body: Container(child: _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.respiratoryRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),
@@ -211,7 +196,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     final _formKey = GlobalKey<FormState>();
     DateTime now = DateTime.now();
     String formattedTime = DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
-    String formattedDate = DateFormat('dd MMM').format(selectedDate);
+    String formattedDate = DateFormat('dd MMM', "th").format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
       title: new Text("บันทึกใหม่"),
@@ -255,12 +240,14 @@ class _NewRecordPageState extends State<NewRecordPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () async {
-                                final chosenDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: selectedDate,
-                                    initialDatePickerMode: DatePickerMode.day,
-                                    firstDate: DateTime.now().subtract(Duration(days: 6*31)),
-                                    lastDate: DateTime.now(),
+                                final chosenDate = await showRoundedDatePicker(
+                                  context: context,
+                                  locale: const Locale("th", "TH"),
+                                  era: EraMode.BUDDHIST_YEAR,
+                                  initialDate: selectedDate,
+                                  initialDatePickerMode: DatePickerMode.day,
+                                  firstDate: DateTime.now().subtract(Duration(days: 6*31)),
+                                  lastDate: DateTime.now(),
                                 );
                                 if (chosenDate != null){
                                   setState(() {

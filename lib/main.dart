@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'PatientRecordPage.dart';
 import 'BloodPressurePage.dart';
@@ -13,7 +16,6 @@ import 'package:alzapp/RespiratoryRatePage.dart';
 import 'package:alzapp/TemperaturePage.dart';
 import 'package:alzapp/DextrostixPage.dart';
 import 'package:alzapp/BladderBowelPage.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -29,6 +31,13 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: PatientItem(),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('th', 'TH'),
+        ],
     );
   }
 // #enddocregion build
@@ -141,6 +150,7 @@ class _PatientItemState extends State<PatientItem> {
   @override
   void initState() {
     initList();
+    initPackageInfo();
 
     //search bar init
     searchBar = SearchBar(
@@ -159,6 +169,14 @@ class _PatientItemState extends State<PatientItem> {
     });
 
     super.initState();
+  }
+
+  String version = "";
+  void initPackageInfo () async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = packageInfo.version;
+    });
   }
 
   void _resetFiltered(){
@@ -180,7 +198,15 @@ class _PatientItemState extends State<PatientItem> {
   }
   AppBar _buildAppBar(BuildContext context){
     return AppBar(
-      title: Text("AlzApp"),
+      title: Row(
+        children: [
+          Text("AlzApp", style: TextStyle(fontSize: 25)),
+          SizedBox(width: 5,),
+          Text(version, style: TextStyle(fontSize: 10),)
+        ],
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+      ),
       actions: [
         searchBar.getSearchAction(context)
       ],
@@ -190,19 +216,28 @@ class _PatientItemState extends State<PatientItem> {
   // #docregion RWS-build
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+      mainAxisSize: MainAxisSize.min,));
+
     return Scaffold(
       appBar: searchBar.build(context),
-      body: Column(
+      body: Container(child: patients.isEmpty ? GestureDetector(child: emptyWidget,
+          onTap: () => _showDialog(context)) :
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
           Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Text('Patients', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+            child: Text('ผู้ป่วย', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
           ),
           Expanded(child: _buildPatientList()),
         ],
-      ),
+      )),
       floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () => _showDialog(context)),
       );
     }
@@ -341,7 +376,7 @@ class AddPatientForm extends State<PatientForm> {
 
             children: <Widget>[
               TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อ Patient's:"),
+                decoration: new InputDecoration(labelText: "ชื่อผู้ป่วย:"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';
@@ -353,7 +388,7 @@ class AddPatientForm extends State<PatientForm> {
                 },
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อ Caretaker's"),
+                decoration: new InputDecoration(labelText: "ชื่อผู้ดูแล"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';
@@ -393,7 +428,7 @@ class AddPatientForm extends State<PatientForm> {
                     Navigator.pop(context);
                   }
                 }
-              }, child: Text("Add"),
+              }, child: Text("เพิ่ม"),
             ),
           ],
         ),

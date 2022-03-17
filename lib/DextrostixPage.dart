@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 
 class DextrostixPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('น้ำตาลในเลือด'),
+        title: Text('น้ำตาลในเลือด (mg/dL)'),
       ),
       body: Container(child: widget.dextrostixRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
@@ -116,7 +117,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
                           SizedBox(width: 8),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 40),
-                            child: Align(child: Text('mg%', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
+                            child: Align(child: Text('mg/dL', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
                           ),
                           Expanded(child: Text(DateFormat('HH:mm').format(DateTime(record.date.year, record.date.month, record.date.day, record.date.hour, record.date.minute)), style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
                           SizedBox(width: 8,),
@@ -195,7 +196,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     final _formKey = GlobalKey<FormState>();
     DateTime now = DateTime.now();
     String formattedTime = DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
-    String formattedDate = DateFormat('dd MMM').format(selectedDate);
+    String formattedDate = DateFormat('dd MMM', "th").format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
       title: new Text("บันทึกใหม่"),
@@ -239,12 +240,14 @@ class _NewRecordPageState extends State<NewRecordPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () async {
-                                final chosenDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: selectedDate,
-                                    initialDatePickerMode: DatePickerMode.day,
-                                    firstDate: DateTime.now().subtract(Duration(days: 6*31)),
-                                    lastDate: DateTime.now(),
+                                final chosenDate = await showRoundedDatePicker(
+                                  context: context,
+                                  locale: const Locale("th", "TH"),
+                                  era: EraMode.BUDDHIST_YEAR,
+                                  initialDate: selectedDate,
+                                  initialDatePickerMode: DatePickerMode.day,
+                                  firstDate: DateTime.now().subtract(Duration(days: 6*31)),
+                                  lastDate: DateTime.now(),
                                 );
                                 if (chosenDate != null){
                                   setState(() {
@@ -343,7 +346,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   Column(
                     children: [
                       SizedBox(height: 10,),
-                      Text('mg%', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                      Text('mg/dL', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
                     ],
                   ),
                 ],

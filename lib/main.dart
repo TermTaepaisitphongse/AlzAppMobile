@@ -5,6 +5,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 import 'PatientRecordPage.dart';
 import 'BloodPressurePage.dart';
@@ -13,7 +15,6 @@ import 'package:alzapp/RespiratoryRatePage.dart';
 import 'package:alzapp/TemperaturePage.dart';
 import 'package:alzapp/DextrostixPage.dart';
 import 'package:alzapp/BladderBowelPage.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -29,6 +30,13 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: PatientItem(),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('th', 'TH'),
+        ],
     );
   }
 // #enddocregion build
@@ -198,7 +206,7 @@ class _PatientItemState extends State<PatientItem> {
         children: [
           Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Text('Patients', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+            child: Text('ผู้ป่วย', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
           ),
           Expanded(child: _buildPatientList()),
         ],
@@ -341,7 +349,7 @@ class AddPatientForm extends State<PatientForm> {
 
             children: <Widget>[
               TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อ Patient's:"),
+                decoration: new InputDecoration(labelText: "ชื่อผู้ป่วย:"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';
@@ -353,7 +361,7 @@ class AddPatientForm extends State<PatientForm> {
                 },
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อ Caretaker's"),
+                decoration: new InputDecoration(labelText: "ชื่อ ู้ดูแล"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';
@@ -393,7 +401,7 @@ class AddPatientForm extends State<PatientForm> {
                     Navigator.pop(context);
                   }
                 }
-              }, child: Text("Add"),
+              }, child: Text("เพิ่ม"),
             ),
           ],
         ),

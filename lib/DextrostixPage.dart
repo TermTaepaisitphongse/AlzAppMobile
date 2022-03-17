@@ -30,7 +30,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
         leading: BackButton(),
         title: Text('น้ำตาลในเลือด (mg/dL)'),
       ),
-      body: Container(child: widget.dextrostixRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.dextrostixRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

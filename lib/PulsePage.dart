@@ -30,7 +30,7 @@ class _PulsePageState extends State<PulsePage> {
         leading: BackButton(),
         title: Text('ชีพจร (bpm)'),
       ),
-      body: Container(child: widget.pulseRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.pulseRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

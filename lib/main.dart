@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -215,9 +216,18 @@ class _PatientItemState extends State<PatientItem> {
   // #docregion RWS-build
   @override
   Widget build(BuildContext context) {
+    final emptyWidget = Center(child: Column(children: [
+      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      SizedBox(height: 6),
+      Icon(Icons.add, color: CupertinoColors.systemGrey2),
+    ],
+      mainAxisSize: MainAxisSize.min,));
+
     return Scaffold(
       appBar: searchBar.build(context),
-      body: Column(
+      body: Container(child: patients.isEmpty ? GestureDetector(child: emptyWidget,
+          onTap: () => _showDialog(context)) :
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -227,7 +237,7 @@ class _PatientItemState extends State<PatientItem> {
           ),
           Expanded(child: _buildPatientList()),
         ],
-      ),
+      )),
       floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () => _showDialog(context)),
       );
     }
@@ -378,7 +388,7 @@ class AddPatientForm extends State<PatientForm> {
                 },
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อ ู้ดูแล"),
+                decoration: new InputDecoration(labelText: "ชื่อผู้ดูแล"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';

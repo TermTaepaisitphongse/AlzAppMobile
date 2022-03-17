@@ -30,7 +30,7 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
         leading: BackButton(),
         title: Text('ถ่ายและฉี่ ()'),
       ),
-      body: Container(child: widget.bladderBowelRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.bladderBowelRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

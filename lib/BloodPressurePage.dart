@@ -31,7 +31,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         leading: BackButton(),
         title: Text('ความดันเลือด (mmHg)'),
       ),
-      body: Container(child: widget.bloodPressureRecords.isEmpty ? emptyWidget : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Container(child: widget.bloodPressureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

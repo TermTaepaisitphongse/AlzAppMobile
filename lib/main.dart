@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'PatientRecordPage.dart';
 import 'BloodPressurePage.dart';
@@ -149,6 +149,7 @@ class _PatientItemState extends State<PatientItem> {
   @override
   void initState() {
     initList();
+    initPackageInfo();
 
     //search bar init
     searchBar = SearchBar(
@@ -167,6 +168,14 @@ class _PatientItemState extends State<PatientItem> {
     });
 
     super.initState();
+  }
+
+  String version = "";
+  void initPackageInfo () async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = packageInfo.version;
+    });
   }
 
   void _resetFiltered(){
@@ -188,7 +197,15 @@ class _PatientItemState extends State<PatientItem> {
   }
   AppBar _buildAppBar(BuildContext context){
     return AppBar(
-      title: Text("AlzApp"),
+      title: Row(
+        children: [
+          Text("AlzApp", style: TextStyle(fontSize: 25)),
+          SizedBox(width: 5,),
+          Text(version, style: TextStyle(fontSize: 10),)
+        ],
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+      ),
       actions: [
         searchBar.getSearchAction(context)
       ],

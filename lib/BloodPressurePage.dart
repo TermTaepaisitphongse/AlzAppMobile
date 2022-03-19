@@ -49,7 +49,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
     });
     list.forEach((element) {
-      final formatter = DateFormat("dd MMM yyyy");
+      final formatter = DateFormat("dd MMM yyyy", "th");
       final dateString = formatter.format(element.date);
       if(dateMap[dateString] != null) {
         dateMap[dateString]?.add(element);
@@ -58,6 +58,9 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         dateMap[dateString] = [element];
       }
       });
+    var sortedKey = dateMap.keys.toList();
+    sortedKey.sort();
+    sortedKey = sortedKey.reversed.toList();
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         itemCount: dateMap.length,
@@ -68,11 +71,11 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 4.0),
-                child: Text(dateMap.keys.toList()[i]),
+                child: Text(sortedKey[i]),
               ),
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
-                  final record = dateMap[dateMap.keys.toList()[i]]?[index];
+                  final record = dateMap[sortedKey[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;

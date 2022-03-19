@@ -57,6 +57,9 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
         dateMap[dateString] = [element];
       }
       });
+    var sortedKey = dateMap.keys.toList();
+    sortedKey.sort();
+    sortedKey = sortedKey.reversed.toList();
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         itemCount: dateMap.length,
@@ -67,11 +70,11 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 4.0),
-                child: Text(dateMap.keys.toList()[i]),
+                child: Text(sortedKey[i]),
               ),
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
-                  final record = dateMap[dateMap.keys.toList()[i]]?[index];
+                  final record = dateMap[sortedKey[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;

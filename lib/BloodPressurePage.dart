@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class BloodPressurePage extends StatefulWidget {
   Function onBPRecordUpdated;
   final List<BloodPressure> bloodPressureRecords;
+  String fullName;
 
-  BloodPressurePage({required this.bloodPressureRecords, required this.onBPRecordUpdated});
+  BloodPressurePage({required this.fullName, required this.bloodPressureRecords, required this.onBPRecordUpdated});
   @override
   _BloodPressurePageState createState() => _BloodPressurePageState();
 }
@@ -29,9 +30,23 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('ความดันเลือด (mmHg)'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.bloodPressureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('ความดันเลือด (mmhg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.bloodPressureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),
@@ -49,7 +64,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
     });
     list.forEach((element) {
-      final formatter = DateFormat("dd MMM yyyy");
+      final formatter = DateFormat("dd MMM yyyy", "th");
       final dateString = formatter.format(element.date);
       if(dateMap[dateString] != null) {
         dateMap[dateString]?.add(element);
@@ -58,6 +73,9 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         dateMap[dateString] = [element];
       }
       });
+    var sortedKey = dateMap.keys.toList();
+    sortedKey.sort();
+    sortedKey = sortedKey.reversed.toList();
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         itemCount: dateMap.length,
@@ -68,11 +86,11 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 4.0),
-                child: Text(dateMap.keys.toList()[i]),
+                child: Text(sortedKey[i]),
               ),
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
-                  final record = dateMap[dateMap.keys.toList()[i]]?[index];
+                  final record = dateMap[sortedKey[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;

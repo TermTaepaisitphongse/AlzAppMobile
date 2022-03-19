@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class PulsePage extends StatefulWidget {
   Function onPulseRecordUpdated;
   final List<Pulse> pulseRecords;
+  String fullName;
 
-  PulsePage({required this.pulseRecords, required this.onPulseRecordUpdated});
+  PulsePage({required this.fullName, required this.pulseRecords, required this.onPulseRecordUpdated});
   @override
   _PulsePageState createState() => _PulsePageState();
 }
@@ -28,9 +29,23 @@ class _PulsePageState extends State<PulsePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('ชีพจร (bpm)'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.pulseRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('ชีพจร (bpm)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.pulseRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),
@@ -48,7 +63,7 @@ class _PulsePageState extends State<PulsePage> {
       return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
     });
     list.forEach((element) {
-      final formatter = DateFormat("dd MMM yyyy");
+      final formatter = DateFormat("dd MMM yyyy", "th");
       final dateString = formatter.format(element.date);
       if(dateMap[dateString] != null) {
         dateMap[dateString]?.add(element);
@@ -57,6 +72,9 @@ class _PulsePageState extends State<PulsePage> {
         dateMap[dateString] = [element];
       }
       });
+    var sortedKey = dateMap.keys.toList();
+    sortedKey.sort();
+    sortedKey = sortedKey.reversed.toList();
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         itemCount: dateMap.length,
@@ -67,11 +85,11 @@ class _PulsePageState extends State<PulsePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 4.0),
-                child: Text(dateMap.keys.toList()[i]),
+                child: Text(sortedKey[i]),
               ),
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
-                  final record = dateMap[dateMap.keys.toList()[i]]?[index];
+                  final record = dateMap[sortedKey[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;

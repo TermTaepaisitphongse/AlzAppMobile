@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class TemperaturePage extends StatefulWidget {
   Function onTemperatureRecordUpdated;
   final List<Temperature> temperatureRecords;
+  String fullName;
 
-  TemperaturePage({required this.temperatureRecords, required this.onTemperatureRecordUpdated});
+  TemperaturePage({required this.fullName, required this.temperatureRecords, required this.onTemperatureRecordUpdated});
   @override
   _TemperaturePageState createState() => _TemperaturePageState();
 }
@@ -28,9 +29,23 @@ class _TemperaturePageState extends State<TemperaturePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('อุณหภูมิร่างกาย (°C)'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.temperatureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('อุณหภูมิร่างกาย (°C)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.temperatureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

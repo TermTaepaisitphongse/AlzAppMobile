@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class PulsePage extends StatefulWidget {
   Function onPulseRecordUpdated;
   final List<Pulse> pulseRecords;
+  String fullName;
 
-  PulsePage({required this.pulseRecords, required this.onPulseRecordUpdated});
+  PulsePage({required this.fullName, required this.pulseRecords, required this.onPulseRecordUpdated});
   @override
   _PulsePageState createState() => _PulsePageState();
 }
@@ -28,9 +29,23 @@ class _PulsePageState extends State<PulsePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('ชีพจร (bpm)'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.pulseRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('ชีพจร (bpm)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.pulseRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

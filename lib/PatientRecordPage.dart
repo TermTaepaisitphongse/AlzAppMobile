@@ -73,10 +73,9 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => BloodPressurePage(
+                              fullName: widget.patient.name,
                               bloodPressureRecords: widget.patient.bloodPressures,
                               onBPRecordUpdated: (newRecords){widget.patient.bloodPressures = newRecords;
-                              print(newRecords);
-                              print(widget.patient.toJson().toString());
                               widget.onPatientChange(widget.patient);
                               },
                             )),
@@ -115,6 +114,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => PulsePage(
+                              fullName: widget.patient.name,
                               pulseRecords: widget.patient.pulse,
                               onPulseRecordUpdated: (newRecords){widget.patient.pulse = newRecords;
                               print(newRecords);
@@ -163,6 +163,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => RespiratoryRatePage(
+                              fullName: widget.patient.name,
                               respiratoryRecords: widget.patient.respiratoryRate,
                               onRespiratoryRecordUpdated: (newRecords){widget.patient.respiratoryRate = newRecords;
                               print(newRecords);
@@ -204,6 +205,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => TemperaturePage(
+                              fullName: widget.patient.name,
                               temperatureRecords: widget.patient.temperature,
                               onTemperatureRecordUpdated: (newRecords){widget.patient.temperature = newRecords;
                               print(newRecords);
@@ -252,6 +254,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => DextrostixPage(
+                              fullName: widget.patient.name,
                               dextrostixRecords: widget.patient.dextrostix,
                               onDextrostixRecordUpdated: (newRecords){widget.patient.dextrostix = newRecords;
                               print(newRecords);
@@ -293,6 +296,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => BladderBowelPage(
+                              fullName: widget.patient.name,
                               bladderBowelRecords: widget.patient.bladderBowel,
                               onBladderBowelRecordUpdated: (newRecords){widget.patient.bladderBowel = newRecords;
                               print(newRecords);

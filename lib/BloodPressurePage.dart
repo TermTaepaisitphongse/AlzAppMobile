@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class BloodPressurePage extends StatefulWidget {
   Function onBPRecordUpdated;
   final List<BloodPressure> bloodPressureRecords;
+  String fullName;
 
-  BloodPressurePage({required this.bloodPressureRecords, required this.onBPRecordUpdated});
+  BloodPressurePage({required this.fullName, required this.bloodPressureRecords, required this.onBPRecordUpdated});
   @override
   _BloodPressurePageState createState() => _BloodPressurePageState();
 }
@@ -29,9 +30,23 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('ความดันเลือด (mmHg)'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.bloodPressureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('ความดันเลือด (mmhg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.bloodPressureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

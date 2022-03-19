@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class BladderBowelPage extends StatefulWidget {
   Function onBladderBowelRecordUpdated;
   final List<BladderBowel> bladderBowelRecords;
+  String fullName;
 
-  BladderBowelPage({required this.bladderBowelRecords, required this.onBladderBowelRecordUpdated});
+  BladderBowelPage({required this.fullName, required this.bladderBowelRecords, required this.onBladderBowelRecordUpdated});
   @override
   _BladderBowelPageState createState() => _BladderBowelPageState();
 }
@@ -28,9 +29,23 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('ถ่ายและฉี่ ()'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.bladderBowelRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('ถ่ายและฉี่ ()', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.bladderBowelRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),
@@ -48,7 +63,7 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
       return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
     });
     list.forEach((element) {
-      final formatter = DateFormat("dd MMM yyyy");
+      final formatter = DateFormat("dd MMM yyyy", "th");
       final dateString = formatter.format(element.date);
       if(dateMap[dateString] != null) {
         dateMap[dateString]?.add(element);

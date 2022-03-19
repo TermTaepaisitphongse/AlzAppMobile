@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class DextrostixPage extends StatefulWidget {
   Function onDextrostixRecordUpdated;
   final List<Dextrostix> dextrostixRecords;
+  String fullName;
 
-  DextrostixPage({required this.dextrostixRecords, required this.onDextrostixRecordUpdated});
+  DextrostixPage({required this.fullName, required this.dextrostixRecords, required this.onDextrostixRecordUpdated});
   @override
   _DextrostixPageState createState() => _DextrostixPageState();
 }
@@ -28,9 +29,23 @@ class _DextrostixPageState extends State<DextrostixPage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('น้ำตาลในเลือด (mg/dL)'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.dextrostixRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('น้ำตาลในเลือด (mg/dL)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.dextrostixRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

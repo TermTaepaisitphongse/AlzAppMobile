@@ -9,8 +9,9 @@ import 'package:intl/intl.dart';
 class RespiratoryRatePage extends StatefulWidget {
   Function onRespiratoryRecordUpdated;
   final List<RespiratoryRate> respiratoryRecords;
+  String fullName;
 
-  RespiratoryRatePage({required this.respiratoryRecords, required this.onRespiratoryRecordUpdated});
+  RespiratoryRatePage({required this.fullName, required this.respiratoryRecords, required this.onRespiratoryRecordUpdated});
   @override
   _RespiratoryRatePageState createState() => _RespiratoryRatePageState();
 }
@@ -28,9 +29,23 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text('อัตราการหายใจ (bpm)'),
+        title: Text(widget.fullName),
       ),
-      body: Container(child: widget.respiratoryRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3)),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Center(child: Text('อัตราการหายใจ (bpm)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Expanded(child: Container(child: widget.respiratoryRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _showDialog(context),

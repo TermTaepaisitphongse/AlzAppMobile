@@ -55,7 +55,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
   }
 
   Widget _buildRecordList() {
-    Map<String, List<BloodPressure>> dateMap = HashMap();
+    Map<DateTime, List<BloodPressure>> dateMap = HashMap();
     final list = widget.bloodPressureRecords;
     list.sort((record1, record2) {
       if (record1.date.year == record2.date.year && record1.date.month == record2.date.month && record1.date.day == record2.date.day) {
@@ -63,19 +63,22 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       }
       return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
     });
+    final formatter = DateFormat("dd MMM yyyy", "th");
     list.forEach((element) {
-      final formatter = DateFormat("dd MMM yyyy", "th");
       final dateString = formatter.format(element.date);
-      if(dateMap[dateString] != null) {
-        dateMap[dateString]?.add(element);
+      final date = formatter.parse(dateString);
+      if(dateMap[date] != null) {
+        dateMap[date]?.add(element);
       }
       else{
-        dateMap[dateString] = [element];
+        dateMap[date] = [element];
       }
       });
-    var sortedKey = dateMap.keys.toList();
-    sortedKey.sort();
-    sortedKey = sortedKey.reversed.toList();
+
+    final sortedKeys = dateMap.keys.toList();
+    sortedKeys.sort();
+    final reversedKeys = sortedKeys.reversed;
+
     return ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         itemCount: dateMap.length,
@@ -86,11 +89,11 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 16.0, 0.0, 4.0),
-                child: Text(sortedKey[i]),
+                child: Text(formatter.format(reversedKeys.toList()[i])),
               ),
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
-                  final record = dateMap[sortedKey[i]]?[index];
+                  final record = dateMap[reversedKeys.toList()[i]]?[index];
                   var iconCheck = null;
                   var iconColor = null;
                   var tooltipMessage = null;

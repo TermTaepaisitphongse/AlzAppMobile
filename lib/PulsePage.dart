@@ -168,7 +168,7 @@ class _PulsePageState extends State<PulsePage> {
                     }
                   );
                 },
-                itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
+                itemCount: dateMap[reversedKeys.toList()[i]]?.length,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                 ),

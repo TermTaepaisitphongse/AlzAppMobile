@@ -170,7 +170,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                     }
                   );
                 },
-                itemCount: dateMap[dateMap.keys.toList()[i]]?.length,
+                itemCount: dateMap[reversedKeys.toList()[i]]?.length,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                 ),

@@ -106,11 +106,20 @@ class _PatientItemState extends State<PatientItem> {
                 child: IconButton(
                   icon: Icon(Icons.clear),
                   onPressed: (){
-                    setState(() {
-                      patients.remove(p);
-                      _updatePatientToLocal();
-                      _resetFiltered();
-                    });
+                    showDialog(context: context, builder: (context) => AlertDialog(
+                      title: Text("ยืนยันลบข้อมูลผู้ป่วย?"),
+                      actions: [
+                        TextButton(onPressed: (){Navigator.pop(context);}, child: Text("ไม่ลบ")),
+                        ElevatedButton(onPressed: (){
+                          setState(() {
+                            patients.remove(p);
+                            _updatePatientToLocal();
+                            _resetFiltered();
+                          });
+                          Navigator.pop(context);
+                        }, child: Text("ลบ"))
+                      ],
+                    ));
                   },
                 ),
               ),

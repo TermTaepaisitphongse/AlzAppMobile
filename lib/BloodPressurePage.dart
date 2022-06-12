@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 
+import 'lineChartPage.dart';
+
 class BloodPressurePage extends StatefulWidget {
   Function onBPRecordUpdated;
   final List<BloodPressure> bloodPressureRecords;
@@ -31,6 +33,15 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
+        actions: [IconButton(onPressed: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LineChartPage(widget.bloodPressureRecords, widget.fullName)
+                )
+          );
+        },
+            icon: Icon(Icons.stacked_line_chart))],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

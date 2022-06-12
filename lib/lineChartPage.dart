@@ -5,33 +5,19 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'BloodPressurePage.dart';
 
-void main() {
-  return runApp(_ChartApp());
-}
-
-class _ChartApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: LineChartPage([
-        BloodPressure(date: DateTime(1, 1, 1), diastolic: 35, systolic: 35),
-        BloodPressure(date: DateTime(2, 2, 2), diastolic: 40, systolic: 40),
-        BloodPressure(date: DateTime(3, 3, 3), diastolic: 30, systolic: 35),
-      ], "hello"),
-    );
-  }
-}
-
 class LineChartPage extends StatefulWidget {
+  final String title;
+
+  final dynamic series;
+
   // ignore: prefer_const_constructors_in_immutables
-  LineChartPage(this.data, this.fullName, {Key? key}) : super(key: key){
+  LineChartPage(this.data, this.fullName, this.title, {required this.series, Key? key}) : super(key: key){
     data.sort((value1, value2) {
       return value1.date.millisecondsSinceEpoch - value2.date.millisecondsSinceEpoch;
     });
   }
 
-  final List<BloodPressure> data;
+  final List<dynamic> data;
   final String fullName;
 
   @override
@@ -110,27 +96,12 @@ class _LineChartPageState extends State<LineChartPage> {
                 maximum: maxDisplayTime,
               ),
               // Chart title
-              title: ChartTitle(text: 'ความดันเลือด (mmhg)'),
+              title: ChartTitle(text: widget.title),
               // Enable legend
               legend: Legend(isVisible: true),
               // Enable tooltip
               tooltipBehavior: TooltipBehavior(enable: true),
-              series: <ChartSeries<BloodPressure, DateTime>>[
-                LineSeries<BloodPressure, DateTime>(
-                    dataSource: widget.data,
-                    xValueMapper: (BloodPressure value, _) => value.date,
-                    yValueMapper: (BloodPressure value, _) => value.diastolic,
-                    name: 'Diastolic',
-                    // Enable data label
-                    dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
-                LineSeries<BloodPressure, DateTime>(
-                    dataSource: widget.data,
-                    xValueMapper: (BloodPressure value, _) => value.date,
-                    yValueMapper: (BloodPressure value, _) => value.systolic,
-                    name: 'Systolic',
-                    // Enable data label
-                    dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, ))
-              ]),
+              series: widget.series),
         ],
         crossAxisAlignment: CrossAxisAlignment.end,));
   }

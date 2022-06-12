@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import 'lineChartPage.dart';
 
@@ -37,7 +38,22 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => LineChartPage(widget.bloodPressureRecords, widget.fullName)
+                builder: (context) => LineChartPage(widget.bloodPressureRecords, widget.fullName, "ความดันเลือด (mmhg)", series: <ChartSeries<BloodPressure, DateTime>>[
+                  LineSeries<BloodPressure, DateTime>(
+                    dataSource: widget.bloodPressureRecords,
+                    xValueMapper: (BloodPressure value, _) => value.date,
+                    yValueMapper: (BloodPressure value, _) => value.diastolic,
+                    name: 'Diastolic',
+                    // Enable data label
+                    dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
+                  LineSeries<BloodPressure, DateTime>(
+                      dataSource: widget.bloodPressureRecords,
+                      xValueMapper: (BloodPressure value, _) => value.date,
+                      yValueMapper: (BloodPressure value, _) => value.systolic,
+                      name: 'Systolic',
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, ))
+                ],)
                 )
           );
         },

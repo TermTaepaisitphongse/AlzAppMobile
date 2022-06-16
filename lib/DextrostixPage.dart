@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'lineChartPage.dart';
 
 class DextrostixPage extends StatefulWidget {
   Function onDextrostixRecordUpdated;
@@ -30,6 +33,30 @@ class _DextrostixPageState extends State<DextrostixPage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
+        actions: [IconButton(onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "ความดันเลือด (mmhg)", series: <ChartSeries<Dextrostix, DateTime>>[
+                    LineSeries<Dextrostix, DateTime>(
+                      dataSource: widget.dextrostixRecords,
+                      xValueMapper: (Dextrostix value, _) => value.date,
+                      yValueMapper: (Dextrostix value, _) => value.dextrostix,
+                      name: 'Diastolic',
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
+                    LineSeries<Dextrostix, DateTime>(
+                        dataSource: widget.dextrostixRecords,
+                        xValueMapper: (Dextrostix value, _) => value.date,
+                        yValueMapper: (Dextrostix value, _) => value.dextrostix,
+                        name: 'Systolic',
+                        // Enable data label
+                        dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, ))
+                  ],)
+              )
+          );
+        },
+            icon: Icon(Icons.stacked_line_chart))],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

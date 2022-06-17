@@ -125,9 +125,9 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
                   final record = dateMap[reversedKeys.toList()[i]]?[index];
-                  var iconCheck = null;
-                  var iconColor = null;
-                  var tooltipMessage = null;
+                  var iconCheck;
+                  var iconColor;
+                  var tooltipMessage;
                   if(record!.systolic >= 180 || record.diastolic >= 110){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;

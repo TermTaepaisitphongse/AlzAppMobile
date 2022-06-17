@@ -113,9 +113,9 @@ class _PulsePageState extends State<PulsePage> {
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
                   final record = dateMap[reversedKeys.toList()[i]]?[index];
-                  var iconCheck = null;
-                  var iconColor = null;
-                  var tooltipMessage = null;
+                  var iconCheck;
+                  var iconColor;
+                  var tooltipMessage;
                   if(record!.pulse >= 101){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;

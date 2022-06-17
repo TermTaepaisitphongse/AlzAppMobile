@@ -113,9 +113,9 @@ class _TemperaturePageState extends State<TemperaturePage> {
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
                   final record = dateMap[reversedKeys.toList()[i]]?[index];
-                  var iconCheck = null;
-                  var iconColor = null;
-                  var tooltipMessage = null;
+                  var iconCheck;
+                  var iconColor;
+                  var tooltipMessage;
                   if(record!.temperature > 38.5){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;

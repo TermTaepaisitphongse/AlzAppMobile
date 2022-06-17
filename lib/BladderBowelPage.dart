@@ -91,9 +91,9 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
                   final record = dateMap[reversedKeys.toList()[i]]?[index];
-                  var iconCheck = null;
-                  var iconColor = null;
-                  var tooltipMessage = null;
+                  var iconCheck;
+                  var iconColor;
+                  var tooltipMessage;
                   if(record!.bowel > 140 && record.bladder > 140){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;

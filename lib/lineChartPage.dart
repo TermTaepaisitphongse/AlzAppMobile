@@ -101,7 +101,7 @@ class _LineChartPageState extends State<LineChartPage> {
               legend: Legend(isVisible: true),
               // Enable tooltip
               tooltipBehavior: TooltipBehavior(enable: true),
-              series: widget.series),
+              series: widget.series,),
         ],
         crossAxisAlignment: CrossAxisAlignment.end,));
   }

@@ -37,12 +37,14 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.respiratoryRecords, widget.fullName, "ความดันเลือด (mmhg)", series: <ChartSeries<RespiratoryRate, DateTime>>[
+                  builder: (context) => LineChartPage(widget.respiratoryRecords, widget.fullName, "อัตราการหายใจ (bpm)", series: <ChartSeries<RespiratoryRate, DateTime>>[
                     LineSeries<RespiratoryRate, DateTime>(
                       dataSource: widget.respiratoryRecords,
                       xValueMapper: (RespiratoryRate value, _) => value.date,
                       yValueMapper: (RespiratoryRate value, _) => value.respiratory,
-                      name: 'Diastolic',
+                      name: 'อัตราการหายใจ',
+                      color: Colors.blueAccent,
+                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                       // Enable data label
                       dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
                   ],)

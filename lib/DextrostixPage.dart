@@ -37,21 +37,16 @@ class _DextrostixPageState extends State<DextrostixPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "ความดันเลือด (mmhg)", series: <ChartSeries<Dextrostix, DateTime>>[
+                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "น้ำตาลในเลือด (mg/dL)", series: <ChartSeries<Dextrostix, DateTime>>[
                     LineSeries<Dextrostix, DateTime>(
                       dataSource: widget.dextrostixRecords,
                       xValueMapper: (Dextrostix value, _) => value.date,
                       yValueMapper: (Dextrostix value, _) => value.dextrostix,
-                      name: 'Diastolic',
+                      name: 'น้ำตาลในเลือด',
+                      color: Colors.blueAccent,
                       // Enable data label
-                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
-                    LineSeries<Dextrostix, DateTime>(
-                        dataSource: widget.dextrostixRecords,
-                        xValueMapper: (Dextrostix value, _) => value.date,
-                        yValueMapper: (Dextrostix value, _) => value.dextrostix,
-                        name: 'Systolic',
-                        // Enable data label
-                        dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, ))
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),
+                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent)),
                   ],)
               )
           );

@@ -42,7 +42,9 @@ class _PulsePageState extends State<PulsePage> {
                       dataSource: widget.pulseRecords,
                       xValueMapper: (Pulse value, _) => value.date,
                       yValueMapper: (Pulse value, _) => value.pulse,
-                      name: 'Pulse',
+                      name: 'ชีพจร',
+                      color: Colors.blueAccent,
+                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                       // Enable data label
                       dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
                   ],)

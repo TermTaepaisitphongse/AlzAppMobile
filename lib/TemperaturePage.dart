@@ -37,12 +37,14 @@ class _TemperaturePageState extends State<TemperaturePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.temperatureRecords, widget.fullName, "ความดันเลือด (mmhg)", series: <ChartSeries<Temperature, DateTime>>[
+                  builder: (context) => LineChartPage(widget.temperatureRecords, widget.fullName, "อุณหภูมิร่างกาย (°C)", series: <ChartSeries<Temperature, DateTime>>[
                     LineSeries<Temperature, DateTime>(
                       dataSource: widget.temperatureRecords,
                       xValueMapper: (Temperature value, _) => value.date,
                       yValueMapper: (Temperature value, _) => value.temperature,
-                      name: 'Diastolic',
+                      name: 'อุณหภูมิร่างกาย',
+                      color: Colors.blueAccent,
+                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                       // Enable data label
                       dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
                   ],)

@@ -44,6 +44,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                     xValueMapper: (BloodPressure value, _) => value.date,
                     yValueMapper: (BloodPressure value, _) => value.diastolic,
                     name: 'Diastolic',
+                    color: Colors.blueAccent,
+                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                     // Enable data label
                     dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
                   LineSeries<BloodPressure, DateTime>(
@@ -51,6 +53,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                       xValueMapper: (BloodPressure value, _) => value.date,
                       yValueMapper: (BloodPressure value, _) => value.systolic,
                       name: 'Systolic',
+                      color: Colors.redAccent,
+                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.redAccent),
                       // Enable data label
                       dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, ))
                 ],)

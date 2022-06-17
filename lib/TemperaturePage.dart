@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'lineChartPage.dart';
 
 class TemperaturePage extends StatefulWidget {
   Function onTemperatureRecordUpdated;
@@ -30,6 +33,25 @@ class _TemperaturePageState extends State<TemperaturePage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
+        actions: [IconButton(onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LineChartPage(widget.temperatureRecords, widget.fullName, "อุณหภูมิร่างกาย (°C)", series: <ChartSeries<Temperature, DateTime>>[
+                    LineSeries<Temperature, DateTime>(
+                      dataSource: widget.temperatureRecords,
+                      xValueMapper: (Temperature value, _) => value.date,
+                      yValueMapper: (Temperature value, _) => value.temperature,
+                      name: 'อุณหภูมิร่างกาย',
+                      color: Colors.blueAccent,
+                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
+                  ],)
+              )
+          );
+        },
+            icon: Icon(Icons.stacked_line_chart))],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

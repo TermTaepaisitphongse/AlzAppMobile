@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'lineChartPage.dart';
 
 class BloodPressurePage extends StatefulWidget {
   Function onBPRecordUpdated;
@@ -31,6 +34,34 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
+        actions: [IconButton(onPressed: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LineChartPage(widget.bloodPressureRecords, widget.fullName, "ความดันเลือด (mmhg)", series: <ChartSeries<BloodPressure, DateTime>>[
+                  LineSeries<BloodPressure, DateTime>(
+                    dataSource: widget.bloodPressureRecords,
+                    xValueMapper: (BloodPressure value, _) => value.date,
+                    yValueMapper: (BloodPressure value, _) => value.diastolic,
+                    name: 'Diastolic',
+                    color: Colors.blueAccent,
+                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
+                    // Enable data label
+                    dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
+                  LineSeries<BloodPressure, DateTime>(
+                      dataSource: widget.bloodPressureRecords,
+                      xValueMapper: (BloodPressure value, _) => value.date,
+                      yValueMapper: (BloodPressure value, _) => value.systolic,
+                      name: 'Systolic',
+                      color: Colors.redAccent,
+                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.redAccent),
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, ))
+                ],)
+                )
+          );
+        },
+            icon: Icon(Icons.stacked_line_chart))],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'lineChartPage.dart';
 
 class DextrostixPage extends StatefulWidget {
   Function onDextrostixRecordUpdated;
@@ -30,6 +33,25 @@ class _DextrostixPageState extends State<DextrostixPage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
+        actions: [IconButton(onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "น้ำตาลในเลือด (mg/dL)", series: <ChartSeries<Dextrostix, DateTime>>[
+                    LineSeries<Dextrostix, DateTime>(
+                      dataSource: widget.dextrostixRecords,
+                      xValueMapper: (Dextrostix value, _) => value.date,
+                      yValueMapper: (Dextrostix value, _) => value.dextrostix,
+                      name: 'น้ำตาลในเลือด',
+                      color: Colors.blueAccent,
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),
+                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent)),
+                  ],)
+              )
+          );
+        },
+            icon: Icon(Icons.stacked_line_chart))],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

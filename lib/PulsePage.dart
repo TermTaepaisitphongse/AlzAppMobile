@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+import 'lineChartPage.dart';
 
 class PulsePage extends StatefulWidget {
   Function onPulseRecordUpdated;
@@ -30,6 +33,25 @@ class _PulsePageState extends State<PulsePage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
+        actions: [IconButton(onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LineChartPage(widget.pulseRecords, widget.fullName, "ชีพจร (bpm)", series: <ChartSeries<Pulse, DateTime>>[
+                    LineSeries<Pulse, DateTime>(
+                      dataSource: widget.pulseRecords,
+                      xValueMapper: (Pulse value, _) => value.date,
+                      yValueMapper: (Pulse value, _) => value.pulse,
+                      name: 'ชีพจร',
+                      color: Colors.blueAccent,
+                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
+                  ],)
+              )
+          );
+        },
+            icon: Icon(Icons.stacked_line_chart))],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

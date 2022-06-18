@@ -81,7 +81,7 @@ class _LineChartPageState extends State<LineChartPage> {
                   );
                   if (chosenDate != null){
                     setState(() {
-                      maxDisplayTime = chosenDate;
+                      maxDisplayTime = chosenDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
                     });
                   }
                 },),
@@ -90,19 +90,31 @@ class _LineChartPageState extends State<LineChartPage> {
             ),
           ),
           //Initialize the chart widget
-          SfCartesianChart(
-              primaryXAxis: DateTimeAxis(
-                minimum: minDisplayTime,
-                maximum: maxDisplayTime,
-              ),
-              // Chart title
-              title: ChartTitle(text: widget.title),
-              // Enable legend
-              legend: Legend(isVisible: true),
-              // Enable tooltip
-              tooltipBehavior: TooltipBehavior(enable: true),
-              series: widget.series,),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SfCartesianChart(
+                primaryXAxis: DateTimeAxis(
+                  minimum: minDisplayTime,
+                  maximum: maxDisplayTime,
+                ),
+                // Chart title
+                title: ChartTitle(text: widget.title),
+                // Enable legend
+                legend: Legend(isVisible: true, position: LegendPosition.bottom),
+                // Enable tooltip
+                tooltipBehavior: TooltipBehavior(enable: true),
+                series: widget.series,
+                zoomPanBehavior: ZoomPanBehavior(enablePinching: true, enablePanning: true, enableDoubleTapZooming: true),
+            ),
+          ),
         ],
         crossAxisAlignment: CrossAxisAlignment.end,));
   }
+
+  calculateOffsetTime(DateTime minDate, DateTime maxDate) {
+    final difference = 0.05*(maxDate.millisecondsSinceEpoch - minDate.millisecondsSinceEpoch);
+    // return Duration(milliseconds: difference.toInt());
+    return Duration(days: 0);
+  }
+
 }

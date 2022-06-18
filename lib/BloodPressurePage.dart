@@ -38,7 +38,16 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => LineChartPage(widget.bloodPressureRecords, widget.fullName, "ความดันเลือด (mmhg)", series: <ChartSeries<BloodPressure, DateTime>>[
+                builder: (context) => LineChartPage(widget.bloodPressureRecords, widget.fullName, "ความดันเลือด (mmHg)", series: <ChartSeries<BloodPressure, DateTime>>[
+                  LineSeries<BloodPressure, DateTime>(
+                      dataSource: widget.bloodPressureRecords,
+                      xValueMapper: (BloodPressure value, _) => value.date,
+                      yValueMapper: (BloodPressure value, _) => value.systolic,
+                      name: 'Systolic',
+                      color: Colors.redAccent,
+                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.redAccent),
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, )),
                   LineSeries<BloodPressure, DateTime>(
                     dataSource: widget.bloodPressureRecords,
                     xValueMapper: (BloodPressure value, _) => value.date,
@@ -48,15 +57,6 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                     markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                     // Enable data label
                     dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
-                  LineSeries<BloodPressure, DateTime>(
-                      dataSource: widget.bloodPressureRecords,
-                      xValueMapper: (BloodPressure value, _) => value.date,
-                      yValueMapper: (BloodPressure value, _) => value.systolic,
-                      name: 'Systolic',
-                      color: Colors.redAccent,
-                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.redAccent),
-                      // Enable data label
-                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, ))
                 ],)
                 )
           );
@@ -72,7 +72,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             color: CupertinoColors.systemGrey6,
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Center(child: Text('ความดันเลือด (mmhg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+              child: Center(child: Text('ความดันเลือด (mmHg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
             ),
           ),
           Expanded(child: Container(child: widget.bloodPressureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),

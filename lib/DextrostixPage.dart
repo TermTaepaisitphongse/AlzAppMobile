@@ -172,12 +172,35 @@ class _DextrostixPageState extends State<DextrostixPage> {
                       ],
                     ),),
                     key: ValueKey<Dextrostix>(widget.dextrostixRecords[i]),
-                    onDismissed: (left) {
-                      setState(() {
-                        widget.dextrostixRecords.removeAt(i);
-                        widget.onDextrostixRecordUpdated(widget.dextrostixRecords);
-                      });
-                    }
+                      confirmDismiss: (DismissDirection direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("ยืนยันลบข้อมูล?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text("ไม่ลบ")),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                    child: Text("ลบ"))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (left) {
+                        setState(() {
+                          widget.dextrostixRecords.removeAt(i);
+                          widget
+                              .onDextrostixRecordUpdated(widget.dextrostixRecords);
+                        });
+                      }
                   );
                 },
                 itemCount: dateMap[reversedKeys.toList()[i]]?.length,

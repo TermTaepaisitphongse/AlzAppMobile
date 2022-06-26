@@ -172,12 +172,35 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
                       ],
                     ),),
                     key: ValueKey<RespiratoryRate>(widget.respiratoryRecords[i]),
-                    onDismissed: (left) {
-                      setState(() {
-                        widget.respiratoryRecords.removeAt(i);
-                        widget.onRespiratoryRecordUpdated(widget.respiratoryRecords);
-                      });
-                    }
+                      confirmDismiss: (DismissDirection direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("ยืนยันลบข้อมูล?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text("ไม่ลบ")),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                    child: Text("ลบ"))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (left) {
+                        setState(() {
+                          widget.respiratoryRecords.removeAt(i);
+                          widget
+                              .onRespiratoryRecordUpdated(widget.respiratoryRecords);
+                        });
+                      }
                   );
                 },
                 itemCount: dateMap[reversedKeys.toList()[i]]?.length,

@@ -37,7 +37,7 @@ dependencies:
   flutter_rounded_date_picker: ^3.0.1
   package_info_plus: ^1.4.0
   syncfusion_flutter_charts: ^20.1.55
-  http: ^0.13.4
+  url_launcher: ^6.1.3
 
 dev_dependencies:
   flutter_test:

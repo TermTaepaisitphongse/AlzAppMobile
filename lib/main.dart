@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'PatientRecordPage.dart';
 import 'BloodPressurePage.dart';
@@ -216,6 +217,26 @@ class _PatientItemState extends State<PatientItem> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
       ),
+      leading: IconButton(icon: Icon(Icons.info_outline), onPressed: () {
+        showAboutDialog(context: context, children: [
+          Text('ขอต้อนรับสู่ AlzApp'),
+          Text('AlzApp ช่วยให้ผู้ดูแลผู้ป่วยสามารถบันทึกสัญญาณชีวิตของผู้ป่วยได้ง่ายและมีประสิทธิภาพ'),
+          Text('พัฒนาโดย'),
+          Text('ปรานต์ (เติม) แต้ไพสิฐพงษ์'),
+          Row(
+            children: [
+              Text('Email: '),
+              GestureDetector(
+                child: Text("termpt2222@gmail.com", style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+                onTap: () async {
+                  final Uri url = Uri.parse('mailto:termpt2222@gmail.com');
+                  if (await canLaunchUrl(url)) launchUrl(url);
+                },
+              )
+            ],
+          ),
+        ]);
+      },),
       actions: [
         searchBar.getSearchAction(context)
       ],

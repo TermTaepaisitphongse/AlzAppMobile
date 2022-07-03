@@ -5,18 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
-class BladderBowelPage extends StatefulWidget {
-  Function onBladderBowelRecordUpdated;
-  final List<BladderBowel> bladderBowelRecords;
+import 'lineChartPage.dart';
+
+class WeightPage extends StatefulWidget {
+  Function onWeightRecordUpdated;
+  final List<Weight> weightRecords;
   String fullName;
 
-  BladderBowelPage({required this.fullName, required this.bladderBowelRecords, required this.onBladderBowelRecordUpdated});
+  WeightPage({required this.fullName, required this.weightRecords, required this.onWeightRecordUpdated});
   @override
-  _BladderBowelPageState createState() => _BladderBowelPageState();
+  _WeightPageState createState() => _WeightPageState();
 }
 
-class _BladderBowelPageState extends State<BladderBowelPage> {
+class _WeightPageState extends State<WeightPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +33,25 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
+        actions: [IconButton(onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => LineChartPage(widget.weightRecords, widget.fullName, "น้ำหนัก (kg)", series: <ChartSeries<Weight, DateTime>>[
+                    LineSeries<Weight, DateTime>(
+                      dataSource: widget.weightRecords,
+                      xValueMapper: (Weight value, _) => value.date,
+                      yValueMapper: (Weight value, _) => value.weight,
+                      name: 'น้ำหนัก',
+                      color: Colors.blueAccent,
+                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
+                      // Enable data label
+                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
+                  ],)
+              )
+          );
+        },
+            icon: Icon(Icons.stacked_line_chart))],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,10 +62,10 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
             color: CupertinoColors.systemGrey6,
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Center(child: Text('ถ่ายและฉี่ ()', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+              child: Center(child: Text('น้ำหนัก (kg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
             ),
           ),
-          Expanded(child: Container(child: widget.bladderBowelRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+          Expanded(child: Container(child: widget.weightRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -54,8 +76,8 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
   }
 
   Widget _buildRecordList() {
-    Map<DateTime, List<BladderBowel>> dateMap = HashMap();
-    final list = widget.bladderBowelRecords;
+    Map<DateTime, List<Weight>> dateMap = HashMap();
+    final list = widget.weightRecords;
     list.sort((record1, record2) {
       if (record1.date.year == record2.date.year && record1.date.month == record2.date.month && record1.date.day == record2.date.day) {
         return record1.date.millisecondsSinceEpoch - record2.date.millisecondsSinceEpoch;
@@ -72,7 +94,7 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
       else{
         dateMap[date] = [element];
       }
-      });
+    });
     final sortedKeys = dateMap.keys.toList();
     sortedKeys.sort();
     final reversedKeys = sortedKeys.reversed;
@@ -91,91 +113,87 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
               Flexible(
                 child: ListView.builder(itemBuilder: (context, index){
                   final record = dateMap[reversedKeys.toList()[i]]?[index];
-                  var iconCheck;
-                  var iconColor;
-                  var tooltipMessage;
-                  if(record!.bowel > 140 && record.bladder > 140){
-                    iconCheck = Icons.warning_rounded;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                  if (record==null){
+                    return Container();
                   }
-                  else if(record.bowel > 120 && record.bladder > 120){
-                    iconCheck = Icons.arrow_circle_up_sharp;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
-                  }
-                  else if (record.bowel > 100 && record.bladder > 100){
-                    iconCheck = Icons.check_circle;
-                    iconColor = Colors.green;
-                    tooltipMessage = "ค่าปกติที่คาดหมาย";
-                  }
-                  else if (record.bowel > 80 && record.bladder > 80) {
-                    iconCheck = Icons.arrow_circle_down_sharp;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
-                  }
-                  else {
-                    iconCheck = Icons.warning_rounded;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
-                  }
+                  var iconCheck = Icons.monitor_weight_rounded;
+                  var iconColor = Colors.blueAccent;
+                  var tooltipMessage = "น้ำหนัก";
                   return Dismissible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Container(height: 75, child: Padding(
-                        padding: const EdgeInsets.only(left: 24),
-                        child: Row(children: [
-                          Tooltip(
-                              child: Icon(iconCheck, color: iconColor),
-                              message: tooltipMessage),
-                          SizedBox(width: 24),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Text('${record.bowel}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Container(height: 75, child: Padding(
+                          padding: const EdgeInsets.only(left: 24),
+                          child: Row(children: [
+                            Tooltip(
+                                child: Icon(iconCheck, color: iconColor),
+                                message: tooltipMessage),
+                            SizedBox(width: 24),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              child: Text('${record.weight}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                            ),
+                            SizedBox(width: 8),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 40),
+                              child: Align(child: Text('bpm', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
+                            ),
+                            Expanded(child: Text(DateFormat('HH:mm').format(DateTime(record.date.year, record.date.month, record.date.day, record.date.hour, record.date.minute)), style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
+                            SizedBox(width: 8,),
+
+                          ],
+                            mainAxisSize: MainAxisSize.max,
                           ),
-                          SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 40),
-                            child: Align(child: Text('ถ่าย', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
-                          ),
-                          SizedBox(width: 12),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Text('${record.bladder}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                          ),
-                          SizedBox(width: 8),
-                          Text('ฉี่', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)),
-                          Expanded(child: Text(DateFormat('HH:mm').format(DateTime(record.date.year, record.date.month, record.date.day, record.date.hour, record.date.minute)), style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
-                        ],
+                        ),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)), color: Colors.white),
+                        ),
+                      ),
+                      direction: DismissDirection.endToStart,
+                      background: Container(color: Colors.red, child: Row(
                         mainAxisSize: MainAxisSize.max,
-                        ),
-                      ),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)), color: Colors.white),
-                      ),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    background: Container(color: Colors.red, child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(child: SizedBox()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Icon(Icons.cancel),
-                        ),
-                      ],
-                    ),),
-                    key: ValueKey<BladderBowel>(widget.bladderBowelRecords[i]),
-                    onDismissed: (left) {
-                      setState(() {
-                        widget.bladderBowelRecords.removeAt(i);
-                        widget.onBladderBowelRecordUpdated(widget.bladderBowelRecords);
-                      });
-                    }
+                        children: [
+                          Expanded(child: SizedBox()),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Icon(Icons.cancel),
+                          ),
+                        ],
+                      ),),
+                      key: ValueKey<Weight>(widget.weightRecords[i]),
+                      confirmDismiss: (DismissDirection direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("ยืนยันลบข้อมูล?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text("ไม่ลบ")),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                    child: Text("ลบ"))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (left) {
+                        setState(() {
+                          widget.weightRecords.removeAt(i);
+                          widget
+                              .onWeightRecordUpdated(widget.weightRecords);
+                        });
+                      }
                   );
                 },
-                itemCount: dateMap[reversedKeys.toList()[i]]?.length,
+                  itemCount: dateMap[reversedKeys.toList()[i]]?.length,
                   shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                 ),
               )
             ],
@@ -191,15 +209,15 @@ class _BladderBowelPageState extends State<BladderBowelPage> {
         // return object of type Dialog
         return NewRecordPage((newRecord){
           setState(() {
-            widget.bladderBowelRecords.add(newRecord);
-            widget.onBladderBowelRecordUpdated(widget.bladderBowelRecords);
+            widget.weightRecords.add(newRecord);
+            widget.onWeightRecordUpdated(widget.weightRecords);
           });
         });
       },
     );
   }
 
-  _BladderBowelPageState();
+  _WeightPageState();
 }
 
 class NewRecordPage extends StatefulWidget {
@@ -213,8 +231,7 @@ class NewRecordPage extends StatefulWidget {
 class _NewRecordPageState extends State<NewRecordPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-  int bowel = -1;
-  int bladder = -1;
+  int weight = 0;
   String errorMessage = '';
   @override
   Widget build(BuildContext context) {
@@ -243,7 +260,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("ถ่ายและฉี่", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text("น้ำหนัก", style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -338,7 +355,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("ถ่ายและฉี่", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text("น้ำหนัก", style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -346,7 +363,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     width: 64,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: 'ถ่าย',
+                        hintText: 'น้ำหนัก',
                         isDense: true,
                         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                         enabledBorder: OutlineInputBorder(
@@ -359,7 +376,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                         ),
                       ),
                       onChanged: (input) {
-                        bowel = int.parse(input);
+                        weight = int.parse(input);
                       },
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
@@ -371,40 +388,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   Column(
                     children: [
                       SizedBox(height: 10,),
-                      Text('ถ่าย', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
-                    ],
-                  ),
-                  SizedBox(width: 4,),
-                  Container(
-                    width: 64,
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: 'ฉี่',
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onChanged: (input) {
-                        bladder = int.parse(input);
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 4,),
-                  Column(
-                    children: [
-                      SizedBox(height: 10,),
-                      Text('ฉี่', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                      Text('kg', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
                     ],
                   ),
                 ],
@@ -428,8 +412,8 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
               });
             }
-            else if (bowel >= 0 && bladder >= 0) {
-              widget.onRecordAdded(BladderBowel(date: dateTime, bowel: bowel, bladder: bladder));
+            else if (weight > 0) {
+              widget.onRecordAdded(Weight(date: dateTime, weight: weight));
               Navigator.pop(context);
             }
             else {
@@ -446,31 +430,27 @@ class _NewRecordPageState extends State<NewRecordPage> {
 }
 
 
-class BladderBowel {
-  BladderBowel(
-      {required this.date, required this.bowel, required this.bladder});
+class Weight {
+  Weight(
+      {required this.date, required this.weight});
 
   final DateTime date;
-  final int bowel;
-  final int bladder;
+  final int weight;
 
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     data['date'] = date.millisecondsSinceEpoch;
-    data['bowel'] = bowel;
-    data['bladder'] = bladder;
+    data['weight'] = weight;
     return data;
   }
 
-  static BladderBowel fromJson(Map<String, dynamic> json) {
+  static Weight fromJson(Map<String, dynamic> json) {
     int date = json['date'];
-    int bowel = json['bowel'];
-    int bladder = json['bladder'];
+    int weight = json['weight'];
     print("json = $json");
-    final record = BladderBowel(
-        date: DateTime.fromMillisecondsSinceEpoch(date),
-        bowel: bowel,
-        bladder: bladder,
+    final record = Weight(
+      date: DateTime.fromMillisecondsSinceEpoch(date),
+      weight: weight,
     );
     return record;
   }

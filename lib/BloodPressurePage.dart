@@ -14,54 +14,87 @@ class BloodPressurePage extends StatefulWidget {
   final List<BloodPressure> bloodPressureRecords;
   String fullName;
 
-  BloodPressurePage({required this.fullName, required this.bloodPressureRecords, required this.onBPRecordUpdated});
+  BloodPressurePage(
+      {required this.fullName,
+      required this.bloodPressureRecords,
+      required this.onBPRecordUpdated});
+
   @override
   _BloodPressurePageState createState() => _BloodPressurePageState();
 }
 
 class _BloodPressurePageState extends State<BloodPressurePage> {
-
   @override
   Widget build(BuildContext context) {
-    final emptyWidget = Center(child: Column(children: [
-      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
-      SizedBox(height: 6),
-      Icon(Icons.add, color: CupertinoColors.systemGrey2),
-    ],
-    mainAxisSize: MainAxisSize.min,));
+    final emptyWidget = Center(
+        child: Column(
+      children: [
+        Text("กรุณาเพิ่มรายการใหม่",
+            style: TextStyle(color: CupertinoColors.systemGrey2)),
+        SizedBox(height: 6),
+        Icon(Icons.add, color: CupertinoColors.systemGrey2),
+      ],
+      mainAxisSize: MainAxisSize.min,
+    ));
 
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: Text(widget.fullName),
-        actions: [IconButton(onPressed: (){
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => LineChartPage(widget.bloodPressureRecords, widget.fullName, "ความดันเลือด (mmHg)", series: <ChartSeries<BloodPressure, DateTime>>[
-                  LineSeries<BloodPressure, DateTime>(
-                      dataSource: widget.bloodPressureRecords,
-                      xValueMapper: (BloodPressure value, _) => value.date,
-                      yValueMapper: (BloodPressure value, _) => value.systolic,
-                      name: 'Systolic',
-                      color: Colors.redAccent,
-                      markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.redAccent),
-                      // Enable data label
-                      dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside, )),
-                  LineSeries<BloodPressure, DateTime>(
-                    dataSource: widget.bloodPressureRecords,
-                    xValueMapper: (BloodPressure value, _) => value.date,
-                    yValueMapper: (BloodPressure value, _) => value.diastolic,
-                    name: 'Diastolic',
-                    color: Colors.blueAccent,
-                    markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
-                    // Enable data label
-                    dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
-                ],)
-                )
-          );
-        },
-            icon: Icon(Icons.stacked_line_chart))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LineChartPage(
+                              widget.bloodPressureRecords,
+                              widget.fullName,
+                              "ความดันเลือด (mmHg)",
+                              series: <ChartSeries<BloodPressure, DateTime>>[
+                                LineSeries<BloodPressure, DateTime>(
+                                    dataSource: widget.bloodPressureRecords,
+                                    xValueMapper: (BloodPressure value, _) =>
+                                        value.date,
+                                    yValueMapper: (BloodPressure value, _) =>
+                                        value.systolic,
+                                    name: 'Systolic',
+                                    color: Colors.redAccent,
+                                    markerSettings: MarkerSettings(
+                                        borderWidth: 3,
+                                        shape: DataMarkerType.circle,
+                                        isVisible: true,
+                                        color: Colors.redAccent),
+                                    // Enable data label
+                                    dataLabelSettings: DataLabelSettings(
+                                      isVisible: true,
+                                      labelPosition:
+                                          ChartDataLabelPosition.inside,
+                                    )),
+                                LineSeries<BloodPressure, DateTime>(
+                                  dataSource: widget.bloodPressureRecords,
+                                  xValueMapper: (BloodPressure value, _) =>
+                                      value.date,
+                                  yValueMapper: (BloodPressure value, _) =>
+                                      value.diastolic,
+                                  name: 'Diastolic',
+                                  color: Colors.blueAccent,
+                                  markerSettings: MarkerSettings(
+                                      borderWidth: 3,
+                                      shape: DataMarkerType.circle,
+                                      isVisible: true,
+                                      color: Colors.blueAccent),
+                                  // Enable data label
+                                  dataLabelSettings: DataLabelSettings(
+                                      isVisible: true,
+                                      labelPosition:
+                                          ChartDataLabelPosition.inside),
+                                ),
+                              ],
+                            )));
+              },
+              icon: Icon(Icons.stacked_line_chart))
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,10 +105,20 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
             color: CupertinoColors.systemGrey6,
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Center(child: Text('ความดันเลือด (mmHg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+              child: Center(
+                  child: Text(
+                'ความดันเลือด (mmHg)',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              )),
             ),
           ),
-          Expanded(child: Container(child: widget.bloodPressureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
+          Expanded(
+              child: Container(
+                  child: widget.bloodPressureRecords.isEmpty
+                      ? GestureDetector(
+                          child: emptyWidget, onTap: () => _showDialog(context))
+                      : _buildRecordList(),
+                  color: Color(0xffF3F3F3))),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -89,22 +132,25 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
     Map<DateTime, List<BloodPressure>> dateMap = HashMap();
     final list = widget.bloodPressureRecords;
     list.sort((record1, record2) {
-      if (record1.date.year == record2.date.year && record1.date.month == record2.date.month && record1.date.day == record2.date.day) {
-        return record1.date.millisecondsSinceEpoch - record2.date.millisecondsSinceEpoch;
+      if (record1.date.year == record2.date.year &&
+          record1.date.month == record2.date.month &&
+          record1.date.day == record2.date.day) {
+        return record1.date.millisecondsSinceEpoch -
+            record2.date.millisecondsSinceEpoch;
       }
-      return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
+      return record2.date.millisecondsSinceEpoch -
+          record1.date.millisecondsSinceEpoch;
     });
     final formatter = DateFormat("dd MMM yyyy", "th");
     list.forEach((element) {
       final dateString = formatter.format(element.date);
       final date = formatter.parse(dateString);
-      if(dateMap[date] != null) {
+      if (dateMap[date] != null) {
         dateMap[date]?.add(element);
-      }
-      else{
+      } else {
         dateMap[date] = [element];
       }
-      });
+    });
 
     final sortedKeys = dateMap.keys.toList();
     sortedKeys.sort();
@@ -123,85 +169,143 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                 child: Text(formatter.format(reversedKeys.toList()[i])),
               ),
               Flexible(
-                child: ListView.builder(itemBuilder: (context, index){
-                  final record = dateMap[reversedKeys.toList()[i]]?[index];
-                  var iconCheck;
-                  var iconColor;
-                  var tooltipMessage;
-                  if(record!.systolic >= 180 || record.diastolic >= 110){
-                    iconCheck = Icons.warning_rounded;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์ทันที";
-                  }
-                  else if(record.systolic >= 140 || record.diastolic > 90){
-                    iconCheck = Icons.arrow_circle_up_sharp;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
-                  }
-                    else if (record.systolic >= 100 || record.diastolic >= 70){
-                    iconCheck = Icons.check_circle;
-                    iconColor = Colors.green;
-                    tooltipMessage = "ค่าปกติที่คาดหมาย";
-                  }
-                  else if (record.systolic > 90 || record.diastolic > 60) {
-                    iconCheck = Icons.arrow_circle_down_sharp;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
-                  }
-                  else {
-                    iconCheck = Icons.warning_rounded;
-                    iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์ทันที";
-                  }
-                  return Dismissible(
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Container(height: 75, child: Padding(
-                        padding: const EdgeInsets.only(left: 24),
-                        child: Row(children: [
-                          Tooltip(
-                              child: Icon(iconCheck, color: iconColor),
-                              message: tooltipMessage),
-                          SizedBox(width: 24),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            child: Text('${record.systolic} / ${record.diastolic}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                          ),
-                          SizedBox(width: 8),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 40),
-                            child: Align(child: Text('mmHg', style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal,)), alignment: Alignment.bottomLeft,),
-                          ),
-                          Expanded(child: Text(DateFormat('HH:mm').format(DateTime(record.date.year, record.date.month, record.date.day, record.date.hour, record.date.minute)), style: TextStyle(fontSize: 12), textAlign: TextAlign.end,)),
-                          SizedBox(width: 8,),
-                        ],
-                        mainAxisSize: MainAxisSize.max,
-                        ),
-                      ),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)), color: Colors.white),
-                      ),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    background: Container(color: Colors.red, child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Expanded(child: SizedBox()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Icon(Icons.cancel),
-                        ),
-                      ],
-                    ),),
-                    key: ValueKey<BloodPressure>(widget.bloodPressureRecords[i]),
-                    onDismissed: (left) {
-                      setState(() {
-                        widget.bloodPressureRecords.removeAt(i);
-                        widget.onBPRecordUpdated(widget.bloodPressureRecords);
-                      });
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    final record = dateMap[reversedKeys.toList()[i]]?[index];
+                    var iconCheck = null;
+                    var iconColor = null;
+                    var tooltipMessage = null;
+                    if (record!.systolic >= 180 || record.diastolic >= 110) {
+                      iconCheck = Icons.warning_rounded;
+                      iconColor = Colors.red;
+                      tooltipMessage = "ควรไปพบแพทย์ทันที";
+                    } else if (record.systolic >= 140 ||
+                        record.diastolic > 90) {
+                      iconCheck = Icons.arrow_circle_up_sharp;
+                      iconColor = Colors.red;
+                      tooltipMessage = "ควรไปพบแพทย์";
+                    } else if (record.systolic >= 100 ||
+                        record.diastolic >= 70) {
+                      iconCheck = Icons.check_circle;
+                      iconColor = Colors.green;
+                      tooltipMessage = "ค่าปกติที่คาดหมาย";
+                    } else if (record.systolic > 90 || record.diastolic > 60) {
+                      iconCheck = Icons.arrow_circle_down_sharp;
+                      iconColor = Colors.red;
+                      tooltipMessage = "ควรไปพบแพทย์";
+                    } else {
+                      iconCheck = Icons.warning_rounded;
+                      iconColor = Colors.red;
+                      tooltipMessage = "ควรไปพบแพทย์ทันที";
                     }
-                  );
-                },
-                itemCount: dateMap[reversedKeys.toList()[i]]?.length,
+                    return Dismissible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Container(
+                            height: 75,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 24),
+                              child: Row(
+                                children: [
+                                  Tooltip(
+                                      child: Icon(iconCheck, color: iconColor),
+                                      message: tooltipMessage),
+                                  SizedBox(width: 24),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    child: Text(
+                                      '${record.systolic} / ${record.diastolic}',
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 40),
+                                    child: Align(
+                                      child: Text('mmHg',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.normal,
+                                          )),
+                                      alignment: Alignment.bottomLeft,
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                    DateFormat('HH:mm').format(DateTime(
+                                        record.date.year,
+                                        record.date.month,
+                                        record.date.day,
+                                        record.date.hour,
+                                        record.date.minute)),
+                                    style: TextStyle(fontSize: 12),
+                                    textAlign: TextAlign.end,
+                                  )),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                ],
+                                mainAxisSize: MainAxisSize.max,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
+                                color: Colors.white),
+                          ),
+                        ),
+                        direction: DismissDirection.endToStart,
+                        background: Container(
+                          color: Colors.red,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(child: SizedBox()),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Icon(Icons.cancel),
+                              ),
+                            ],
+                          ),
+                        ),
+                        key: ValueKey<BloodPressure>(
+                            widget.bloodPressureRecords[i]),
+                        confirmDismiss: (DismissDirection direction) async {
+                          return await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("ยืนยันลบข้อมูล?"),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                      child: Text("ไม่ลบ")),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                      },
+                                      child: Text("ลบ"))
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        onDismissed: (left) {
+                          setState(() {
+                            widget.bloodPressureRecords.removeAt(i);
+                            widget
+                                .onBPRecordUpdated(widget.bloodPressureRecords);
+                          });
+                        });
+                  },
+                  itemCount: dateMap[reversedKeys.toList()[i]]?.length,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                 ),
@@ -210,14 +314,14 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
           );
         });
   }
-  void _showDialog(BuildContext context) {
 
+  void _showDialog(BuildContext context) {
     // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
-        return NewRecordPage((newRecord){
+        return NewRecordPage((newRecord) {
           setState(() {
             widget.bloodPressureRecords.add(newRecord);
             widget.onBPRecordUpdated(widget.bloodPressureRecords);
@@ -232,6 +336,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
 
 class NewRecordPage extends StatefulWidget {
   NewRecordPage(this.onRecordAdded);
+
   Function onRecordAdded;
 
   @override
@@ -240,7 +345,8 @@ class NewRecordPage extends StatefulWidget {
 
 class _NewRecordPageState extends State<NewRecordPage> {
   DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
+  TimeOfDay selectedTime =
+      TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
   int sys = 0;
   int dia = 0;
   String errorMessage = '';
@@ -249,9 +355,11 @@ class _NewRecordPageState extends State<NewRecordPage> {
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
     DateTime now = DateTime.now();
-    String formattedTime = DateFormat('HH:mm').format(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
+    String formattedTime = DateFormat('HH:mm').format(DateTime(
+        now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     String formattedDate = DateFormat('dd MMM', "th").format(selectedDate);
-    print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
+    print(DateTime(
+        now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
       title: new Text("บันทึกใหม่"),
       content: Form(
@@ -260,50 +368,66 @@ class _NewRecordPageState extends State<NewRecordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-
             children: <Widget>[
-              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text(
+                "ประเภท",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               SizedBox(height: 8.0),
               Container(
-                decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                    borderRadius: BorderRadius.circular(8.0)),
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("ความดันเลือด", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(
+                          child: Text(
+                        "ความดันเลือด",
+                        style: TextStyle(fontSize: 12.0),
+                      )),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height:8.0),
+              SizedBox(height: 8.0),
               Row(
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text(
+                          "วันที่",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         SizedBox(height: 4.0),
                         Container(
-                          decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.circular(8.0)),
                           width: double.infinity,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () async {
                                 final chosenDate = await showRoundedDatePicker(
-                                    context: context,
-                                    locale: const Locale("th", "TH"),
-                                    era: EraMode.BUDDHIST_YEAR,
-                                    initialDate: selectedDate,
-                                    initialDatePickerMode: DatePickerMode.day,
-                                    firstDate: DateTime.now().subtract(Duration(days: 6*31)),
-                                    lastDate: DateTime.now(),
+                                  context: context,
+                                  locale: const Locale("th", "TH"),
+                                  era: EraMode.BUDDHIST_YEAR,
+                                  initialDate: selectedDate,
+                                  initialDatePickerMode: DatePickerMode.day,
+                                  firstDate: DateTime.now()
+                                      .subtract(Duration(days: 6 * 31)),
+                                  lastDate: DateTime.now(),
                                 );
-                                if (chosenDate != null){
+                                if (chosenDate != null) {
                                   setState(() {
                                     selectedDate = chosenDate;
                                   });
@@ -314,7 +438,11 @@ class _NewRecordPageState extends State<NewRecordPage> {
                                 children: [
                                   Icon(Icons.calendar_today, size: 18),
                                   SizedBox(width: 4.0),
-                                  Expanded(child: Text(formattedDate, style: TextStyle(fontSize: 12.0),)),
+                                  Expanded(
+                                      child: Text(
+                                    formattedDate,
+                                    style: TextStyle(fontSize: 12.0),
+                                  )),
                                   Icon(Icons.arrow_drop_down_sharp),
                                 ],
                               ),
@@ -324,23 +452,30 @@ class _NewRecordPageState extends State<NewRecordPage> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 4.0,),
+                  SizedBox(
+                    width: 4.0,
+                  ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text(
+                          "เวลา",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         SizedBox(height: 4.0),
                         Container(
-                          decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.circular(8.0)),
                           width: double.infinity,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () async {
                                 final chosenTime = await showTimePicker(
-                                    context: context,
-                                    initialTime: selectedTime,
+                                  context: context,
+                                  initialTime: selectedTime,
                                 );
                                 if (chosenTime != null) {
                                   setState(() {
@@ -354,7 +489,11 @@ class _NewRecordPageState extends State<NewRecordPage> {
                                 children: [
                                   Icon(Icons.timer, size: 18),
                                   SizedBox(width: 4.0),
-                                  Expanded(child: Text(formattedTime, style: TextStyle(fontSize: 12.0),)),
+                                  Expanded(
+                                      child: Text(
+                                    formattedTime,
+                                    style: TextStyle(fontSize: 12.0),
+                                  )),
                                   Icon(Icons.arrow_drop_down_sharp),
                                 ],
                               ),
@@ -367,8 +506,15 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("ความดันเลือด", style: TextStyle(fontWeight: FontWeight.bold,),),
-              SizedBox(height: 4.0,),
+              Text(
+                "ความดันเลือด",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 4.0,
+              ),
               Row(
                 children: [
                   Container(
@@ -377,7 +523,8 @@ class _NewRecordPageState extends State<NewRecordPage> {
                       decoration: InputDecoration(
                         hintText: 'Systolic',
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1, color: Colors.grey),
                           borderRadius: BorderRadius.circular(8),
@@ -396,16 +543,21 @@ class _NewRecordPageState extends State<NewRecordPage> {
                       ],
                     ),
                   ),
-                  SizedBox(width: 4,),
+                  SizedBox(
+                    width: 4,
+                  ),
                   Text('/'),
-                  SizedBox(width: 4,),
+                  SizedBox(
+                    width: 4,
+                  ),
                   Container(
                     width: 64,
                     child: TextFormField(
                       decoration: InputDecoration(
                         hintText: 'Diastolic',
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1, color: Colors.grey),
                           borderRadius: BorderRadius.circular(8),
@@ -426,13 +578,20 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   ),
                   Column(
                     children: [
-                      SizedBox(height: 10,),
-                      Text(' mmHg', style: TextStyle(fontWeight: FontWeight.w100, fontSize: 12)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(' mmHg',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w100, fontSize: 12)),
                     ],
                   ),
                 ],
               ),
-              Text(errorMessage, style: TextStyle(color: Colors.red, fontSize: 12),),
+              Text(
+                errorMessage,
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
               ),
@@ -444,30 +603,31 @@ class _NewRecordPageState extends State<NewRecordPage> {
         // usually buttons at the bottom of the dialog
         ElevatedButton(
           onPressed: () {
-            DateTime dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+            DateTime dateTime = DateTime(selectedDate.year, selectedDate.month,
+                selectedDate.day, selectedTime.hour, selectedTime.minute);
             // Validate returns true if the form is valid, or false otherwise.
-            if (dateTime.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
+            if (dateTime.millisecondsSinceEpoch >
+                DateTime.now().millisecondsSinceEpoch) {
               setState(() {
                 errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
               });
-            }
-            else if (sys >= dia && sys != 0 && dia != 0) {
-              widget.onRecordAdded(BloodPressure(date: dateTime, systolic: sys, diastolic: dia));
+            } else if (sys >= dia && sys != 0 && dia != 0) {
+              widget.onRecordAdded(
+                  BloodPressure(date: dateTime, systolic: sys, diastolic: dia));
               Navigator.pop(context);
-            }
-            else {
+            } else {
               //show red text that says invalid value
               setState(() {
                 errorMessage = "กรุณากรอกค่าค่ี่ถูกต้อง";
               });
             }
-          }, child: Text("เพิ่ม"),
+          },
+          child: Text("เพิ่ม"),
         ),
       ],
     );
   }
 }
-
 
 class BloodPressure {
   BloodPressure(
@@ -491,9 +651,9 @@ class BloodPressure {
     int diastolic = json['diastolic'];
     print("json = $json");
     final record = BloodPressure(
-        date: DateTime.fromMillisecondsSinceEpoch(date),
-        systolic: systolic,
-        diastolic: diastolic,
+      date: DateTime.fromMillisecondsSinceEpoch(date),
+      systolic: systolic,
+      diastolic: diastolic,
     );
     return record;
   }

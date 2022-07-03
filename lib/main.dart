@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'PatientRecordPage.dart';
 import 'BloodPressurePage.dart';
@@ -15,7 +16,7 @@ import 'package:alzapp/PulsePage.dart';
 import 'package:alzapp/RespiratoryRatePage.dart';
 import 'package:alzapp/TemperaturePage.dart';
 import 'package:alzapp/DextrostixPage.dart';
-import 'package:alzapp/BladderBowelPage.dart';
+import 'package:alzapp/WeightPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,13 +32,13 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: PatientItem(),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('th', 'TH'),
-        ],
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('th', 'TH'),
+      ],
     );
   }
 // #enddocregion build
@@ -46,9 +47,10 @@ class MyApp extends StatelessWidget {
 
 // #docregion RWS-var
 class _PatientItemState extends State<PatientItem> {
-  final List<Patient> patients  = [];
+  final List<Patient> patients = [];
   List<Patient> filteredPatients = [];
   late SearchBar searchBar;
+
   // #enddocregion RWS-var
 
   // #docregion _buildSuggestions
@@ -60,6 +62,7 @@ class _PatientItemState extends State<PatientItem> {
           return _buildRow(filteredPatients[i]);
         });
   }
+
   // #enddocregion _buildSuggestions
 
   // #docregion _buildRow
@@ -69,7 +72,7 @@ class _PatientItemState extends State<PatientItem> {
         borderRadius: BorderRadius.all(Radius.circular(8)),
         color: Color.fromARGB(255, p.RGBcolor[0], p.RGBcolor[1], p.RGBcolor[2]),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0,horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
           child: Row(
             children: [
               Expanded(
@@ -87,10 +90,11 @@ class _PatientItemState extends State<PatientItem> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "${p.name}",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black)
-                    ),
+                    Text("${p.name}",
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black)),
                     SizedBox(
                       height: 4,
                     ),
@@ -105,21 +109,29 @@ class _PatientItemState extends State<PatientItem> {
                 flex: 1,
                 child: IconButton(
                   icon: Icon(Icons.clear),
-                  onPressed: (){
-                    showDialog(context: context, builder: (context) => AlertDialog(
-                      title: Text("ยืนยันลบข้อมูลผู้ป่วย?"),
-                      actions: [
-                        TextButton(onPressed: (){Navigator.pop(context);}, child: Text("ไม่ลบ")),
-                        ElevatedButton(onPressed: (){
-                          setState(() {
-                            patients.remove(p);
-                            _updatePatientToLocal();
-                            _resetFiltered();
-                          });
-                          Navigator.pop(context);
-                        }, child: Text("ลบ"))
-                      ],
-                    ));
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text("ยืนยันลบข้อมูลผู้ป่วย?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("ไม่ลบ")),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        patients.remove(p);
+                                        _updatePatientToLocal();
+                                        _resetFiltered();
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("ลบ"))
+                              ],
+                            ));
                   },
                 ),
               ),
@@ -127,23 +139,25 @@ class _PatientItemState extends State<PatientItem> {
           ),
         ),
       ),
-      onTap: (){
+      onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PatientRecordPage(p, (Patient patient){
-            print(patient.bloodPressures);
-            final index = patients.indexOf(p);
-            patients[index] = patient;
-            _updatePatientToLocal();
-          })),
+          MaterialPageRoute(
+              builder: (context) => PatientRecordPage(p, (Patient patient) {
+                    print(patient.bloodPressures);
+                    final index = patients.indexOf(p);
+                    patients[index] = patient;
+                    _updatePatientToLocal();
+                  })),
         );
       },
     );
   }
+
   // #enddocregion _buildRow
-  void initList() async{
+  void initList() async {
     final sharedPrefs = await SharedPreferences.getInstance();
-    final value = sharedPrefs.getString('patients')??'[]';
+    final value = sharedPrefs.getString('patients') ?? '[]';
     print("storedvalue = $value");
     final map = json.decode(value) as List<dynamic>;
     final patientList = map.map((patient) {
@@ -165,14 +179,13 @@ class _PatientItemState extends State<PatientItem> {
     searchBar = SearchBar(
         inBar: false,
         setState: setState,
-        onSubmitted: (text){
+        onSubmitted: (text) {
           _resetFiltered();
         },
-        onClosed: (){
+        onClosed: () {
           _resetFiltered();
         },
-        buildDefaultAppBar: _buildAppBar
-    );
+        buildDefaultAppBar: _buildAppBar);
     searchBar.controller.addListener(() {
       _filterWith(searchBar.controller.text);
     });
@@ -181,22 +194,24 @@ class _PatientItemState extends State<PatientItem> {
   }
 
   String version = "";
-  void initPackageInfo () async {
+
+  void initPackageInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
       version = packageInfo.version;
     });
   }
 
-  void _resetFiltered(){
+  void _resetFiltered() {
     filteredPatients.clear();
     filteredPatients.addAll(patients);
   }
-  void _filterWith(String text){
+
+  void _filterWith(String text) {
     filteredPatients.clear();
     final filtered = patients.where((element) {
-      final shouldRetain = text == "" || element.name.toLowerCase()
-          .contains(text.toLowerCase()) ||
+      final shouldRetain = text == "" ||
+          element.name.toLowerCase().contains(text.toLowerCase()) ||
           element.caretakerName.toLowerCase().contains(text.toLowerCase());
       return shouldRetain;
     }).toList();
@@ -205,51 +220,105 @@ class _PatientItemState extends State<PatientItem> {
       filteredPatients.addAll(filtered);
     });
   }
-  AppBar _buildAppBar(BuildContext context){
+
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: Row(
         children: [
           Text("AlzApp", style: TextStyle(fontSize: 25)),
-          SizedBox(width: 5,),
-          Text(version, style: TextStyle(fontSize: 10),)
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            version,
+            style: TextStyle(fontSize: 10),
+          )
         ],
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
       ),
-      actions: [
-        searchBar.getSearchAction(context)
-      ],
+      leading: IconButton(
+        icon: Icon(Icons.info_outline),
+        onPressed: () {
+          showAboutDialog(
+              context: context,
+              applicationName: 'ขอต้อนรับสู่ AlzApp',
+              applicationIcon: SizedBox(
+                child: Image.asset('assets/AlzAppIcon.png'),
+                width: 32,
+                height: 32,
+              ),
+              applicationVersion: "",
+              children: [
+                Text(
+                    'AlzApp ช่วยให้ผู้ดูแลผู้ป่วยหรือตัวท่านเองสามารถบันทึกสัญญาณชีวิตของผู้ป่วยหรือตัวท่านเองได้ง่ายและมีประสิทธิภาพ'),
+                SizedBox(
+                  height: 16,
+                ),
+                Text('พัฒนาโดย'),
+                Text('ปรานต์ (เติม) แต้ไพสิฐพงษ์'),
+                Row(
+                  children: [
+                    Text('Email: '),
+                    GestureDetector(
+                      child: Text("termpt2222@gmail.com",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue)),
+                      onTap: () async {
+                        final Uri url =
+                            Uri.parse('mailto:termpt2222@gmail.com');
+                        if (await canLaunchUrl(url)) launchUrl(url);
+                      },
+                    )
+                  ],
+                ),
+              ]);
+        },
+      ),
+      actions: [searchBar.getSearchAction(context)],
     );
   }
 
   // #docregion RWS-build
   @override
   Widget build(BuildContext context) {
-    final emptyWidget = Center(child: Column(children: [
-      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
-      SizedBox(height: 6),
-      Icon(Icons.add, color: CupertinoColors.systemGrey2),
-    ],
-      mainAxisSize: MainAxisSize.min,));
+    final emptyWidget = Center(
+        child: Column(
+      children: [
+        Text("กรุณาเพิ่มรายการใหม่",
+            style: TextStyle(color: CupertinoColors.systemGrey2)),
+        SizedBox(height: 6),
+        Icon(Icons.add, color: CupertinoColors.systemGrey2),
+      ],
+      mainAxisSize: MainAxisSize.min,
+    ));
 
     return Scaffold(
       appBar: searchBar.build(context),
-      body: Container(child: patients.isEmpty ? GestureDetector(child: emptyWidget,
-          onTap: () => _showDialog(context)) :
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Text('ผู้ป่วย', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
-          ),
-          Expanded(child: _buildPatientList()),
-        ],
-      )),
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () => _showDialog(context)),
-      );
-    }
+      body: Container(
+          child: patients.isEmpty
+              ? GestureDetector(
+                  child: emptyWidget, onTap: () => _showDialog(context))
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Text(
+                        'ผู้ป่วย',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24),
+                      ),
+                    ),
+                    Expanded(child: _buildPatientList()),
+                  ],
+                )),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add), onPressed: () => _showDialog(context)),
+    );
+  }
 
   void _showDialog(BuildContext context) {
     // flutter defined function
@@ -257,7 +326,7 @@ class _PatientItemState extends State<PatientItem> {
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
-        return PatientForm(patients,(newPatient){
+        return PatientForm(patients, (newPatient) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
           setState(() {
@@ -269,7 +338,8 @@ class _PatientItemState extends State<PatientItem> {
       },
     );
   }
-  void _updatePatientToLocal() async{
+
+  void _updatePatientToLocal() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     final jsonList = patients.map((p) => p.toJson()).toList();
     sharedPrefs.setString('patients', json.encode(jsonList));
@@ -279,7 +349,6 @@ class _PatientItemState extends State<PatientItem> {
   }
 }
 
-
 // #enddocregion RWS-var
 
 class PatientItem extends StatefulWidget {
@@ -288,7 +357,11 @@ class PatientItem extends StatefulWidget {
 }
 
 class Patient {
-  Patient({required this.name, required this.caretakerName, required this.RGBcolor});
+  Patient(
+      {required this.name,
+      required this.caretakerName,
+      required this.RGBcolor});
+
   String name;
   String caretakerName;
   List<int> RGBcolor;
@@ -298,7 +371,7 @@ class Patient {
   List<RespiratoryRate> respiratoryRate = [];
   List<Temperature> temperature = [];
   List<Dextrostix> dextrostix = [];
-  List<BladderBowel> bladderBowel = [];
+  List<Weight> weight = [];
 
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
@@ -308,17 +381,18 @@ class Patient {
     final dataRecord = records.map((e) => e.toJson()).toList();
     final bloodPressureRecord = bloodPressures.map((e) => e.toJson()).toList();
     final pulseRecord = pulse.map((e) => e.toJson()).toList();
-    final respiratoryRateRecord = respiratoryRate.map((e) => e.toJson()).toList();
+    final respiratoryRateRecord =
+        respiratoryRate.map((e) => e.toJson()).toList();
     final temperatureRecord = temperature.map((e) => e.toJson()).toList();
     final dextrostixRecord = dextrostix.map((e) => e.toJson()).toList();
-    final bladderBowelRecord = bladderBowel.map((e) => e.toJson()).toList();
+    final weightRecord = weight.map((e) => e.toJson()).toList();
     data['records'] = dataRecord;
     data['bloodPressures'] = bloodPressureRecord;
     data['pulse'] = pulseRecord;
     data['respiratoryRate'] = respiratoryRateRecord;
     data['temperature'] = temperatureRecord;
     data['dextrostix'] = dextrostixRecord;
-    data['bladderBowel'] = bladderBowelRecord;
+    data['weight'] = weightRecord;
     return data;
   }
 
@@ -330,21 +404,29 @@ class Patient {
     final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>;
     final jsonTemperature = json['temperature'] as List<dynamic>;
     final jsonDextrostix = json['dextrostix'] as List<dynamic>;
-    final jsonBladderBowel = json['bladderBowel'] as List<dynamic>;
-    final bloodPressureRecord = jsonBP.map((e) => BloodPressure.fromJson(e)).toList();
+    final jsonWeight = json['weight'] as List<dynamic>;
+    final bloodPressureRecord =
+        jsonBP.map((e) => BloodPressure.fromJson(e)).toList();
     final pulseRecord = jsonPulse.map((e) => Pulse.fromJson(e)).toList();
-    final respiratoryRateRecord = jsonRespiratoryRate.map((e) => RespiratoryRate.fromJson(e)).toList();
-    final temperatureRecord = jsonTemperature.map((e) => Temperature.fromJson(e)).toList();
-    final dextrostixRecord = jsonDextrostix.map((e) => Dextrostix.fromJson(e)).toList();
-    final bladderBowelRecord = jsonBladderBowel.map((e) => BladderBowel.fromJson(e)).toList();
+    final respiratoryRateRecord =
+        jsonRespiratoryRate.map((e) => RespiratoryRate.fromJson(e)).toList();
+    final temperatureRecord =
+        jsonTemperature.map((e) => Temperature.fromJson(e)).toList();
+    final dextrostixRecord =
+        jsonDextrostix.map((e) => Dextrostix.fromJson(e)).toList();
+    final weightRecord =
+        jsonWeight.map((e) => Weight.fromJson(e)).toList();
     print("bprecord = $bloodPressureRecord");
-    final patient = Patient(name: json['name'], caretakerName: json['caretakerName'], RGBcolor: color);
+    final patient = Patient(
+        name: json['name'],
+        caretakerName: json['caretakerName'],
+        RGBcolor: color);
     patient.bloodPressures = bloodPressureRecord;
     patient.pulse = pulseRecord;
     patient.respiratoryRate = respiratoryRateRecord;
     patient.temperature = temperatureRecord;
     patient.dextrostix = dextrostixRecord;
-    patient.bladderBowel = bladderBowelRecord;
+    patient.weight = weightRecord;
     return patient;
   }
 }
@@ -352,6 +434,7 @@ class Patient {
 // Create a Form widget.
 class PatientForm extends StatefulWidget {
   final List<Patient> patients;
+
   PatientForm(this.patients, this.onAdded);
 
   final Function onAdded;
@@ -382,15 +465,13 @@ class AddPatientForm extends State<PatientForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
-
             children: <Widget>[
               TextFormField(
                 decoration: new InputDecoration(labelText: "ชื่อผู้ป่วย:"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';
-                  }
-                  else{
+                  } else {
                     currentName = value;
                   }
                   return null;
@@ -401,8 +482,7 @@ class AddPatientForm extends State<PatientForm> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';
-                  }
-                  else{
+                  } else {
                     currentCaretakerName = value;
                   }
                   return null;
@@ -419,25 +499,40 @@ class AddPatientForm extends State<PatientForm> {
         // usually buttons at the bottom of the dialog
         Row(
           children: [
-            Expanded(child: Text(errorMessage, textAlign: TextAlign.end, style: TextStyle(color: Colors.red),)),
-            SizedBox(width: 4,),
+            Expanded(
+                child: Text(
+              errorMessage,
+              textAlign: TextAlign.end,
+              style: TextStyle(color: Colors.red),
+            )),
+            SizedBox(
+              width: 4,
+            ),
             ElevatedButton(
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
-                  final patientWithSameName = widget.patients.firstWhereOrNull((element) => element.name == currentName);
+                  final patientWithSameName = widget.patients.firstWhereOrNull(
+                      (element) => element.name == currentName);
                   print(patientWithSameName);
-                  if (patientWithSameName!=null){
+                  if (patientWithSameName != null) {
                     setState(() {
                       errorMessage = "มีผู้ป่วยชื่อนี้แล้ว กรุณาใช้ชื่ออื่น";
                     });
-                  }
-                  else {
-                    widget.onAdded(Patient(name: currentName, caretakerName: currentCaretakerName, RGBcolor: [currentColor.red, currentColor.green, currentColor.blue]));
+                  } else {
+                    widget.onAdded(Patient(
+                        name: currentName,
+                        caretakerName: currentCaretakerName,
+                        RGBcolor: [
+                          currentColor.red,
+                          currentColor.green,
+                          currentColor.blue
+                        ]));
                     Navigator.pop(context);
                   }
                 }
-              }, child: Text("เพิ่ม"),
+              },
+              child: Text("เพิ่ม"),
             ),
           ],
         ),

@@ -182,12 +182,35 @@ class _TemperaturePageState extends State<TemperaturePage> {
                       ],
                     ),),
                     key: ValueKey<Temperature>(widget.temperatureRecords[i]),
-                    onDismissed: (left) {
-                      setState(() {
-                        widget.temperatureRecords.removeAt(i);
-                        widget.onTemperatureRecordUpdated(widget.temperatureRecords);
-                      });
-                    }
+                      confirmDismiss: (DismissDirection direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("ยืนยันลบข้อมูล?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text("ไม่ลบ")),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                    child: Text("ลบ"))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (left) {
+                        setState(() {
+                          widget.temperatureRecords.removeAt(i);
+                          widget
+                              .onTemperatureRecordUpdated(widget.temperatureRecords);
+                        });
+                      }
                   );
                 },
                 itemCount: dateMap[reversedKeys.toList()[i]]?.length,

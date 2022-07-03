@@ -182,12 +182,35 @@ class _PulsePageState extends State<PulsePage> {
                       ],
                     ),),
                     key: ValueKey<Pulse>(widget.pulseRecords[i]),
-                    onDismissed: (left) {
-                      setState(() {
-                        widget.pulseRecords.removeAt(i);
-                        widget.onPulseRecordUpdated(widget.pulseRecords);
-                      });
-                    }
+                      confirmDismiss: (DismissDirection direction) async {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("ยืนยันลบข้อมูล?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text("ไม่ลบ")),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(true);
+                                    },
+                                    child: Text("ลบ"))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      onDismissed: (left) {
+                        setState(() {
+                          widget.pulseRecords.removeAt(i);
+                          widget
+                              .onPulseRecordUpdated(widget.pulseRecords);
+                        });
+                      }
                   );
                 },
                 itemCount: dateMap[reversedKeys.toList()[i]]?.length,

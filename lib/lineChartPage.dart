@@ -49,66 +49,68 @@ class _LineChartPageState extends State<LineChartPage> {
         appBar: AppBar(
           title: Text(widget.fullName),
         ),
-        body: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                TextButton(child: Text(dateFormatter.format(minDisplayTime)), onPressed: () async {
-                  final chosenDate = await showDatePicker(
-                    context: context,
-                    locale: const Locale("th", "TH"),
-                    initialDate: minDisplayTime,
-                    initialDatePickerMode: DatePickerMode.day,
-                    firstDate: widget.data.first.date,
-                    lastDate: widget.data.last.date,
-                  );
-                  if (chosenDate != null){
-                    setState(() {
-                      minDisplayTime = chosenDate;
-                    });
-                  }
-                },),
-                Text('-'),
-                TextButton(child: Text(dateFormatter.format(maxDisplayTime)), onPressed: () async {
-                  final chosenDate = await showDatePicker(
-                    context: context,
-                    locale: const Locale("th", "TH"),
-                    initialDate: maxDisplayTime,
-                    initialDatePickerMode: DatePickerMode.day,
-                    firstDate: widget.data.first.date,
-                    lastDate: widget.data.last.date,
-                  );
-                  if (chosenDate != null){
-                    setState(() {
-                      maxDisplayTime = chosenDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
-                    });
-                  }
-                },),
-              ],
-              mainAxisSize: MainAxisSize.min,
+        body: SingleChildScrollView(
+          child: Column(children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  TextButton(child: Text(dateFormatter.format(minDisplayTime)), onPressed: () async {
+                    final chosenDate = await showDatePicker(
+                      context: context,
+                      locale: const Locale("th", "TH"),
+                      initialDate: minDisplayTime,
+                      initialDatePickerMode: DatePickerMode.day,
+                      firstDate: widget.data.first.date,
+                      lastDate: widget.data.last.date,
+                    );
+                    if (chosenDate != null){
+                      setState(() {
+                        minDisplayTime = chosenDate;
+                      });
+                    }
+                  },),
+                  Text('-'),
+                  TextButton(child: Text(dateFormatter.format(maxDisplayTime)), onPressed: () async {
+                    final chosenDate = await showDatePicker(
+                      context: context,
+                      locale: const Locale("th", "TH"),
+                      initialDate: maxDisplayTime,
+                      initialDatePickerMode: DatePickerMode.day,
+                      firstDate: widget.data.first.date,
+                      lastDate: widget.data.last.date,
+                    );
+                    if (chosenDate != null){
+                      setState(() {
+                        maxDisplayTime = chosenDate.add(Duration(hours: 23, minutes: 59, seconds: 59));
+                      });
+                    }
+                  },),
+                ],
+                mainAxisSize: MainAxisSize.min,
+              ),
             ),
-          ),
-          //Initialize the chart widget
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SfCartesianChart(
-                primaryXAxis: DateTimeAxis(
-                  minimum: minDisplayTime,
-                  maximum: maxDisplayTime,
-                ),
-                // Chart title
-                title: ChartTitle(text: widget.title),
-                // Enable legend
-                legend: Legend(isVisible: true, position: LegendPosition.bottom),
-                // Enable tooltip
-                tooltipBehavior: TooltipBehavior(enable: true),
-                series: widget.series,
-                zoomPanBehavior: ZoomPanBehavior(enablePinching: true, enablePanning: true, enableDoubleTapZooming: true),
+            //Initialize the chart widget
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SfCartesianChart(
+                  primaryXAxis: DateTimeAxis(
+                    minimum: minDisplayTime,
+                    maximum: maxDisplayTime,
+                  ),
+                  // Chart title
+                  title: ChartTitle(text: widget.title),
+                  // Enable legend
+                  legend: Legend(isVisible: true, position: LegendPosition.bottom),
+                  // Enable tooltip
+                  tooltipBehavior: TooltipBehavior(enable: true),
+                  series: widget.series,
+                  zoomPanBehavior: ZoomPanBehavior(enablePinching: true, enablePanning: true, enableDoubleTapZooming: true),
+              ),
             ),
-          ),
-        ],
-        crossAxisAlignment: CrossAxisAlignment.end,));
+          ],
+          crossAxisAlignment: CrossAxisAlignment.end,),
+        ));
   }
 
   calculateOffsetTime(DateTime minDate, DateTime maxDate) {

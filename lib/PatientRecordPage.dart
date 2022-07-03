@@ -8,7 +8,7 @@ import 'PulsePage.dart';
 import 'RespiratoryRatePage.dart';
 import 'TemperaturePage.dart';
 import 'DextrostixPage.dart';
-import 'BladderBowelPage.dart';
+import 'WeightPage.dart';
 import 'main.dart';
 
 void main() => runApp(MyApp());
@@ -295,10 +295,10 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => BladderBowelPage(
+                            builder: (context) => WeightPage(
                               fullName: widget.patient.name,
-                              bladderBowelRecords: widget.patient.bladderBowel,
-                              onBladderBowelRecordUpdated: (newRecords){widget.patient.bladderBowel = newRecords;
+                              weightRecords: widget.patient.weight,
+                              onWeightRecordUpdated: (newRecords){widget.patient.weight = newRecords;
                               print(newRecords);
                               print(widget.patient.toJson().toString());
                               widget.onPatientChange(widget.patient);
@@ -307,19 +307,19 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                       );
                     },
                     child: Visibility(
-                      visible: false,
+                      visible: true,
                       child: Material(
                         elevation: 8,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              SvgPicture.asset('assets/bladderBowel.svg', height: 38.0, color: Colors.white),
+                              SvgPicture.asset('assets/weight.svg', height: 38.0, color: Colors.white),
                               SizedBox(
                                 height: 16.0,
                               ),
                               Text(
-                                'ถ่ายและฉี่',
+                                'น้ำหนัก',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),

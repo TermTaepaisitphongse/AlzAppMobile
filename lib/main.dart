@@ -447,20 +447,20 @@ class Patient {
 }
 
 enum Gender {
-  male,
-  female,
-  other
+  Male,
+  Female,
+  Other
 }
 
 createGenderFromString(String gender){
-  if (gender == "male") {
-    return Gender.male;
+  if (gender == "Male") {
+    return Gender.Male;
   }
-  else if (gender == "female") {
-    return Gender.female;
+  else if (gender == "Female") {
+    return Gender.Female;
   }
   else {
-    return Gender.other;
+    return Gender.Other;
   }
 }
 
@@ -482,7 +482,7 @@ class AddPatientForm extends State<PatientForm> {
   final _formKey = GlobalKey<FormState>();
   String currentName = "";
   String currentCaretakerName = "";
-  Gender currentGender = Gender.male;
+  Gender currentGender = Gender.Male;
   DateTime currentDateOfBirth = DateTime.now();
   String currentNotes = "";
   final colors = Colors.accents;
@@ -520,6 +520,43 @@ class AddPatientForm extends State<PatientForm> {
                     return 'กรุณากรอกข้อความนี่';
                   } else {
                     currentCaretakerName = value;
+                  }
+                  return null;
+                },
+              ),
+              DropdownButton<Gender>(
+                value: currentGender,
+                icon: const Icon(Icons.arrow_downward),
+                onChanged: (Gender? changeGender) {
+                  setState(() {
+                    currentGender = changeGender!;
+                  });
+                },
+                items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
+                  return DropdownMenuItem<Gender>(
+                    value: value,
+                    child: Text(value.name),
+                  );
+                }).toList(),
+              ),
+              TextFormField(
+                decoration: new InputDecoration(labelText: "DOB"),
+                  keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty || int.parse(value) > DateTime.now().year + 543) {
+                    return 'กรุณากรอกข้อความนี่';
+                  } else {
+                    currentDateOfBirth = DateTime(int.parse(value));
+                  }
+                  return null;
+                },
+              ),TextFormField(
+                decoration: new InputDecoration(labelText: "NOTES"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    currentNotes = "";
+                  } else {
+                    currentNotes = value;
                   }
                   return null;
                 },

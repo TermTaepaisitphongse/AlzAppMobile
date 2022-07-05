@@ -378,10 +378,8 @@ class _NewRecordPageState extends State<NewRecordPage> {
                       onChanged: (input) {
                         weight = int.parse(input);
                       },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),],
                     ),
                   ),
                   SizedBox(width: 4,),

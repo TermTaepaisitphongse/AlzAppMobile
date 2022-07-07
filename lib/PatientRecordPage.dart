@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'BloodPressurePage.dart';
+import 'PatientProfilePage.dart';
 import 'PulsePage.dart';
 import 'RespiratoryRatePage.dart';
 import 'TemperaturePage.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   // #docregion build
   @override
   Widget build(BuildContext context) {
-    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', RGBcolor: [Colors.white.red, Colors.white.green, Colors.white.blue]);
+    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', gender: Gender.Male, dateOfBirth: DateTime.now(), notes: "hello", RGBcolor: [Colors.white.red, Colors.white.green, Colors.white.blue]);
     return MaterialApp(
       title: 'AlzApp Health Records',
       theme: ThemeData(
@@ -48,7 +49,17 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
       appBar: AppBar(
         leading: BackButton(),
         centerTitle: true,
-        title: Text(widget.patient.name),
+        title: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PatientProfilePage(widget.patient)
+              ),
+            );
+          },
+          child: Text(widget.patient.name),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -359,11 +359,14 @@ class PatientItem extends StatefulWidget {
 class Patient {
   Patient(
       {required this.name,
-      required this.caretakerName,
-      required this.RGBcolor});
+      required this.caretakerName, required this.gender,required this.dateOfBirth, required this.notes,
+      required this.RGBcolor,});
 
   String name;
   String caretakerName;
+  Gender gender;
+  DateTime dateOfBirth;
+  String notes;
   List<int> RGBcolor;
   List<Record> records = [];
   List<BloodPressure> bloodPressures = [];
@@ -377,6 +380,9 @@ class Patient {
     final data = Map<String, dynamic>();
     data['name'] = name;
     data['caretakerName'] = caretakerName;
+    data['gender'] = gender.toString();
+    data['dateOfBirth'] = dateOfBirth.millisecondsSinceEpoch;
+    data['notes'] = notes;
     data['color'] = RGBcolor;
     final dataRecord = records.map((e) => e.toJson()).toList();
     final bloodPressureRecord = bloodPressures.map((e) => e.toJson()).toList();
@@ -397,14 +403,20 @@ class Patient {
   }
 
   static Patient fromJson(Map<String, dynamic> json) {
+    final jsonGender = json['gender'] as String;
+    final jsonDateOfBirth = json['dateOfBirth'] as int;
+    final jsonNotes = json['notes'] as String;
     final jsonRGBcolor = json['color'] as List<dynamic>;
-    final color = jsonRGBcolor.map((e) => e as int).toList();
     final jsonBP = json['bloodPressures'] as List<dynamic>;
     final jsonPulse = json['pulse'] as List<dynamic>;
     final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>;
     final jsonTemperature = json['temperature'] as List<dynamic>;
     final jsonDextrostix = json['dextrostix'] as List<dynamic>;
     final jsonWeight = json['weight'] as List<dynamic>;
+    final gender = createGenderFromString(jsonGender);
+    final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(jsonDateOfBirth);
+    final notes = jsonNotes;
+    final color = jsonRGBcolor.map((e) => e as int).toList();
     final bloodPressureRecord =
         jsonBP.map((e) => BloodPressure.fromJson(e)).toList();
     final pulseRecord = jsonPulse.map((e) => Pulse.fromJson(e)).toList();
@@ -420,6 +432,9 @@ class Patient {
     final patient = Patient(
         name: json['name'],
         caretakerName: json['caretakerName'],
+        gender: gender,
+        dateOfBirth: dateOfBirth,
+        notes: notes,
         RGBcolor: color);
     patient.bloodPressures = bloodPressureRecord;
     patient.pulse = pulseRecord;
@@ -428,6 +443,24 @@ class Patient {
     patient.dextrostix = dextrostixRecord;
     patient.weight = weightRecord;
     return patient;
+  }
+}
+
+enum Gender {
+  Male,
+  Female,
+  Other
+}
+
+createGenderFromString(String gender){
+  if (gender == "Male") {
+    return Gender.Male;
+  }
+  else if (gender == "Female") {
+    return Gender.Female;
+  }
+  else {
+    return Gender.Other;
   }
 }
 
@@ -449,6 +482,9 @@ class AddPatientForm extends State<PatientForm> {
   final _formKey = GlobalKey<FormState>();
   String currentName = "";
   String currentCaretakerName = "";
+  Gender currentGender = Gender.Male;
+  DateTime currentDateOfBirth = DateTime.now();
+  String currentNotes = "";
   final colors = Colors.accents;
   final _random = new Random();
   String errorMessage = "";
@@ -473,6 +509,50 @@ class AddPatientForm extends State<PatientForm> {
                     return 'กรุณากรอกข้อความนี่';
                   } else {
                     currentName = value;
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16,),
+              Row(
+                children: [
+                  Text("เพศ:", style: TextStyle(color: Colors.grey),),
+                  SizedBox(width: 16,),
+                  DropdownButton<Gender>(
+                    value: currentGender,
+                    icon: const Icon(Icons.arrow_drop_down_sharp),
+                    onChanged: (Gender? changeGender) {
+                      setState(() {
+                        currentGender = changeGender!;
+                      });
+                    },
+                    items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
+                      return DropdownMenuItem<Gender>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+              TextFormField(
+                decoration: new InputDecoration(labelText: "ปีเกิด"),
+                  keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty || int.parse(value) > DateTime.now().year + 543) {
+                    return 'กรุณากรอกข้อความนี่';
+                  } else {
+                    currentDateOfBirth = DateTime(int.parse(value));
+                  }
+                  return null;
+                },
+              ),TextFormField(
+                decoration: new InputDecoration(labelText: "ข้อมูลเพิ่มเติม"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    currentNotes = "";
+                  } else {
+                    currentNotes = value;
                   }
                   return null;
                 },
@@ -523,6 +603,9 @@ class AddPatientForm extends State<PatientForm> {
                     widget.onAdded(Patient(
                         name: currentName,
                         caretakerName: currentCaretakerName,
+                        gender: currentGender,
+                        dateOfBirth: currentDateOfBirth,
+                        notes: currentNotes,
                         RGBcolor: [
                           currentColor.red,
                           currentColor.green,

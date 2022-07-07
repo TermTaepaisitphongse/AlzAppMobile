@@ -405,7 +405,7 @@ class Patient {
   static Patient fromJson(Map<String, dynamic> json) {
     final jsonGender = json['gender'] as String;
     final jsonDateOfBirth = json['dateOfBirth'] as int;
-    final jsonNotes = json['gender'] as String;
+    final jsonNotes = json['notes'] as String;
     final jsonRGBcolor = json['color'] as List<dynamic>;
     final jsonBP = json['bloodPressures'] as List<dynamic>;
     final jsonPulse = json['pulse'] as List<dynamic>;
@@ -513,34 +513,30 @@ class AddPatientForm extends State<PatientForm> {
                   return null;
                 },
               ),
-              TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อผู้ดูแล"),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกข้อความนี่';
-                  } else {
-                    currentCaretakerName = value;
-                  }
-                  return null;
-                },
-              ),
-              DropdownButton<Gender>(
-                value: currentGender,
-                icon: const Icon(Icons.arrow_downward),
-                onChanged: (Gender? changeGender) {
-                  setState(() {
-                    currentGender = changeGender!;
-                  });
-                },
-                items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
-                  return DropdownMenuItem<Gender>(
-                    value: value,
-                    child: Text(value.name),
-                  );
-                }).toList(),
+              SizedBox(height: 16,),
+              Row(
+                children: [
+                  Text("เพศ:", style: TextStyle(color: Colors.grey),),
+                  SizedBox(width: 16,),
+                  DropdownButton<Gender>(
+                    value: currentGender,
+                    icon: const Icon(Icons.arrow_drop_down_sharp),
+                    onChanged: (Gender? changeGender) {
+                      setState(() {
+                        currentGender = changeGender!;
+                      });
+                    },
+                    items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
+                      return DropdownMenuItem<Gender>(
+                        value: value,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "DOB"),
+                decoration: new InputDecoration(labelText: "ปีเกิด"),
                   keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty || int.parse(value) > DateTime.now().year + 543) {
@@ -551,12 +547,23 @@ class AddPatientForm extends State<PatientForm> {
                   return null;
                 },
               ),TextFormField(
-                decoration: new InputDecoration(labelText: "NOTES"),
+                decoration: new InputDecoration(labelText: "ข้อมูลเพิ่มเติม"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     currentNotes = "";
                   } else {
                     currentNotes = value;
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: new InputDecoration(labelText: "ชื่อผู้ดูแล"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกข้อความนี่';
+                  } else {
+                    currentCaretakerName = value;
                   }
                   return null;
                 },

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'main.dart';
 
@@ -46,13 +44,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Text(
-              'Profile Page',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-            ),
-          ),
+          Text('iamge'),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -60,11 +52,34 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(width: 24.0),
-                Text("Patient Name: " + widget.patient.name),
-                Text("Caretaker Name: " + widget.patient.caretakerName),
-                Text("Gender: " + widget.patient.gender.name),
-                Text("DoB: " + widget.patient.dateOfBirth.year.toString()),
-                Text("Notes: " + widget.patient.notes),
+                Row(
+                  children: [
+                    Icon(chosenIcon(widget.patient), size: 32, color: Colors.blueAccent),
+                    SizedBox(width: 16,),
+                    Text("เพศ: " + widget.patient.gender.name, style: TextStyle(fontSize: 32, color: Colors.black45),),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.cake, size: 32, color: Colors.blueAccent,),
+                    SizedBox(width: 16,),
+                    Text("ปีเกิด: " + widget.patient.dateOfBirth.year.toString(), style: TextStyle(fontSize: 32, color: Colors.black45,)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.assignment_ind, size: 32, color: Colors.blueAccent,),
+                    SizedBox(width: 16,),
+                    Text("ชื่อผู้ดูแล: " + widget.patient.caretakerName, style: TextStyle(fontSize: 32, color: Colors.black45),),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.notes, size: 32, color: Colors.blueAccent,),
+                    SizedBox(width: 16,),
+                    Text("ข้อมูลเพิ่มเติม: " + widget.patient.notes, style: TextStyle(fontSize: 32, color: Colors.black45),),
+                  ],
+                ),
               ],
             ),
           ),
@@ -73,6 +88,14 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
       // floatingActionButton: FloatingActionButton(
       //     child: Icon(Icons.add), onPressed: () => _showDialog(context)),
     );
+  }
+}
+
+chosenIcon(Patient patient){
+  switch(patient.gender.name) {
+    case "Male": {  return Icons.male; }
+    case "Female": {  return Icons.female; }
+    case "Other": {  return Icons.person; }
   }
 }
 

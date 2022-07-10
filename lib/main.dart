@@ -453,14 +453,28 @@ enum Gender {
 }
 
 createGenderFromString(String? gender){
-  if (gender == "Male") {
+  if (gender?.contains("Male") ?? false) {
     return Gender.Male;
   }
-  else if (gender == "Female") {
+  else if (gender?.contains("Female") ?? false) {
     return Gender.Female;
   }
   else {
     return Gender.Other;
+  }
+}
+
+extension createStringFromGender on Gender {
+  String get returnString {
+    if (name == "Male") {
+      return "ชาย";
+    }
+    else if (name == "Female") {
+      return "หญิง";
+    }
+    else {
+      return "ไม่ระบุ";
+    }
   }
 }
 
@@ -529,7 +543,7 @@ class AddPatientForm extends State<PatientForm> {
                     items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
                       return DropdownMenuItem<Gender>(
                         value: value,
-                        child: Text(value.name),
+                        child: Text(value.returnString),
                       );
                     }).toList(),
                   ),

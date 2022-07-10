@@ -79,9 +79,6 @@ class _DextrostixPageState extends State<DextrostixPage> {
     Map<DateTime, List<Dextrostix>> dateMap = HashMap();
     final list = widget.dextrostixRecords;
     list.sort((record1, record2) {
-      if (record1.date.year == record2.date.year && record1.date.month == record2.date.month && record1.date.day == record2.date.day) {
-        return record1.date.millisecondsSinceEpoch - record2.date.millisecondsSinceEpoch;
-      }
       return record2.date.millisecondsSinceEpoch - record1.date.millisecondsSinceEpoch;
     });
     final formatter = DateFormat("dd MMM yyyy", "th");

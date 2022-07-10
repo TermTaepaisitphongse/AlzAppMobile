@@ -366,7 +366,7 @@ class Patient {
   String caretakerName;
   Gender gender;
   DateTime dateOfBirth;
-  String notes;
+  String? notes;
   List<int> RGBcolor;
   List<Record> records = [];
   List<BloodPressure> bloodPressures = [];
@@ -403,18 +403,18 @@ class Patient {
   }
 
   static Patient fromJson(Map<String, dynamic> json) {
-    final jsonGender = json['gender'] as String;
-    final jsonDateOfBirth = json['dateOfBirth'] as int;
-    final jsonNotes = json['notes'] as String;
+    final jsonGender = json['gender'] as String?;
+    final jsonDateOfBirth = json['dateOfBirth'] as int?;
+    final jsonNotes = json['notes'] as String?;
     final jsonRGBcolor = json['color'] as List<dynamic>;
     final jsonBP = json['bloodPressures'] as List<dynamic>;
     final jsonPulse = json['pulse'] as List<dynamic>;
     final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>;
     final jsonTemperature = json['temperature'] as List<dynamic>;
     final jsonDextrostix = json['dextrostix'] as List<dynamic>;
-    final jsonWeight = json['weight'] as List<dynamic>;
+    final jsonWeight = json['weight'] as List<dynamic>?;
     final gender = createGenderFromString(jsonGender);
-    final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(jsonDateOfBirth);
+    final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(jsonDateOfBirth ?? 0);
     final notes = jsonNotes;
     final color = jsonRGBcolor.map((e) => e as int).toList();
     final bloodPressureRecord =
@@ -427,7 +427,7 @@ class Patient {
     final dextrostixRecord =
         jsonDextrostix.map((e) => Dextrostix.fromJson(e)).toList();
     final weightRecord =
-        jsonWeight.map((e) => Weight.fromJson(e)).toList();
+        jsonWeight?.map((e) => Weight.fromJson(e)).toList();
     print("bprecord = $bloodPressureRecord");
     final patient = Patient(
         name: json['name'],
@@ -441,7 +441,7 @@ class Patient {
     patient.respiratoryRate = respiratoryRateRecord;
     patient.temperature = temperatureRecord;
     patient.dextrostix = dextrostixRecord;
-    patient.weight = weightRecord;
+    patient.weight = weightRecord ?? [];
     return patient;
   }
 }
@@ -452,15 +452,29 @@ enum Gender {
   Other
 }
 
-createGenderFromString(String gender){
-  if (gender == "Male") {
+createGenderFromString(String? gender){
+  if (gender?.contains("Male") ?? false) {
     return Gender.Male;
   }
-  else if (gender == "Female") {
+  else if (gender?.contains("Female") ?? false) {
     return Gender.Female;
   }
   else {
     return Gender.Other;
+  }
+}
+
+extension createStringFromGender on Gender {
+  String get returnString {
+    if (name == "Male") {
+      return "ชาย";
+    }
+    else if (name == "Female") {
+      return "หญิง";
+    }
+    else {
+      return "ไม่ระบุ";
+    }
   }
 }
 
@@ -529,7 +543,7 @@ class AddPatientForm extends State<PatientForm> {
                     items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
                       return DropdownMenuItem<Gender>(
                         value: value,
-                        child: Text(value.name),
+                        child: Text(value.returnString),
                       );
                     }).toList(),
                   ),

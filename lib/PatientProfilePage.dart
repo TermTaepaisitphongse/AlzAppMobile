@@ -34,6 +34,7 @@ class PatientProfilePage extends StatefulWidget {
 class _PatientProfilePageState extends State<PatientProfilePage> {
   @override
   Widget build(BuildContext context) {
+    print(widget.patient.gender.name);
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
@@ -56,7 +57,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                   children: [
                     Icon(chosenIcon(widget.patient), size: 32, color: Colors.blueAccent),
                     SizedBox(width: 16,),
-                    Text("เพศ: " + widget.patient.gender.name, style: TextStyle(fontSize: 32, color: Colors.black45),),
+                    Text("เพศ: " + widget.patient.gender.returnString, style: TextStyle(fontSize: 32, color: Colors.black45),),
                   ],
                 ),
                 Row(
@@ -77,7 +78,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                   children: [
                     Icon(Icons.notes, size: 32, color: Colors.blueAccent,),
                     SizedBox(width: 16,),
-                    Text("ข้อมูลเพิ่มเติม: " + widget.patient.notes, style: TextStyle(fontSize: 32, color: Colors.black45),),
+                    Text("ข้อมูลเพิ่มเติม: " + (widget.patient.notes ?? ''), style: TextStyle(fontSize: 32, color: Colors.black45),),
                   ],
                 ),
               ],

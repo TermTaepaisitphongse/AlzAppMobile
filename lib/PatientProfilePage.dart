@@ -77,7 +77,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                   children: [
                     Icon(Icons.notes, size: 32, color: Colors.blueAccent,),
                     SizedBox(width: 16,),
-                    Text("ข้อมูลเพิ่มเติม: " + widget.patient.notes, style: TextStyle(fontSize: 32, color: Colors.black45),),
+                    Text("ข้อมูลเพิ่มเติม: " + (widget.patient.notes ?? ''), style: TextStyle(fontSize: 32, color: Colors.black45),),
                   ],
                 ),
               ],

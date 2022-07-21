@@ -553,9 +553,13 @@ class AddPatientForm extends State<PatientForm> {
                 decoration: new InputDecoration(labelText: "ปีเกิด"),
                   keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty || int.parse(value) > DateTime.now().year + 543) {
+                  if (value == null || value.isEmpty) {
                     return 'กรุณากรอกข้อความนี่';
-                  } else {
+                  }
+                  else if (int.parse(value) < (DateTime.now().year + 543) - 100 || int.parse(value) > DateTime.now().year + 543) {
+                    return 'กรุณากรอกปีเกิดที่ถูกต้อง';
+                  }
+                  else {
                     currentDateOfBirth = DateTime(int.parse(value));
                   }
                   return null;

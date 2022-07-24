@@ -34,10 +34,14 @@ class _DextrostixPageState extends State<DextrostixPage> {
         leading: BackButton(),
         title: Text(widget.fullName),
         actions: [IconButton(onPressed: (){
+          final minimum = widget.dextrostixRecords.fold<num>(double.infinity, (previousValue, element) => element.dextrostix < previousValue ? element.dextrostix : previousValue
+          );
+          final maximum = widget.dextrostixRecords.fold<num>(0, (previousValue, element) => element.dextrostix > previousValue ? element.dextrostix : previousValue
+          );
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "น้ำตาลในเลือด (mg/dL)", series: <ChartSeries<Dextrostix, DateTime>>[
+                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "น้ำตาลในเลือด (mg/dL)", maximum: maximum, minimum: minimum, series: <ChartSeries<Dextrostix, DateTime>>[
                     LineSeries<Dextrostix, DateTime>(
                       dataSource: widget.dextrostixRecords,
                       xValueMapper: (Dextrostix value, _) => value.date,

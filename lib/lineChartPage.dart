@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
@@ -7,18 +9,19 @@ import 'BloodPressurePage.dart';
 
 class LineChartPage extends StatefulWidget {
   final String title;
+  final List<dynamic> data;
+  final String fullName;
+  final minimum;
+  final maximum;
 
   final dynamic series;
 
   // ignore: prefer_const_constructors_in_immutables
-  LineChartPage(this.data, this.fullName, this.title, {required this.series, Key? key}) : super(key: key){
+  LineChartPage(this.data, this.fullName, this.title, {required this.series, this.maximum, this.minimum, Key? key}) : super(key: key){
     data.sort((value1, value2) {
       return value1.date.millisecondsSinceEpoch - value2.date.millisecondsSinceEpoch;
     });
   }
-
-  final List<dynamic> data;
-  final String fullName;
 
   @override
   _LineChartPageState createState() => _LineChartPageState();
@@ -97,6 +100,10 @@ class _LineChartPageState extends State<LineChartPage> {
                   primaryXAxis: DateTimeAxis(
                     minimum: minDisplayTime,
                     maximum: maxDisplayTime,
+                  ),
+                  primaryYAxis: NumericAxis(
+                    maximum: widget.maximum + 10,
+                    minimum: widget.minimum - 10,
                   ),
                   // Chart title
                   title: ChartTitle(text: widget.title),

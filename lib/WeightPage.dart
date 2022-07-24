@@ -34,10 +34,14 @@ class _WeightPageState extends State<WeightPage> {
         leading: BackButton(),
         title: Text(widget.fullName),
         actions: [IconButton(onPressed: (){
+          final minimum = widget.weightRecords.fold<double>(double.infinity, (previousValue, element) => element.weight < previousValue ? element.weight : previousValue
+          );
+          final maximum = widget.weightRecords.fold<double>(0, (previousValue, element) => element.weight > previousValue ? element.weight : previousValue
+          );
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.weightRecords, widget.fullName, "น้ำหนัก (kg)", series: <ChartSeries<Weight, DateTime>>[
+                  builder: (context) => LineChartPage(widget.weightRecords, widget.fullName, "น้ำหนัก (kg)", maximum: maximum, minimum: minimum, series: <ChartSeries<Weight, DateTime>>[
                     LineSeries<Weight, DateTime>(
                       dataSource: widget.weightRecords,
                       xValueMapper: (Weight value, _) => value.date,
@@ -228,7 +232,7 @@ class NewRecordPage extends StatefulWidget {
 class _NewRecordPageState extends State<NewRecordPage> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
-  int weight = 0;
+  double weight = 0.0;
   String errorMessage = '';
   @override
   Widget build(BuildContext context) {
@@ -373,7 +377,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                         ),
                       ),
                       onChanged: (input) {
-                        weight = int.parse(input);
+                        weight = double.parse(input);
                       },
                       keyboardType: TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),],
@@ -430,7 +434,7 @@ class Weight {
       {required this.date, required this.weight});
 
   final DateTime date;
-  final int weight;
+  final double weight;
 
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
@@ -441,7 +445,7 @@ class Weight {
 
   static Weight fromJson(Map<String, dynamic> json) {
     int date = json['date'];
-    int weight = json['weight'];
+    double weight = json['weight'];
     print("json = $json");
     final record = Weight(
       date: DateTime.fromMillisecondsSinceEpoch(date),

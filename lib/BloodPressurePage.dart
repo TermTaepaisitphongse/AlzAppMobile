@@ -44,6 +44,10 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
         actions: [
           IconButton(
               onPressed: () {
+                final minimum = widget.bloodPressureRecords.fold<num>(double.infinity, (previousValue, element) => element.diastolic < previousValue ? element.diastolic : previousValue
+                );
+                final maximum = widget.bloodPressureRecords.fold<num>(0, (previousValue, element) => element.systolic > previousValue ? element.systolic : previousValue
+                );
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -51,6 +55,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                               widget.bloodPressureRecords,
                               widget.fullName,
                               "ความดันเลือด (mmHg)",
+                              maximum: maximum,
+                              minimum: minimum,
                               series: <ChartSeries<BloodPressure, DateTime>>[
                                 LineSeries<BloodPressure, DateTime>(
                                     dataSource: widget.bloodPressureRecords,

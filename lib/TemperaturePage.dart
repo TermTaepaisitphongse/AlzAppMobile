@@ -34,10 +34,14 @@ class _TemperaturePageState extends State<TemperaturePage> {
         leading: BackButton(),
         title: Text(widget.fullName),
         actions: [IconButton(onPressed: (){
+          final minimum = widget.temperatureRecords.fold<double>(double.infinity, (previousValue, element) => element.temperature < previousValue ? element.temperature : previousValue
+          );
+          final maximum = widget.temperatureRecords.fold<double>(0, (previousValue, element) => element.temperature > previousValue ? element.temperature : previousValue
+          );
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.temperatureRecords, widget.fullName, "อุณหภูมิร่างกาย (°C)", series: <ChartSeries<Temperature, DateTime>>[
+                  builder: (context) => LineChartPage(widget.temperatureRecords, widget.fullName, "อุณหภูมิร่างกาย (°C)", maximum: maximum, minimum: minimum, series: <ChartSeries<Temperature, DateTime>>[
                     LineSeries<Temperature, DateTime>(
                       dataSource: widget.temperatureRecords,
                       xValueMapper: (Temperature value, _) => value.date,

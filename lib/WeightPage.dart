@@ -34,10 +34,14 @@ class _WeightPageState extends State<WeightPage> {
         leading: BackButton(),
         title: Text(widget.fullName),
         actions: [IconButton(onPressed: (){
+          final minimum = widget.weightRecords.fold<double>(double.infinity, (previousValue, element) => element.weight < previousValue ? element.weight : previousValue
+          );
+          final maximum = widget.weightRecords.fold<double>(0, (previousValue, element) => element.weight > previousValue ? element.weight : previousValue
+          );
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.weightRecords, widget.fullName, "น้ำหนัก (kg)", series: <ChartSeries<Weight, DateTime>>[
+                  builder: (context) => LineChartPage(widget.weightRecords, widget.fullName, "น้ำหนัก (kg)", maximum: maximum, minimum: minimum, series: <ChartSeries<Weight, DateTime>>[
                     LineSeries<Weight, DateTime>(
                       dataSource: widget.weightRecords,
                       xValueMapper: (Weight value, _) => value.date,

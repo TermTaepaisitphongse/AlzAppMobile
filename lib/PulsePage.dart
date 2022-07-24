@@ -34,10 +34,14 @@ class _PulsePageState extends State<PulsePage> {
         leading: BackButton(),
         title: Text(widget.fullName),
         actions: [IconButton(onPressed: (){
+          final minimum = widget.pulseRecords.fold<num>(double.infinity, (previousValue, element) => element.pulse < previousValue ? element.pulse : previousValue
+          );
+          final maximum = widget.pulseRecords.fold<num>(0, (previousValue, element) => element.pulse > previousValue ? element.pulse : previousValue
+          );
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.pulseRecords, widget.fullName, "ชีพจร (bpm)", series: <ChartSeries<Pulse, DateTime>>[
+                  builder: (context) => LineChartPage(widget.pulseRecords, widget.fullName, "ชีพจร (bpm)", maximum: maximum, minimum: minimum, series: <ChartSeries<Pulse, DateTime>>[
                     LineSeries<Pulse, DateTime>(
                       dataSource: widget.pulseRecords,
                       xValueMapper: (Pulse value, _) => value.date,

@@ -34,10 +34,14 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
         leading: BackButton(),
         title: Text(widget.fullName),
         actions: [IconButton(onPressed: (){
+          final minimum = widget.respiratoryRecords.fold<num>(double.infinity, (previousValue, element) => element.respiratory < previousValue ? element.respiratory : previousValue
+          );
+          final maximum = widget.respiratoryRecords.fold<num>(0, (previousValue, element) => element.respiratory > previousValue ? element.respiratory : previousValue
+          );
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.respiratoryRecords, widget.fullName, "อัตราการหายใจ (bpm)", series: <ChartSeries<RespiratoryRate, DateTime>>[
+                  builder: (context) => LineChartPage(widget.respiratoryRecords, widget.fullName, "อัตราการหายใจ (bpm)", maximum: maximum, minimum: minimum, series: <ChartSeries<RespiratoryRate, DateTime>>[
                     LineSeries<RespiratoryRate, DateTime>(
                       dataSource: widget.respiratoryRecords,
                       xValueMapper: (RespiratoryRate value, _) => value.date,

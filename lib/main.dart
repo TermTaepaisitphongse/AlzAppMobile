@@ -367,6 +367,7 @@ class Patient {
   Gender gender;
   DateTime dateOfBirth;
   String? notes;
+  String? imagePath;
   List<int> RGBcolor;
   List<Record> records = [];
   List<BloodPressure> bloodPressures = [];
@@ -383,6 +384,7 @@ class Patient {
     data['gender'] = gender.toString();
     data['dateOfBirth'] = dateOfBirth.millisecondsSinceEpoch;
     data['notes'] = notes;
+    data['imagePath'] = imagePath;
     data['color'] = RGBcolor;
     final dataRecord = records.map((e) => e.toJson()).toList();
     final bloodPressureRecord = bloodPressures.map((e) => e.toJson()).toList();
@@ -406,6 +408,7 @@ class Patient {
     final jsonGender = json['gender'] as String?;
     final jsonDateOfBirth = json['dateOfBirth'] as int?;
     final jsonNotes = json['notes'] as String?;
+    final jsonImagePath = json['imagePath'] as String?;
     final jsonRGBcolor = json['color'] as List<dynamic>;
     final jsonBP = json['bloodPressures'] as List<dynamic>;
     final jsonPulse = json['pulse'] as List<dynamic>;
@@ -416,6 +419,7 @@ class Patient {
     final gender = createGenderFromString(jsonGender);
     final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(jsonDateOfBirth ?? 0);
     final notes = jsonNotes;
+    final imagePath = jsonImagePath;
     final color = jsonRGBcolor.map((e) => e as int).toList();
     final bloodPressureRecord =
         jsonBP.map((e) => BloodPressure.fromJson(e)).toList();
@@ -436,6 +440,7 @@ class Patient {
         dateOfBirth: dateOfBirth,
         notes: notes,
         RGBcolor: color);
+    patient.imagePath = imagePath;
     patient.bloodPressures = bloodPressureRecord;
     patient.pulse = pulseRecord;
     patient.respiratoryRate = respiratoryRateRecord;

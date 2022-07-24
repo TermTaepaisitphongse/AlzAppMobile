@@ -54,7 +54,9 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PatientProfilePage(widget.patient)
+                  builder: (context) => PatientProfilePage(widget.patient, (p) {
+                    widget.onPatientChange(p);
+                  })
               ),
             );
           },

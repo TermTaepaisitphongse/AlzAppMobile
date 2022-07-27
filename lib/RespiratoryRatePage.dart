@@ -41,7 +41,8 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.respiratoryRecords, widget.fullName, "อัตราการหายใจ (bpm)", maximum: maximum, minimum: minimum, series: <ChartSeries<RespiratoryRate, DateTime>>[
+                  builder: (context) => LineChartPage(widget.respiratoryRecords, widget.fullName, "อัตราการหายใจ (bpm)", maximum: maximum.toDouble(),
+                    minimum: minimum.toDouble(), series: <ChartSeries<RespiratoryRate, DateTime>>[
                     LineSeries<RespiratoryRate, DateTime>(
                       dataSource: widget.respiratoryRecords,
                       xValueMapper: (RespiratoryRate value, _) => value.date,

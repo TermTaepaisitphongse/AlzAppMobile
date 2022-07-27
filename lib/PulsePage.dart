@@ -41,7 +41,8 @@ class _PulsePageState extends State<PulsePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.pulseRecords, widget.fullName, "ชีพจร (bpm)", maximum: maximum, minimum: minimum, series: <ChartSeries<Pulse, DateTime>>[
+                  builder: (context) => LineChartPage(widget.pulseRecords, widget.fullName, "ชีพจร (bpm)", maximum: maximum.toDouble(),
+                    minimum: minimum.toDouble(), series: <ChartSeries<Pulse, DateTime>>[
                     LineSeries<Pulse, DateTime>(
                       dataSource: widget.pulseRecords,
                       xValueMapper: (Pulse value, _) => value.date,

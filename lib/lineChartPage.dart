@@ -11,8 +11,8 @@ class LineChartPage extends StatefulWidget {
   final String title;
   final List<dynamic> data;
   final String fullName;
-  final minimum;
-  final maximum;
+  final double? minimum;
+  final double? maximum;
 
   final dynamic series;
 
@@ -102,8 +102,8 @@ class _LineChartPageState extends State<LineChartPage> {
                     maximum: maxDisplayTime,
                   ),
                   primaryYAxis: NumericAxis(
-                    maximum: widget.maximum + 10,
-                    minimum: widget.minimum - 10,
+                    maximum: (widget.maximum ?? 0.0) + 10.0,
+                    minimum: (widget.minimum ?? 0.0) - 10.0,
                   ),
                   // Chart title
                   title: ChartTitle(text: widget.title),

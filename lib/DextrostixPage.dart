@@ -41,7 +41,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "น้ำตาลในเลือด (mg/dL)", maximum: maximum, minimum: minimum, series: <ChartSeries<Dextrostix, DateTime>>[
+                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "น้ำตาลในเลือด (mg/dL)", maximum: maximum.toDouble(), minimum: minimum.toDouble(), series: <ChartSeries<Dextrostix, DateTime>>[
                     LineSeries<Dextrostix, DateTime>(
                       dataSource: widget.dextrostixRecords,
                       xValueMapper: (Dextrostix value, _) => value.date,

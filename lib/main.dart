@@ -346,26 +346,26 @@ class Patient {
   static Patient fromJson(Map<String, dynamic> json) {
     final jsonRGBcolor = json['color'] as List<dynamic>;
     final color = jsonRGBcolor.map((e) => e as int).toList();
-    final jsonBP = json['bloodPressures'] as List<dynamic>;
-    final jsonPulse = json['pulse'] as List<dynamic>;
-    final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>;
-    final jsonTemperature = json['temperature'] as List<dynamic>;
-    final jsonDextrostix = json['dextrostix'] as List<dynamic>;
-    final jsonBladderBowel = json['bladderBowel'] as List<dynamic>;
+    final jsonBP = json['bloodPressures'] as List<dynamic?>;
+    final jsonPulse = json['pulse'] as List<dynamic>?;
+    final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>?;
+    final jsonTemperature = json['temperature'] as List<dynamic>?;
+    final jsonDextrostix = json['dextrostix'] as List<dynamic>?;
+    final jsonBladderBowel = json['bladderBowel'] as List<dynamic>?;
     final bloodPressureRecord = jsonBP.map((e) => BloodPressure.fromJson(e)).toList();
-    final pulseRecord = jsonPulse.map((e) => Pulse.fromJson(e)).toList();
-    final respiratoryRateRecord = jsonRespiratoryRate.map((e) => RespiratoryRate.fromJson(e)).toList();
-    final temperatureRecord = jsonTemperature.map((e) => Temperature.fromJson(e)).toList();
-    final dextrostixRecord = jsonDextrostix.map((e) => Dextrostix.fromJson(e)).toList();
-    final bladderBowelRecord = jsonBladderBowel.map((e) => BladderBowel.fromJson(e)).toList();
+    final pulseRecord = jsonPulse?.map((e) => Pulse.fromJson(e)).toList();
+    final respiratoryRateRecord = jsonRespiratoryRate?.map((e) => RespiratoryRate.fromJson(e)).toList();
+    final temperatureRecord = jsonTemperature?.map((e) => Temperature.fromJson(e)).toList();
+    final dextrostixRecord = jsonDextrostix?.map((e) => Dextrostix.fromJson(e)).toList();
+    final bladderBowelRecord = jsonBladderBowel?.map((e) => BladderBowel.fromJson(e)).toList();
     print("bprecord = $bloodPressureRecord");
     final patient = Patient(name: json['name'], caretakerName: json['caretakerName'], RGBcolor: color);
     patient.bloodPressures = bloodPressureRecord;
-    patient.pulse = pulseRecord;
-    patient.respiratoryRate = respiratoryRateRecord;
-    patient.temperature = temperatureRecord;
-    patient.dextrostix = dextrostixRecord;
-    patient.bladderBowel = bladderBowelRecord;
+    patient.pulse = pulseRecord ?? [];
+    patient.respiratoryRate = respiratoryRateRecord ?? [];
+    patient.temperature = temperatureRecord ?? [];
+    patient.dextrostix = dextrostixRecord ?? [];
+    patient.bladderBowel = bladderBowelRecord ?? [];
     return patient;
   }
 }

@@ -410,28 +410,25 @@ class Patient {
     final jsonNotes = json['notes'] as String?;
     final jsonImagePath = json['imagePath'] as String?;
     final jsonRGBcolor = json['color'] as List<dynamic>;
-    final jsonBP = json['bloodPressures'] as List<dynamic>;
-    final jsonPulse = json['pulse'] as List<dynamic>;
-    final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>;
-    final jsonTemperature = json['temperature'] as List<dynamic>;
-    final jsonDextrostix = json['dextrostix'] as List<dynamic>;
+
+    final jsonBP = json['bloodPressures'] as List<dynamic>?;
+    final jsonPulse = json['pulse'] as List<dynamic>?;
+    final jsonRespiratoryRate = json['respiratoryRate'] as List<dynamic>?;
+    final jsonTemperature = json['temperature'] as List<dynamic>?;
+    final jsonDextrostix = json['dextrostix'] as List<dynamic>?;
     final jsonWeight = json['weight'] as List<dynamic>?;
     final gender = createGenderFromString(jsonGender);
     final dateOfBirth = DateTime.fromMillisecondsSinceEpoch(jsonDateOfBirth ?? 0);
     final notes = jsonNotes;
     final imagePath = jsonImagePath;
     final color = jsonRGBcolor.map((e) => e as int).toList();
-    final bloodPressureRecord =
-        jsonBP.map((e) => BloodPressure.fromJson(e)).toList();
-    final pulseRecord = jsonPulse.map((e) => Pulse.fromJson(e)).toList();
-    final respiratoryRateRecord =
-        jsonRespiratoryRate.map((e) => RespiratoryRate.fromJson(e)).toList();
-    final temperatureRecord =
-        jsonTemperature.map((e) => Temperature.fromJson(e)).toList();
-    final dextrostixRecord =
-        jsonDextrostix.map((e) => Dextrostix.fromJson(e)).toList();
     final weightRecord =
         jsonWeight?.map((e) => Weight.fromJson(e)).toList();
+    final bloodPressureRecord = jsonBP?.map((e) => BloodPressure.fromJson(e)).toList();
+    final pulseRecord = jsonPulse?.map((e) => Pulse.fromJson(e)).toList();
+    final respiratoryRateRecord = jsonRespiratoryRate?.map((e) => RespiratoryRate.fromJson(e)).toList();
+    final temperatureRecord = jsonTemperature?.map((e) => Temperature.fromJson(e)).toList();
+    final dextrostixRecord = jsonDextrostix?.map((e) => Dextrostix.fromJson(e)).toList();
     print("bprecord = $bloodPressureRecord");
     final patient = Patient(
         name: json['name'],
@@ -441,13 +438,13 @@ class Patient {
         notes: notes,
         RGBcolor: color);
     patient.imagePath = imagePath;
-    patient.bloodPressures = bloodPressureRecord;
-    patient.pulse = pulseRecord;
-    patient.respiratoryRate = respiratoryRateRecord;
-    patient.temperature = temperatureRecord;
-    patient.dextrostix = dextrostixRecord;
+    patient.bloodPressures = bloodPressureRecord ?? [];
+    patient.pulse = pulseRecord ?? [];
+    patient.respiratoryRate = respiratoryRateRecord ?? [];
+    patient.temperature = temperatureRecord ?? [];
+    patient.dextrostix = dextrostixRecord ?? [];
     patient.weight = weightRecord ?? [];
-    return patient;
+      return patient;
   }
 }
 

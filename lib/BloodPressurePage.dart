@@ -55,8 +55,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                               widget.bloodPressureRecords,
                               widget.fullName,
                               "ความดันเลือด (mmHg)",
-                              maximum: maximum,
-                              minimum: minimum,
+                              maximum: maximum.toDouble(),
+                              minimum: minimum.toDouble(),
                               series: <ChartSeries<BloodPressure, DateTime>>[
                                 LineSeries<BloodPressure, DateTime>(
                                     dataSource: widget.bloodPressureRecords,

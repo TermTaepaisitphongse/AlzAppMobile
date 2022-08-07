@@ -182,7 +182,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
                         ),
                       ],
                     ),),
-                    key: ValueKey<Temperature>(widget.temperatureRecords[i]),
+                    key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,

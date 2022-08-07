@@ -273,8 +273,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                             ],
                           ),
                         ),
-                        key: ValueKey<BloodPressure>(
-                            widget.bloodPressureRecords[i]),
+                        key: UniqueKey(),
                         confirmDismiss: (DismissDirection direction) async {
                           return await showDialog(
                             context: context,

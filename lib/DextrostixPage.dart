@@ -172,7 +172,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
                         ),
                       ],
                     ),),
-                    key: ValueKey<Dextrostix>(widget.dextrostixRecords[i]),
+                    key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,

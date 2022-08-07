@@ -160,7 +160,7 @@ class _WeightPageState extends State<WeightPage> {
                           ),
                         ],
                       ),),
-                      key: ValueKey<Weight>(widget.weightRecords[i]),
+                      key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,

@@ -183,7 +183,7 @@ class _PulsePageState extends State<PulsePage> {
                         ),
                       ],
                     ),),
-                    key: ValueKey<Pulse>(widget.pulseRecords[i]),
+                    key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,

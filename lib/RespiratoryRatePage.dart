@@ -173,7 +173,7 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
                         ),
                       ],
                     ),),
-                    key: ValueKey<RespiratoryRate>(widget.respiratoryRecords[i]),
+                    key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,

@@ -185,7 +185,8 @@ class _WeightPageState extends State<WeightPage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.weightRecords.removeAt(i);
+                          final index = widget.weightRecords.indexOf(record);
+                          widget.weightRecords.removeAt(index);
                           widget
                               .onWeightRecordUpdated(widget.weightRecords);
                         });

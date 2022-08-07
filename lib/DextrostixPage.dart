@@ -197,7 +197,8 @@ class _DextrostixPageState extends State<DextrostixPage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.dextrostixRecords.removeAt(i);
+                          final index = widget.dextrostixRecords.indexOf(record);
+                          widget.dextrostixRecords.removeAt(index);
                           widget
                               .onDextrostixRecordUpdated(widget.dextrostixRecords);
                         });

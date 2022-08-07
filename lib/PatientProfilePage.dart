@@ -39,9 +39,15 @@ class PatientProfilePage extends StatefulWidget {
 
 class _PatientProfilePageState extends State<PatientProfilePage> {
   ImageProvider? currentImage;
+  bool isEditMode = false;
+  late Gender currentGender;
+  late TextEditingController birthYearController;
 
   @override
   void initState() {
+    currentGender = widget.patient.gender;
+    birthYearController = TextEditingController(text: widget.patient.dateOfBirth.toString());
+
     final imagePath = widget.patient.imagePath;
     if (imagePath != null) {
       if (kIsWeb) {
@@ -52,7 +58,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     }
     super.initState();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     ImageProvider? chosenImage;
@@ -105,39 +111,90 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                 elevation: 16,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
                     children: [
-                      SizedBox(width: 24.0),
-                      Row(
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(chosenIcon(widget.patient), size: 32, color: Colors.blueAccent),
-                          SizedBox(width: 16,),
-                          Text("เพศ: " + widget.patient.gender.returnString, style: TextStyle(fontSize: 32, color: Colors.black45),),
+                          SizedBox(width: 24.0),
+                          Row(
+                            children: [
+                              Tooltip(
+                                  child: Icon(chosenIcon(widget.patient), size: 32, color: Colors.blueAccent),
+                                  message: "เพศ"),
+                              SizedBox(width: 16,), isEditMode? DropdownButton<Gender>(
+                                value: currentGender,
+                                icon: const Icon(Icons.arrow_drop_down_sharp),
+                                onChanged: (Gender? changeGender) {
+                                  setState(() {
+                                    if (changeGender != null) {
+                                      currentGender = changeGender;
+                                    }
+                                  });
+                                },
+                                items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
+                                  return DropdownMenuItem<Gender>(
+                                    value: value,
+                                    child: Text(value.returnString),
+                                  );
+                                }).toList(),
+                              ):
+                              Text(widget.patient.gender.returnString, style: TextStyle(fontSize: 24, color: Colors.black45),),
+                            ],
+                          ),
+                          SizedBox(height: 16,),
+                          Row(
+                            children: [
+                              Tooltip(
+                                  child: Icon(Icons.cake, size: 32, color: Colors.blueAccent,),
+                                  message: "ปีเกิด"),
+                              SizedBox(width: 16,), isEditMode?
+                              TextField(controller: birthYearController,):
+                              Text(widget.patient.dateOfBirth.year.toString(), style: TextStyle(fontSize: 24, color: Colors.black45,)),
+                            ],
+                          ),
+                          SizedBox(height: 16,),
+                          Row(
+                            children: [
+                              Tooltip(
+                                  child: Icon(Icons.assignment_ind, size: 32, color: Colors.blueAccent,),
+                                  message: "ชื่อผู้ดูแล"),
+                              SizedBox(width: 16,),
+                              Flexible(child: Text(widget.patient.caretakerName, style: TextStyle(fontSize: 24, color: Colors.black45),)),
+                            ],
+                          ),
+                          SizedBox(height: 16,),
+                          Row(
+                            children: [
+                              Tooltip(
+                                  child: Icon(Icons.notes, size: 32, color: Colors.blueAccent,),
+                                  message: "ข้อมูลเพิ่มเติม"),
+                              SizedBox(width: 16,),
+                              Flexible(child: Text(widget.patient.notes ?? '', style: TextStyle(fontSize: 24, color: Colors.black45),)),
+                            ],
+                          ),
                         ],
                       ),
+                      Align(alignment: Alignment.topRight, child: 
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.cake, size: 32, color: Colors.blueAccent,),
-                          SizedBox(width: 16,),
-                          Text("ปีเกิด: " + widget.patient.dateOfBirth.year.toString(), style: TextStyle(fontSize: 32, color: Colors.black45,)),
+                          Visibility(child: IconButton(icon: Icon(Icons.cancel_outlined, color: Colors.redAccent,), onPressed: (){
+                            setState(() {
+                              isEditMode = false;
+                              currentGender = widget.patient.gender;
+                            });
+                          },), visible: isEditMode,),
+                          IconButton(icon: isEditMode? Icon(Icons.check, color: Colors.green,):Icon(Icons.edit), onPressed: (){
+                            setState(() {
+                              isEditMode = !isEditMode;
+                              widget.patient.gender = currentGender;
+                              widget.onPatientChange(widget.patient);
+                              currentGender = widget.patient.gender;
+                            });},),
                         ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.assignment_ind, size: 32, color: Colors.blueAccent,),
-                          SizedBox(width: 16,),
-                          Text("ชื่อผู้ดูแล: " + widget.patient.caretakerName, style: TextStyle(fontSize: 32, color: Colors.black45),),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.notes, size: 32, color: Colors.blueAccent,),
-                          SizedBox(width: 16,),
-                          Text("ข้อมูลเพิ่มเติม: " + (widget.patient.notes ?? ''), style: TextStyle(fontSize: 32, color: Colors.black45),),
-                        ],
-                      ),
+                      ),),
                     ],
                   ),
                 ),

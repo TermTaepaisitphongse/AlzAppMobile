@@ -208,7 +208,8 @@ class _PulsePageState extends State<PulsePage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.pulseRecords.removeAt(i);
+                          final index = widget.pulseRecords.indexOf(record);
+                          // widget.pulseRecords.removeAt(index);
                           widget
                               .onPulseRecordUpdated(widget.pulseRecords);
                         });

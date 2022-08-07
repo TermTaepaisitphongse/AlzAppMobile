@@ -299,7 +299,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                         },
                         onDismissed: (left) {
                           setState(() {
-                            widget.bloodPressureRecords.removeAt(i);
+                            final index = widget.bloodPressureRecords.indexOf(record);
+                            widget.bloodPressureRecords.removeAt(index);
                             widget
                                 .onBPRecordUpdated(widget.bloodPressureRecords);
                           });

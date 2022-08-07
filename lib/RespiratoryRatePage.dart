@@ -198,7 +198,8 @@ class _RespiratoryRatePageState extends State<RespiratoryRatePage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.respiratoryRecords.removeAt(i);
+                          final index = widget.respiratoryRecords.indexOf(record);
+                          widget.respiratoryRecords.removeAt(index);
                           widget
                               .onRespiratoryRecordUpdated(widget.respiratoryRecords);
                         });

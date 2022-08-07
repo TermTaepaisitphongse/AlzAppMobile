@@ -273,6 +273,8 @@ class _PatientItemState extends State<PatientItem> {
                     )
                   ],
                 ),
+                SizedBox(height: 16),
+                Text("ผมขอขอบคุณ รศ.นพ.สุขเจริญ ตั้งวงษ์ไชย\nภาควิชาจิตเวชศาสตร์\nคณะแพทยศาสตร์\nจุฬาลงกรณ์มหาวิทยาลัย\nที่กรุณาให้คำแนะนำในการพัฒนา AlzApp")
               ]);
         },
       ),

@@ -183,7 +183,7 @@ class _PulsePageState extends State<PulsePage> {
                         ),
                       ],
                     ),),
-                    key: ValueKey<Pulse>(widget.pulseRecords[i]),
+                    key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,
@@ -208,7 +208,8 @@ class _PulsePageState extends State<PulsePage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.pulseRecords.removeAt(i);
+                          final index = widget.pulseRecords.indexOf(record);
+                          // widget.pulseRecords.removeAt(index);
                           widget
                               .onPulseRecordUpdated(widget.pulseRecords);
                         });

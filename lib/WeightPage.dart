@@ -160,7 +160,7 @@ class _WeightPageState extends State<WeightPage> {
                           ),
                         ],
                       ),),
-                      key: ValueKey<Weight>(widget.weightRecords[i]),
+                      key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,
@@ -185,7 +185,8 @@ class _WeightPageState extends State<WeightPage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.weightRecords.removeAt(i);
+                          final index = widget.weightRecords.indexOf(record);
+                          widget.weightRecords.removeAt(index);
                           widget
                               .onWeightRecordUpdated(widget.weightRecords);
                         });

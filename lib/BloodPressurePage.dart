@@ -273,8 +273,7 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                             ],
                           ),
                         ),
-                        key: ValueKey<BloodPressure>(
-                            widget.bloodPressureRecords[i]),
+                        key: UniqueKey(),
                         confirmDismiss: (DismissDirection direction) async {
                           return await showDialog(
                             context: context,
@@ -299,7 +298,8 @@ class _BloodPressurePageState extends State<BloodPressurePage> {
                         },
                         onDismissed: (left) {
                           setState(() {
-                            widget.bloodPressureRecords.removeAt(i);
+                            final index = widget.bloodPressureRecords.indexOf(record);
+                            widget.bloodPressureRecords.removeAt(index);
                             widget
                                 .onBPRecordUpdated(widget.bloodPressureRecords);
                           });

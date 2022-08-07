@@ -172,7 +172,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
                         ),
                       ],
                     ),),
-                    key: ValueKey<Dextrostix>(widget.dextrostixRecords[i]),
+                    key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,
@@ -197,7 +197,8 @@ class _DextrostixPageState extends State<DextrostixPage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.dextrostixRecords.removeAt(i);
+                          final index = widget.dextrostixRecords.indexOf(record);
+                          widget.dextrostixRecords.removeAt(index);
                           widget
                               .onDextrostixRecordUpdated(widget.dextrostixRecords);
                         });

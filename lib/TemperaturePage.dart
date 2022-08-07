@@ -182,7 +182,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
                         ),
                       ],
                     ),),
-                    key: ValueKey<Temperature>(widget.temperatureRecords[i]),
+                    key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         return await showDialog(
                           context: context,
@@ -207,7 +207,8 @@ class _TemperaturePageState extends State<TemperaturePage> {
                       },
                       onDismissed: (left) {
                         setState(() {
-                          widget.temperatureRecords.removeAt(i);
+                          final index = widget.temperatureRecords.indexOf(record);
+                          widget.temperatureRecords.removeAt(index);
                           widget
                               .onTemperatureRecordUpdated(widget.temperatureRecords);
                         });

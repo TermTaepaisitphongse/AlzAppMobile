@@ -42,11 +42,15 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
   bool isEditMode = false;
   late Gender currentGender;
   late TextEditingController birthYearController;
+  late TextEditingController caretakerController;
+  late TextEditingController notesController;
 
   @override
   void initState() {
     currentGender = widget.patient.gender;
-    birthYearController = TextEditingController(text: widget.patient.dateOfBirth.toString());
+    birthYearController = TextEditingController(text: widget.patient.dateOfBirth.year.toString());
+    caretakerController = TextEditingController(text: widget.patient.caretakerName);
+    notesController = TextEditingController(text: widget.patient.notes);
 
     final imagePath = widget.patient.imagePath;
     if (imagePath != null) {
@@ -62,7 +66,6 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
   @override
   Widget build(BuildContext context) {
     ImageProvider? chosenImage;
-    print(currentImage);
     if (currentImage != null){
       chosenImage = currentImage;
     }
@@ -150,7 +153,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                                   child: Icon(Icons.cake, size: 32, color: Colors.blueAccent,),
                                   message: "ปีเกิด"),
                               SizedBox(width: 16,), isEditMode?
-                              TextField(controller: birthYearController,):
+                              Flexible(child: TextField(controller: birthYearController, keyboardType: TextInputType.number,)):
                               Text(widget.patient.dateOfBirth.year.toString(), style: TextStyle(fontSize: 24, color: Colors.black45,)),
                             ],
                           ),
@@ -160,7 +163,8 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                               Tooltip(
                                   child: Icon(Icons.assignment_ind, size: 32, color: Colors.blueAccent,),
                                   message: "ชื่อผู้ดูแล"),
-                              SizedBox(width: 16,),
+                              SizedBox(width: 16,), isEditMode?
+                              Flexible(child: TextField(controller: caretakerController)):
                               Flexible(child: Text(widget.patient.caretakerName, style: TextStyle(fontSize: 24, color: Colors.black45),)),
                             ],
                           ),
@@ -170,7 +174,8 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                               Tooltip(
                                   child: Icon(Icons.notes, size: 32, color: Colors.blueAccent,),
                                   message: "ข้อมูลเพิ่มเติม"),
-                              SizedBox(width: 16,),
+                              SizedBox(width: 16,), isEditMode?
+                              Flexible(child: TextField(controller: notesController)):
                               Flexible(child: Text(widget.patient.notes ?? '', style: TextStyle(fontSize: 24, color: Colors.black45),)),
                             ],
                           ),
@@ -187,12 +192,33 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                             });
                           },), visible: isEditMode,),
                           IconButton(icon: isEditMode? Icon(Icons.check, color: Colors.green,):Icon(Icons.edit), onPressed: (){
-                            setState(() {
-                              isEditMode = !isEditMode;
-                              widget.patient.gender = currentGender;
-                              widget.onPatientChange(widget.patient);
-                              currentGender = widget.patient.gender;
-                            });},),
+                            final dateOfBirthError = dateOfBirthValidator(birthYearController.text);
+                            if (dateOfBirthError != null){
+                              birthYearController.text = widget.patient.dateOfBirth.year.toString();
+                              showDialog(context: context, builder: (context){
+                                return AlertDialog(title: Text(dateOfBirthError), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);
+                              });
+                            }
+                            else{
+                              if (caretakerController.text.isEmpty) {
+                                caretakerController.text = widget.patient.caretakerName;
+                                showDialog(context: context, builder: (context){
+                                  return AlertDialog(title: Text("กรุณาระบุชื่อผู้ดูแล"), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);
+                                });
+                              }
+                              else {
+                                setState(() {
+                                  isEditMode = !isEditMode;
+                                  widget.patient.gender = currentGender;
+                                  widget.patient.dateOfBirth = DateTime(int.parse(birthYearController.text));
+                                  widget.patient.caretakerName = caretakerController.text;
+                                  widget.patient.notes = notesController.text;
+                                  widget.onPatientChange(widget.patient);
+                                  currentGender = widget.patient.gender;
+                                });
+                              }
+                            }
+                            },),
                         ],
                       ),),
                     ],
@@ -205,6 +231,17 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
         // floatingActionButton: FloatingActionButton(
         //     child: Icon(Icons.add), onPressed: () => _showDialog(context)),
       );
+    }
+    dateOfBirthValidator(String? value) {
+      if (value == null || value.isEmpty) {
+        return 'กรุณากรอกข้อความนี่';
+      }
+      else if (int.parse(value) < (DateTime.now().year + 543) - 100 || int.parse(value) > DateTime.now().year + 543) {
+        return 'กรุณากรอกปีเกิดที่ถูกต้อง';
+      }
+      else {
+        return null;
+      }
     }
   }
 

@@ -49,6 +49,8 @@ class _LineChartPageState extends State<LineChartPage> {
   @override
   Widget build(BuildContext context) {
     final dateFormatter = DateFormat('dd MMM yy', "th");
+    double? max = widget.maximum == double.infinity?0.0:widget.maximum;
+    double? min = widget.minimum == double.infinity?0.0:widget.minimum;
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.fullName),
@@ -104,8 +106,8 @@ class _LineChartPageState extends State<LineChartPage> {
                     maximum: maxDisplayTime,
                   ),
                   primaryYAxis: NumericAxis(
-                    maximum: (widget.maximum ?? 0.0) + 10.0,
-                    minimum: (widget.minimum ?? 0.0) - 10.0,
+                    maximum: (max ?? 0.0) + 10.0,
+                    minimum: (min ?? 0.0) - 10.0,
                   ),
                   // Chart title
                   title: ChartTitle(text: widget.title),

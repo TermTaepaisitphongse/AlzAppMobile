@@ -1,11 +1,10 @@
-import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
-import 'BloodPressurePage.dart';
 
 class LineChartPage extends StatefulWidget {
   final String title;
@@ -31,10 +30,12 @@ class _LineChartPageState extends State<LineChartPage> {
   late DateTime minDisplayTime;
   late DateTime maxDisplayTime;
   final redTriangle = MarkerSettings(shape: DataMarkerType.triangle, borderColor: Colors.red, color: Colors.red, isVisible: true, width: 10);
+  late GlobalKey<SfCartesianChartState> _cartesianChartKey;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    _cartesianChartKey = GlobalKey();
     if (widget.data.isNotEmpty){
       minDisplayTime = widget.data.first.date;
       maxDisplayTime = widget.data.last.date;
@@ -97,6 +98,7 @@ class _LineChartPageState extends State<LineChartPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SfCartesianChart(
+                key: _cartesianChartKey,
                   primaryXAxis: DateTimeAxis(
                     minimum: minDisplayTime,
                     maximum: maxDisplayTime,
@@ -115,9 +117,23 @@ class _LineChartPageState extends State<LineChartPage> {
                   zoomPanBehavior: ZoomPanBehavior(enablePinching: true, enablePanning: true, enableDoubleTapZooming: true),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: ElevatedButton(onPressed: () async {
+                Uint8List imageBytes = await _renderChartAsImage();
+                ImageGallerySaver.saveImage(imageBytes);
+                print('saved');
+                }, child: Text("Save")),
+            )
           ],
           crossAxisAlignment: CrossAxisAlignment.end,),
         ));
+  }
+  Future<Uint8List> _renderChartAsImage() async {
+    final ui.Image data = await _cartesianChartKey.currentState!.toImage(pixelRatio: 3.0);
+    final ByteData? bytes = await data.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List imageBytes = bytes!.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes);
+    return imageBytes;
   }
 
   calculateOffsetTime(DateTime minDate, DateTime maxDate) {

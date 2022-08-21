@@ -30,7 +30,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
   void initState() {
     currentGender = widget.patient.gender;
     birthYearController = TextEditingController(text: widget.patient.dateOfBirth.year.toString());
-    heightController = TextEditingController(text: widget.patient.height.toString());
+    heightController = TextEditingController(text: (widget.patient.height ?? 0).toString());
     caretakerController = TextEditingController(text: widget.patient.caretakerName);
     notesController = TextEditingController(text: widget.patient.notes);
 
@@ -147,7 +147,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                                   message: "ส่วนสูง (ซม.)"),
                               SizedBox(width: 16,), isEditMode?
                               Flexible(child: TextField(controller: heightController, keyboardType: TextInputType.number,)):
-                              Text(widget.patient.height.toString(), style: TextStyle(fontSize: 24, color: Colors.black45,)),
+                              Text((widget.patient.height ?? 0).toString(), style: TextStyle(fontSize: 24, color: Colors.black45,)),
                             ],
                           ),
                           SizedBox(height: 16,),
@@ -239,6 +239,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
         return 'กรุณากรอกข้อความนี่';
       }
       else if (int.parse(value) < (DateTime.now().year + 543) - 100 || int.parse(value) > DateTime.now().year + 543) {
+        print(value);
         return 'กรุณากรอกปีเกิดที่ถูกต้อง';
       }
       else {

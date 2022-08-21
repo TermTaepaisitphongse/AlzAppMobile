@@ -49,5 +49,7 @@
     <string>to setup profile image</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>to save images to camera roll</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

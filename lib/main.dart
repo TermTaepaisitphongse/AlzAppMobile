@@ -361,13 +361,14 @@ class PatientItem extends StatefulWidget {
 class Patient {
   Patient(
       {required this.name,
-      required this.caretakerName, required this.gender,required this.dateOfBirth, required this.notes,
+      required this.caretakerName, required this.gender,required this.dateOfBirth, required this.height, required this.notes,
       required this.RGBcolor,});
 
   String name;
   String caretakerName;
   Gender gender;
   DateTime dateOfBirth;
+  int? height;
   String? notes;
   String? imagePath;
   List<int> RGBcolor;
@@ -385,6 +386,7 @@ class Patient {
     data['caretakerName'] = caretakerName;
     data['gender'] = gender.toString();
     data['dateOfBirth'] = dateOfBirth.millisecondsSinceEpoch;
+    data['height'] = height;
     data['notes'] = notes;
     data['imagePath'] = imagePath;
     data['color'] = RGBcolor;
@@ -409,6 +411,7 @@ class Patient {
   static Patient fromJson(Map<String, dynamic> json) {
     final jsonGender = json['gender'] as String?;
     final jsonDateOfBirth = json['dateOfBirth'] as int?;
+    final jsonHeight = json['height'] as int?;
     final jsonNotes = json['notes'] as String?;
     final jsonImagePath = json['imagePath'] as String?;
     final jsonRGBcolor = json['color'] as List<dynamic>;
@@ -437,6 +440,7 @@ class Patient {
         caretakerName: json['caretakerName'],
         gender: gender,
         dateOfBirth: dateOfBirth,
+        height: jsonHeight,
         notes: notes,
         RGBcolor: color);
     patient.imagePath = imagePath;
@@ -502,6 +506,7 @@ class AddPatientForm extends State<PatientForm> {
   String currentCaretakerName = "";
   Gender currentGender = Gender.Male;
   DateTime currentDateOfBirth = DateTime.now();
+  int currentHeight = 0;
   String currentNotes = "";
   final colors = Colors.accents;
   final _random = new Random();
@@ -568,7 +573,24 @@ class AddPatientForm extends State<PatientForm> {
                   }
                   return null;
                 },
-              ),TextFormField(
+              ),
+              TextFormField(
+                decoration: new InputDecoration(labelText: "ส่วนสูง (ซม.)"),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'กรุณากรอกข้อความนี่';
+                  }
+                  else if (int.parse(value) <= 0) {
+                    return 'กรุณากรอกส่วนสูงเป็นเซนติเมตรที่ถูกต้อง';
+                  }
+                  else {
+                    currentHeight = int.parse(value);
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
                 decoration: new InputDecoration(labelText: "ข้อมูลเพิ่มเติม"),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -627,6 +649,7 @@ class AddPatientForm extends State<PatientForm> {
                         caretakerName: currentCaretakerName,
                         gender: currentGender,
                         dateOfBirth: currentDateOfBirth,
+                        height: currentHeight,
                         notes: currentNotes,
                         RGBcolor: [
                           currentColor.red,

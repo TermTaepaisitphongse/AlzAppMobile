@@ -7,26 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'main.dart';
 
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', gender: Gender.Male, dateOfBirth: DateTime.now(), notes: "hello", RGBcolor: [Colors.white.red, Colors.white.green, Colors.white.blue]);
-    return MaterialApp(
-      title: 'AlzApp Health Records',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: PatientProfilePage(patient, (p) {}),
-    );
-  }
-// #enddocregion build
-}
-
 class PatientProfilePage extends StatefulWidget {
   PatientProfilePage(this.patient, this.onPatientChange);
 
@@ -44,11 +24,13 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
   late TextEditingController birthYearController;
   late TextEditingController caretakerController;
   late TextEditingController notesController;
+  late TextEditingController heightController;
 
   @override
   void initState() {
     currentGender = widget.patient.gender;
     birthYearController = TextEditingController(text: widget.patient.dateOfBirth.year.toString());
+    heightController = TextEditingController(text: widget.patient.height.toString());
     caretakerController = TextEditingController(text: widget.patient.caretakerName);
     notesController = TextEditingController(text: widget.patient.notes);
 
@@ -161,6 +143,17 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                           Row(
                             children: [
                               Tooltip(
+                                  child: Icon(Icons.man, size: 32, color: Colors.blueAccent,),
+                                  message: "ส่วนสูง (ซม.)"),
+                              SizedBox(width: 16,), isEditMode?
+                              Flexible(child: TextField(controller: heightController, keyboardType: TextInputType.number,)):
+                              Text(widget.patient.height.toString(), style: TextStyle(fontSize: 24, color: Colors.black45,)),
+                            ],
+                          ),
+                          SizedBox(height: 16,),
+                          Row(
+                            children: [
+                              Tooltip(
                                   child: Icon(Icons.assignment_ind, size: 32, color: Colors.blueAccent,),
                                   message: "ชื่อผู้ดูแล"),
                               SizedBox(width: 16,), isEditMode?
@@ -207,15 +200,24 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                                 });
                               }
                               else {
-                                setState(() {
-                                  isEditMode = !isEditMode;
-                                  widget.patient.gender = currentGender;
-                                  widget.patient.dateOfBirth = DateTime(int.parse(birthYearController.text));
-                                  widget.patient.caretakerName = caretakerController.text;
-                                  widget.patient.notes = notesController.text;
-                                  widget.onPatientChange(widget.patient);
-                                  currentGender = widget.patient.gender;
-                                });
+                                if (heightController.text.isEmpty || int.parse(heightController.text) <= 0) {
+                                  heightController.text = widget.patient.height.toString();
+                                  showDialog(context: context, builder: (context){
+                                    return AlertDialog(title: Text("กรุณาระบุส่วนสูงที่ถูกต้อง"), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    isEditMode = !isEditMode;
+                                    widget.patient.gender = currentGender;
+                                    widget.patient.dateOfBirth = DateTime(int.parse(birthYearController.text));
+                                    widget.patient.height = int.parse(heightController.text);
+                                    widget.patient.caretakerName = caretakerController.text;
+                                    widget.patient.notes = notesController.text;
+                                    widget.onPatientChange(widget.patient);
+                                    currentGender = widget.patient.gender;
+                                  });
+                                }
                               }
                             }
                             },),

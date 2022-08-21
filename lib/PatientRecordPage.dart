@@ -12,26 +12,6 @@ import 'DextrostixPage.dart';
 import 'WeightPage.dart';
 import 'main.dart';
 
-void main() => runApp(MyApp());
-
-// #docregion MyApp
-class MyApp extends StatelessWidget {
-  // #docregion build
-  @override
-  Widget build(BuildContext context) {
-    Patient patient = Patient(name: 'name', caretakerName: 'caretakerName', gender: Gender.Male, dateOfBirth: DateTime.now(), notes: "hello", RGBcolor: [Colors.white.red, Colors.white.green, Colors.white.blue]);
-    return MaterialApp(
-      title: 'AlzApp Health Records',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: PatientRecordPage(patient, (p) {}),
-    );
-  }
-// #enddocregion build
-}
-
 class PatientRecordPage extends StatefulWidget {
   PatientRecordPage(this.patient, this.onPatientChange);
 
@@ -309,7 +289,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => WeightPage(
-                              fullName: widget.patient.name,
+                              patient: widget.patient,
                               weightRecords: widget.patient.weight,
                               onWeightRecordUpdated: (newRecords){widget.patient.weight = newRecords;
                               print(newRecords);

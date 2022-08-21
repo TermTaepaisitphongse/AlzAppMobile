@@ -7,14 +7,15 @@ import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'main.dart';
 import 'lineChartPage.dart';
 
 class WeightPage extends StatefulWidget {
   Function onWeightRecordUpdated;
   final List<Weight> weightRecords;
-  String fullName;
+  Patient patient;
 
-  WeightPage({required this.fullName, required this.weightRecords, required this.onWeightRecordUpdated});
+  WeightPage({required this.patient, required this.weightRecords, required this.onWeightRecordUpdated});
   @override
   _WeightPageState createState() => _WeightPageState();
 }
@@ -32,7 +33,7 @@ class _WeightPageState extends State<WeightPage> {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
-        title: Text(widget.fullName),
+        title: Text(widget.patient.name),
         actions: [IconButton(onPressed: (){
           final minimum = widget.weightRecords.fold<double>(double.infinity, (previousValue, element) => element.weight < previousValue ? element.weight : previousValue
           );
@@ -41,7 +42,7 @@ class _WeightPageState extends State<WeightPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.weightRecords, widget.fullName, "น้ำหนัก (kg)", maximum: maximum, minimum: minimum, series: <ChartSeries<Weight, DateTime>>[
+                  builder: (context) => LineChartPage(widget.weightRecords, widget.patient.name, "น้ำหนัก (kg)", maximum: maximum, minimum: minimum, series: <ChartSeries<Weight, DateTime>>[
                     LineSeries<Weight, DateTime>(
                       dataSource: widget.weightRecords,
                       xValueMapper: (Weight value, _) => value.date,
@@ -67,6 +68,43 @@ class _WeightPageState extends State<WeightPage> {
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Center(child: Text('น้ำหนัก (kg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            color: CupertinoColors.systemGrey6,
+            padding: const EdgeInsets.only(top: 8),
+            child: Center(
+              child: ElevatedButton(onPressed: (){
+                final bmi = widget.weightRecords.map((weight) {
+                  final heightInMeters = (widget.patient.height ?? 0) / 100.0;
+                  final weightRounded = double.parse((weight.weight/heightInMeters/heightInMeters).toStringAsFixed(2));
+                  return Bmi(date: weight.date, value: weightRounded);
+                }).toList();
+                final minimum = bmi.fold<double>(double.infinity, (previousValue, element) => element.value < previousValue ? element.value : previousValue
+                );
+                final maximum = bmi.fold<double>(0, (previousValue, element) => element.value > previousValue ? element.value : previousValue
+                );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LineChartPage(bmi, widget.patient.name, "BMI", maximum: maximum, minimum: minimum, series: <ChartSeries<Bmi, DateTime>>[
+                          LineSeries<Bmi, DateTime>(
+                            dataSource: bmi,
+                            xValueMapper: (Bmi value, _) => value.date,
+                            yValueMapper: (Bmi value, _) => value.value,
+                            name: 'BMI',
+                            color: Colors.blueAccent,
+                            markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
+                            // Enable data label
+                            dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),),
+                        ],)
+                    )
+                );
+              }, child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('View Your BMI'),
+              )),
             ),
           ),
           Expanded(child: Container(child: widget.weightRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
@@ -460,4 +498,12 @@ class Weight {
     // TODO: implement toString
     return toJson().toString();
   }
+}
+
+class Bmi {
+  final DateTime date;
+  final double value;
+
+  Bmi({required this.date, required this.value});
+
 }

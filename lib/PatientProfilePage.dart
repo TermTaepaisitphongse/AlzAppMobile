@@ -200,7 +200,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                                 });
                               }
                               else {
-                                if (heightController.text.isEmpty || int.parse(heightController.text) <= 0) {
+                                if (heightController.text.isEmpty || int.parse(heightController.text) < 0) {
                                   heightController.text = widget.patient.height.toString();
                                   showDialog(context: context, builder: (context){
                                     return AlertDialog(title: Text("กรุณาระบุส่วนสูงที่ถูกต้อง"), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);

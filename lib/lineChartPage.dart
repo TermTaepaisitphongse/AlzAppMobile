@@ -149,7 +149,7 @@ class _LineChartPageState extends State<LineChartPage> {
                         // Either the permission was already granted before or the user just granted it.
                       }
                     },
-                    child: Text("Save")),
+                    child: Text("บันทึกภาพ")),
               )
             ],
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -167,7 +167,7 @@ class _LineChartPageState extends State<LineChartPage> {
                 title: Text('บันทึกภาพสำเร็จ'),
                 actions: [
                   ElevatedButton(
-                    child: Text('OK'),
+                    child: Text('ปิด'),
                     onPressed: () => Navigator.pop(context),
                   )
                 ],

@@ -25,13 +25,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>to setup profile image</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>to setup profile image</string>
+	<string>The app needs a camera usage to assist you to setup profile image</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>to save images to camera roll</string>
+	<string>The app needs access to photo library to save your vital graph information </string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>to setup profile image</string>
+	<string>The app needs access to photo library to setup profile image</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>The app needs access to photo library to save vital chart image</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

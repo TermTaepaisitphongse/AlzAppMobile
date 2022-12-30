@@ -51,5 +51,10 @@
     <string>to save images to camera roll</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>CFBundleLocalizations</key>
+    <array>
+    	<string>en</string>
+    	<string>th</string>
+    </array>
 </dict>
 </plist>

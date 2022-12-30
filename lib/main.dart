@@ -6,9 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'PatientRecordPage.dart';
 import 'BloodPressurePage.dart';
@@ -18,7 +18,15 @@ import 'package:alzapp/TemperaturePage.dart';
 import 'package:alzapp/DextrostixPage.dart';
 import 'package:alzapp/WeightPage.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
+  runApp(EasyLocalization(
+      path: 'locales',
+      supportedLocales: [Locale('en', 'US'), Locale('th', 'TH')],
+      child: MyApp()));
+}
 
 // #docregion MyApp
 class MyApp extends StatelessWidget {
@@ -32,13 +40,9 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: PatientItem(),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('th', 'TH'),
-      ],
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
     );
   }
 // #enddocregion build
@@ -113,13 +117,13 @@ class _PatientItemState extends State<PatientItem> {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                              title: Text("ยืนยันลบข้อมูลผู้ป่วย?"),
+                              title: Text('confirm_delete_patient'.tr()),
                               actions: [
                                 TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text("ไม่ลบ")),
+                                    child: Text('do_not_delete'.tr())),
                                 ElevatedButton(
                                     onPressed: () {
                                       setState(() {
@@ -129,7 +133,7 @@ class _PatientItemState extends State<PatientItem> {
                                       });
                                       Navigator.pop(context);
                                     },
-                                    child: Text("ลบ"))
+                                    child: Text('delete'.tr()))
                               ],
                             ));
                   },
@@ -225,14 +229,14 @@ class _PatientItemState extends State<PatientItem> {
     return AppBar(
       title: Row(
         children: [
-          Text("AlzApp", style: TextStyle(fontSize: 25)),
+          Text('app_name'.tr(), style: TextStyle(fontSize: 25)),
           SizedBox(
             width: 5,
           ),
           Text(
             version,
             style: TextStyle(fontSize: 10),
-          )
+          ),
         ],
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -242,7 +246,7 @@ class _PatientItemState extends State<PatientItem> {
         onPressed: () {
           showAboutDialog(
               context: context,
-              applicationName: 'ขอต้อนรับสู่ AlzApp',
+              applicationName: 'infodialog_title'.tr(),
               applicationIcon: SizedBox(
                 child: Image.asset('assets/AlzAppIcon.png'),
                 width: 32,
@@ -251,17 +255,17 @@ class _PatientItemState extends State<PatientItem> {
               applicationVersion: "",
               children: [
                 Text(
-                    'AlzApp ช่วยให้ผู้ดูแลผู้ป่วยหรือตัวท่านเองสามารถบันทึกสัญญาณชีวิตของผู้ป่วยหรือตัวท่านเองได้ง่ายและมีประสิทธิภาพ'),
+                    'infodialog_desc'.tr()),
                 SizedBox(
                   height: 16,
                 ),
-                Text('พัฒนาโดย'),
-                Text('ปรานต์ (เติม) แต้ไพสิฐพงษ์'),
+                Text('infodialog_term_fullname_prefix'.tr()),
+                Text('infodialog_term_fullname'.tr()),
                 Row(
                   children: [
-                    Text('Email: '),
+                    Text('infodialog_email_prefix'.tr()),
                     GestureDetector(
-                      child: Text("termpt2222@gmail.com",
+                      child: Text('infodialog_email'.tr(),
                           style: TextStyle(
                               decoration: TextDecoration.underline,
                               color: Colors.blue)),
@@ -274,7 +278,7 @@ class _PatientItemState extends State<PatientItem> {
                   ],
                 ),
                 SizedBox(height: 16),
-                Text("ผมขอขอบคุณ\nรศ.นพ.สุขเจริญ ตั้งวงษ์ไชย\nภาควิชาจิตเวชศาสตร์\nคณะแพทยศาสตร์\nจุฬาลงกรณ์มหาวิทยาลัย\nที่กรุณาให้คำแนะนำในการพัฒนา AlzApp")
+                Text('infodialog_thank_you'.tr())
               ]);
         },
       ),
@@ -288,7 +292,7 @@ class _PatientItemState extends State<PatientItem> {
     final emptyWidget = Center(
         child: Column(
       children: [
-        Text("กรุณาเพิ่มรายการใหม่",
+        Text('add_new_patient'.tr(),
             style: TextStyle(color: CupertinoColors.systemGrey2)),
         SizedBox(height: 6),
         Icon(Icons.add, color: CupertinoColors.systemGrey2),
@@ -309,7 +313,7 @@ class _PatientItemState extends State<PatientItem> {
                     Padding(
                       padding: const EdgeInsets.all(24.0),
                       child: Text(
-                        'ผู้ป่วย',
+                        'patient'.tr(),
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 24),
                       ),
@@ -330,7 +334,7 @@ class _PatientItemState extends State<PatientItem> {
         // return object of type Dialog
         return PatientForm(patients, (newPatient) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('เพิ่มเรียบร้อย!')));
+              .showSnackBar(SnackBar(content: Text('added_successfully'.tr())));
           setState(() {
             patients.add(newPatient);
             _updatePatientToLocal();
@@ -517,7 +521,7 @@ class AddPatientForm extends State<PatientForm> {
     Color currentColor = colors[_random.nextInt(colors.length)];
     // Build a Form widget using the _formKey created above.
     return AlertDialog(
-      title: new Text("เพิ่มรายชื่อใหม่"),
+      title: new Text('newpatient_title'.tr()),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -526,10 +530,10 @@ class AddPatientForm extends State<PatientForm> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อผู้ป่วย:"),
+                decoration: new InputDecoration(labelText: 'newpatient_name'.tr()),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกข้อความนี่';
+                    return 'required'.tr();
                   } else {
                     currentName = value;
                   }
@@ -539,7 +543,7 @@ class AddPatientForm extends State<PatientForm> {
               SizedBox(height: 16,),
               Row(
                 children: [
-                  Text("เพศ:", style: TextStyle(color: Colors.grey),),
+                  Text('gender'.tr() + ":", style: TextStyle(color: Colors.grey),),
                   SizedBox(width: 16,),
                   DropdownButton<Gender>(
                     value: currentGender,
@@ -559,14 +563,14 @@ class AddPatientForm extends State<PatientForm> {
                 ],
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "ปีเกิด"),
+                decoration: new InputDecoration(labelText: 'birth_year'.tr()),
                   keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกข้อความนี่';
+                    return 'required'.tr();
                   }
                   else if (int.parse(value) < (DateTime.now().year + 543) - 100 || int.parse(value) > DateTime.now().year + 543) {
-                    return 'กรุณากรอกปีเกิดที่ถูกต้อง';
+                    return 'incorrect_input'.tr();
                   }
                   else {
                     currentDateOfBirth = DateTime(int.parse(value));
@@ -575,14 +579,14 @@ class AddPatientForm extends State<PatientForm> {
                 },
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "ส่วนสูง (ซม.)"),
+                decoration: new InputDecoration(labelText: 'height'.tr()),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกข้อความนี่';
+                    return 'required'.tr();
                   }
                   else if (int.parse(value) <= 0) {
-                    return 'กรุณากรอกส่วนสูงเป็นเซนติเมตรที่ถูกต้อง';
+                    return 'incorrect_height'.tr();
                   }
                   else {
                     currentHeight = int.parse(value);
@@ -591,7 +595,7 @@ class AddPatientForm extends State<PatientForm> {
                 },
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "ข้อมูลเพิ่มเติม"),
+                decoration: new InputDecoration(labelText: 'notes'.tr()),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     currentNotes = "";
@@ -602,10 +606,10 @@ class AddPatientForm extends State<PatientForm> {
                 },
               ),
               TextFormField(
-                decoration: new InputDecoration(labelText: "ชื่อผู้ดูแล"),
+                decoration: new InputDecoration(labelText: 'caretaker_name'.tr()),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'กรุณากรอกข้อความนี่';
+                    return 'required'.tr();
                   } else {
                     currentCaretakerName = value;
                   }
@@ -641,7 +645,7 @@ class AddPatientForm extends State<PatientForm> {
                   print(patientWithSameName);
                   if (patientWithSameName != null) {
                     setState(() {
-                      errorMessage = "มีผู้ป่วยชื่อนี้แล้ว กรุณาใช้ชื่ออื่น";
+                      errorMessage = 'repeated_patient_name_error'.tr();
                     });
                   } else {
                     widget.onAdded(Patient(
@@ -660,7 +664,7 @@ class AddPatientForm extends State<PatientForm> {
                   }
                 }
               },
-              child: Text("เพิ่ม"),
+              child: Text('add'.tr()),
             ),
           ],
         ),

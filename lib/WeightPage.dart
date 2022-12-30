@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'main.dart';
 import 'lineChartPage.dart';
@@ -25,7 +26,7 @@ class _WeightPageState extends State<WeightPage> {
   @override
   Widget build(BuildContext context) {
     final emptyWidget = Center(child: Column(children: [
-      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      Text('add_new_patient'.tr(), style: TextStyle(color: CupertinoColors.systemGrey2)),
       SizedBox(height: 6),
       Icon(Icons.add, color: CupertinoColors.systemGrey2),
     ],
@@ -42,12 +43,12 @@ class _WeightPageState extends State<WeightPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.weightRecords, widget.patient.name, "น้ำหนัก (kg)", maximum: maximum, minimum: minimum, series: <ChartSeries<Weight, DateTime>>[
+                  builder: (context) => LineChartPage(widget.weightRecords, widget.patient.name, 'weight'.tr() + " (kg)", maximum: maximum, minimum: minimum, series: <ChartSeries<Weight, DateTime>>[
                     LineSeries<Weight, DateTime>(
                       dataSource: widget.weightRecords,
                       xValueMapper: (Weight value, _) => value.date,
                       yValueMapper: (Weight value, _) => value.weight,
-                      name: 'น้ำหนัก',
+                      name: 'weight'.tr(),
                       color: Colors.blueAccent,
                       markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                       // Enable data label
@@ -67,7 +68,7 @@ class _WeightPageState extends State<WeightPage> {
             color: CupertinoColors.systemGrey6,
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Center(child: Text('น้ำหนัก (kg)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+              child: Center(child: Text('weight'.tr() + " (kg)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
             ),
           ),
           Container(
@@ -157,7 +158,7 @@ class _WeightPageState extends State<WeightPage> {
                   }
                   var iconCheck = Icons.monitor_weight_rounded;
                   var iconColor = Colors.blueAccent;
-                  var tooltipMessage = "น้ำหนัก";
+                  var tooltipMessage = 'weight'.tr();
                   return Dismissible(
                       child: Padding(
                         padding: const EdgeInsets.all(2.0),
@@ -204,18 +205,18 @@ class _WeightPageState extends State<WeightPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("ยืนยันลบข้อมูล?"),
+                              title: Text('confirm_delete_info'.tr()),
                               actions: [
                                 TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
                                     },
-                                    child: Text("ไม่ลบ")),
+                                    child: Text('do_not_delete'.tr())),
                                 ElevatedButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(true);
                                     },
-                                    child: Text("ลบ"))
+                                    child: Text('delete'.tr()))
                               ],
                             );
                           },
@@ -281,7 +282,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     String formattedDate = DateFormat('dd MMM', "th").format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("บันทึกใหม่"),
+      title: new Text('new_record'.tr()),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -290,7 +291,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text('record_type'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -300,7 +301,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("น้ำหนัก", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text('weight'.tr(), style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -313,7 +314,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text('date'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -357,7 +358,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text('time'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -395,7 +396,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("น้ำหนัก", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text('weight'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -403,7 +404,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     width: 64,
                     child: TextFormField(
                       decoration: InputDecoration(
-                        hintText: 'น้ำหนัก',
+                        hintText: 'weight'.tr(),
                         isDense: true,
                         contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                         enabledBorder: OutlineInputBorder(
@@ -447,7 +448,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             // Validate returns true if the form is valid, or false otherwise.
             if (dateTime.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
               setState(() {
-                errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
+                errorMessage = 'incorrect_time'.tr();
               });
             }
             else if (weight > 0) {
@@ -457,10 +458,10 @@ class _NewRecordPageState extends State<NewRecordPage> {
             else {
               //show red text that says invalid value
               setState(() {
-                errorMessage = "กรุณากรอกค่าค่ี่ถูกต้อง";
+                errorMessage = 'incorrect_value'.tr();
               });
             }
-          }, child: Text("เพิ่ม"),
+          }, child: Text('add'.tr()),
         ),
       ],
     );

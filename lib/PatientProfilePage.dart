@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'main.dart';
 
@@ -107,7 +107,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                             children: [
                               Tooltip(
                                   child: Icon(chosenIcon(widget.patient), size: 32, color: Colors.blueAccent),
-                                  message: "เพศ"),
+                                  message: 'gender'.tr()),
                               SizedBox(width: 16,), isEditMode? DropdownButton<Gender>(
                                 value: currentGender,
                                 icon: const Icon(Icons.arrow_drop_down_sharp),
@@ -133,7 +133,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                             children: [
                               Tooltip(
                                   child: Icon(Icons.cake, size: 32, color: Colors.blueAccent,),
-                                  message: "ปีเกิด"),
+                                  message: 'birth_year'.tr()),
                               SizedBox(width: 16,), isEditMode?
                               Flexible(child: TextField(controller: birthYearController, keyboardType: TextInputType.number,)):
                               Text(widget.patient.dateOfBirth.year.toString(), style: TextStyle(fontSize: 24, color: Colors.black45,)),
@@ -144,7 +144,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                             children: [
                               Tooltip(
                                   child: Icon(Icons.man, size: 32, color: Colors.blueAccent,),
-                                  message: "ส่วนสูง (ซม.)"),
+                                  message: 'height'.tr()),
                               SizedBox(width: 16,), isEditMode?
                               Flexible(child: TextField(controller: heightController, keyboardType: TextInputType.number,)):
                               Text((widget.patient.height ?? 0).toString(), style: TextStyle(fontSize: 24, color: Colors.black45,)),
@@ -155,7 +155,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                             children: [
                               Tooltip(
                                   child: Icon(Icons.assignment_ind, size: 32, color: Colors.blueAccent,),
-                                  message: "ชื่อผู้ดูแล"),
+                                  message: 'caretaker_name'.tr()),
                               SizedBox(width: 16,), isEditMode?
                               Flexible(child: TextField(controller: caretakerController)):
                               Flexible(child: Text(widget.patient.caretakerName, style: TextStyle(fontSize: 24, color: Colors.black45),)),
@@ -166,7 +166,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                             children: [
                               Tooltip(
                                   child: Icon(Icons.notes, size: 32, color: Colors.blueAccent,),
-                                  message: "ข้อมูลเพิ่มเติม"),
+                                  message: 'notes'.tr()),
                               SizedBox(width: 16,), isEditMode?
                               Flexible(child: TextField(controller: notesController)):
                               Flexible(child: Text(widget.patient.notes ?? '', style: TextStyle(fontSize: 24, color: Colors.black45),)),
@@ -196,14 +196,14 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                               if (caretakerController.text.isEmpty) {
                                 caretakerController.text = widget.patient.caretakerName;
                                 showDialog(context: context, builder: (context){
-                                  return AlertDialog(title: Text("กรุณาระบุชื่อผู้ดูแล"), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);
+                                  return AlertDialog(title: Text('incorrect_caretaker_name'.tr()), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);
                                 });
                               }
                               else {
                                 if (heightController.text.isEmpty || int.parse(heightController.text) < 0) {
                                   heightController.text = widget.patient.height.toString();
                                   showDialog(context: context, builder: (context){
-                                    return AlertDialog(title: Text("กรุณาระบุส่วนสูงที่ถูกต้อง"), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);
+                                    return AlertDialog(title: Text('incorrect_height'.tr()), actions: [ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Text('Ok'))],);
                                   });
                                 }
                                 else{
@@ -236,11 +236,11 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
     }
     dateOfBirthValidator(String? value) {
       if (value == null || value.isEmpty) {
-        return 'กรุณากรอกข้อความนี่';
+        return 'required'.tr();
       }
       else if (int.parse(value) < (DateTime.now().year + 543) - 100 || int.parse(value) > DateTime.now().year + 543) {
         print(value);
-        return 'กรุณากรอกปีเกิดที่ถูกต้อง';
+        return 'incorrect_input'.tr();
       }
       else {
         return null;

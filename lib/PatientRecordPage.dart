@@ -2,6 +2,7 @@ import 'package:alzapp/RespiratoryRatePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'BloodPressurePage.dart';
 import 'PatientProfilePage.dart';
@@ -50,7 +51,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Text(
-              'บันทึกสุขภาพ',
+              'patient_record_page_title'.tr(),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
             ),
           ),
@@ -86,7 +87,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                               height: 16.0,
                             ),
                             Text(
-                              'ความดันเลือด',
+                              'blood_pressure'.tr(),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -128,7 +129,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                               height: 16.0,
                             ),
                             Text(
-                              'ชีพจร',
+                              'pulse'.tr(),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -177,7 +178,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                               height: 16.0,
                             ),
                             Text(
-                              'อัตราการหายใจ',
+                              'respiratory_rate'.tr(),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -219,7 +220,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                               height: 16.0,
                             ),
                             Text(
-                              'อุณหภูมิร่างกาย',
+                              'temperature'.tr(),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -268,7 +269,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                               height: 16.0,
                             ),
                             Text(
-                              'น้ำตาลในเลือด',
+                              'dextrostix'.tr(),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
@@ -312,7 +313,7 @@ class _PatientRecordPageState extends State<PatientRecordPage> {
                                 height: 16.0,
                               ),
                               Text(
-                                'น้ำหนัก',
+                                'weight'.tr(),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),

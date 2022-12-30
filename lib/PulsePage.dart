@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'lineChartPage.dart';
 
@@ -24,7 +25,7 @@ class _PulsePageState extends State<PulsePage> {
   @override
   Widget build(BuildContext context) {
     final emptyWidget = Center(child: Column(children: [
-      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      Text('add_new_patient'.tr(), style: TextStyle(color: CupertinoColors.systemGrey2)),
       SizedBox(height: 6),
       Icon(Icons.add, color: CupertinoColors.systemGrey2),
     ],
@@ -41,13 +42,13 @@ class _PulsePageState extends State<PulsePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.pulseRecords, widget.fullName, "ชีพจร (bpm)", maximum: maximum.toDouble(),
+                  builder: (context) => LineChartPage(widget.pulseRecords, widget.fullName, 'pulse'.tr() + " (bpm)", maximum: maximum.toDouble(),
                     minimum: minimum.toDouble(), series: <ChartSeries<Pulse, DateTime>>[
                     LineSeries<Pulse, DateTime>(
                       dataSource: widget.pulseRecords,
                       xValueMapper: (Pulse value, _) => value.date,
                       yValueMapper: (Pulse value, _) => value.pulse,
-                      name: 'ชีพจร',
+                      name: 'pulse'.tr(),
                       color: Colors.blueAccent,
                       markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                       // Enable data label
@@ -67,7 +68,7 @@ class _PulsePageState extends State<PulsePage> {
             color: CupertinoColors.systemGrey6,
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Center(child: Text('ชีพจร (bpm)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+              child: Center(child: Text('pulse'.tr() + " (bpm)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
             ),
           ),
           Expanded(child: Container(child: widget.pulseRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
@@ -121,27 +122,27 @@ class _PulsePageState extends State<PulsePage> {
                   if(record!.pulse >= 101){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์ทันที";
+                    tooltipMessage = 'tip_meet_doctor_severe'.tr();
                   }
                   else if(record.pulse > 90){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรสังเกตอาการ";
+                    tooltipMessage = 'tip_observe_symptoms'.tr();
                   }
                   else if (record.pulse > 70){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
-                    tooltipMessage = "ค่าปกติที่คาดหมาย";
+                    tooltipMessage = 'tip_normal'.tr();
                   }
                   else if (record.pulse > 60) {
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรสังเกตอาการ";
+                    tooltipMessage = 'tip_observe_symptoms'.tr();
                   }
                   else {
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์ทันที";
+                    tooltipMessage = 'tip_meet_doctor_severe'.tr();
                   }
                   return Dismissible(
                     child: Padding(
@@ -189,18 +190,18 @@ class _PulsePageState extends State<PulsePage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("ยืนยันลบข้อมูล?"),
+                              title: Text('confirm_delete_info'.tr()),
                               actions: [
                                 TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
                                     },
-                                    child: Text("ไม่ลบ")),
+                                    child: Text('do_not_delete'.tr())),
                                 ElevatedButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(true);
                                     },
-                                    child: Text("ลบ"))
+                                    child: Text('delete'.tr()))
                               ],
                             );
                           },
@@ -266,7 +267,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     String formattedDate = DateFormat('dd MMM', "th").format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("บันทึกใหม่"),
+      title: new Text('new_record'.tr()),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -275,7 +276,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text('record_type'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -285,7 +286,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("ชีพจร", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text('pulse'.tr(), style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -298,7 +299,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text('date'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -342,7 +343,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text('time'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -380,7 +381,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("ชีพจร", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text('pulse'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -434,7 +435,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             // Validate returns true if the form is valid, or false otherwise.
             if (dateTime.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
               setState(() {
-                errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
+                errorMessage = 'incorrect_time'.tr();
               });
             }
             else if (pulse > 0) {
@@ -444,10 +445,10 @@ class _NewRecordPageState extends State<NewRecordPage> {
             else {
               //show red text that says invalid value
               setState(() {
-                errorMessage = "กรุณากรอกค่าค่ี่ถูกต้อง";
+                errorMessage = 'incorrect_value'.tr();
               });
             }
-          }, child: Text("เพิ่ม"),
+          }, child: Text('add'.tr()),
         ),
       ],
     );

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'lineChartPage.dart';
 
@@ -24,7 +25,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
   @override
   Widget build(BuildContext context) {
     final emptyWidget = Center(child: Column(children: [
-      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      Text('add_new_patient'.tr(), style: TextStyle(color: CupertinoColors.systemGrey2)),
       SizedBox(height: 6),
       Icon(Icons.add, color: CupertinoColors.systemGrey2),
     ],
@@ -41,12 +42,12 @@ class _TemperaturePageState extends State<TemperaturePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.temperatureRecords, widget.fullName, "อุณหภูมิร่างกาย (°C)", maximum: maximum, minimum: minimum, series: <ChartSeries<Temperature, DateTime>>[
+                  builder: (context) => LineChartPage(widget.temperatureRecords, widget.fullName, 'temperature'.tr() + " (°C)", maximum: maximum, minimum: minimum, series: <ChartSeries<Temperature, DateTime>>[
                     LineSeries<Temperature, DateTime>(
                       dataSource: widget.temperatureRecords,
                       xValueMapper: (Temperature value, _) => value.date,
                       yValueMapper: (Temperature value, _) => value.temperature,
-                      name: 'อุณหภูมิร่างกาย',
+                      name: 'temperature'.tr(),
                       color: Colors.blueAccent,
                       markerSettings: MarkerSettings(borderWidth: 3, shape: DataMarkerType.circle, isVisible: true, color: Colors.blueAccent),
                       // Enable data label
@@ -66,7 +67,7 @@ class _TemperaturePageState extends State<TemperaturePage> {
             color: CupertinoColors.systemGrey6,
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Center(child: Text('อุณหภูมิร่างกาย (°C)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+              child: Center(child: Text('temperature'.tr() + " (°C)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
             ),
           ),
           Expanded(child: Container(child: widget.temperatureRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
@@ -120,27 +121,27 @@ class _TemperaturePageState extends State<TemperaturePage> {
                   if(record!.temperature > 38.5){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                    tooltipMessage = 'tip_meet_doctor'.tr();
                   }
                   else if(record.temperature > 37.5){
                     iconCheck = Icons.arrow_circle_up_sharp;
                     iconColor = Colors.red;
-                    tooltipMessage = "ค่าสูงกว่าที่คาดหมาย";
+                    tooltipMessage = 'tip_high'.tr();
                   }
                   else if (record.temperature > 36){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
-                    tooltipMessage = "ค่าปกติที่คาดหมาย";
+                    tooltipMessage = 'tip_normal'.tr();
                   }
                   else if (record.temperature > 35.5) {
                     iconCheck = Icons.arrow_circle_down_sharp;
                     iconColor = Colors.red;
-                    tooltipMessage = "ค่าต่ำกว่าที่คาดหมาย";
+                    tooltipMessage = 'tip_low'.tr();
                   }
                   else {
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                    tooltipMessage = 'tip_meet_doctor'.tr();
                   }
                   return Dismissible(
                     child: Padding(
@@ -188,18 +189,18 @@ class _TemperaturePageState extends State<TemperaturePage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("ยืนยันลบข้อมูล?"),
+                              title: Text('confirm_delete_info'.tr()),
                               actions: [
                                 TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
                                     },
-                                    child: Text("ไม่ลบ")),
+                                    child: Text('do_not_delete'.tr())),
                                 ElevatedButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(true);
                                     },
-                                    child: Text("ลบ"))
+                                    child: Text('delete'.tr()))
                               ],
                             );
                           },
@@ -265,7 +266,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     String formattedDate = DateFormat('dd MMM', "th").format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("บันทึกใหม่"),
+      title: new Text('new_record'.tr()),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -274,7 +275,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text('record_type'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -284,7 +285,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("อุณหภูมิร่างกาย", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text('temperature'.tr(), style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -297,7 +298,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text('date'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -341,7 +342,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text('time'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -379,7 +380,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("อุณหภูมิร่างกาย", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text('temperature'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -431,7 +432,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             // Validate returns true if the form is valid, or false otherwise.
             if (dateTime.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
               setState(() {
-                errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
+                errorMessage = 'incorrect_time'.tr();
               });
             }
             else if (temperature > 0) {
@@ -441,10 +442,10 @@ class _NewRecordPageState extends State<NewRecordPage> {
             else {
               //show red text that says invalid value
               setState(() {
-                errorMessage = "กรุณากรอกค่าค่ี่ถูกต้อง";
+                errorMessage = 'incorrect_value'.tr();
               });
             }
-          }, child: Text("เพิ่ม"),
+          }, child: Text('add'.tr()),
         ),
       ],
     );

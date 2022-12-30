@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'lineChartPage.dart';
 
@@ -24,7 +25,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
   @override
   Widget build(BuildContext context) {
     final emptyWidget = Center(child: Column(children: [
-      Text("กรุณาเพิ่มรายการใหม่", style: TextStyle(color: CupertinoColors.systemGrey2)),
+      Text('add_new_patient'.tr(), style: TextStyle(color: CupertinoColors.systemGrey2)),
       SizedBox(height: 6),
       Icon(Icons.add, color: CupertinoColors.systemGrey2),
     ],
@@ -41,12 +42,12 @@ class _DextrostixPageState extends State<DextrostixPage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, "น้ำตาลในเลือด (mg/dL)", maximum: maximum.toDouble(), minimum: minimum.toDouble(), series: <ChartSeries<Dextrostix, DateTime>>[
+                  builder: (context) => LineChartPage(widget.dextrostixRecords, widget.fullName, 'dextrostix'.tr() + " (mg/dL)", maximum: maximum.toDouble(), minimum: minimum.toDouble(), series: <ChartSeries<Dextrostix, DateTime>>[
                     LineSeries<Dextrostix, DateTime>(
                       dataSource: widget.dextrostixRecords,
                       xValueMapper: (Dextrostix value, _) => value.date,
                       yValueMapper: (Dextrostix value, _) => value.dextrostix,
-                      name: 'น้ำตาลในเลือด',
+                      name: 'dextrostix'.tr(),
                       color: Colors.blueAccent,
                       // Enable data label
                       dataLabelSettings: DataLabelSettings(isVisible: true, labelPosition: ChartDataLabelPosition.inside),
@@ -66,7 +67,7 @@ class _DextrostixPageState extends State<DextrostixPage> {
             color: CupertinoColors.systemGrey6,
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Center(child: Text('น้ำตาลในเลือด (mg/dL)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
+              child: Center(child: Text('dextrostix'.tr() + " (mg/dL)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),)),
             ),
           ),
           Expanded(child: Container(child: widget.dextrostixRecords.isEmpty ? GestureDetector(child: emptyWidget, onTap: () => _showDialog(context)) : _buildRecordList(), color: Color(0xffF3F3F3))),
@@ -120,17 +121,17 @@ class _DextrostixPageState extends State<DextrostixPage> {
                   if(record!.dextrostix > 99){
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                    tooltipMessage = 'tip_meet_doctor'.tr();
                   }
                   else if (record.dextrostix > 0){
                     iconCheck = Icons.check_circle;
                     iconColor = Colors.green;
-                    tooltipMessage = "ค่าปกติที่คาดหมาย";
+                    tooltipMessage = 'tip_normal'.tr();
                   }
                   else {
                     iconCheck = Icons.warning_rounded;
                     iconColor = Colors.red;
-                    tooltipMessage = "ควรไปพบแพทย์";
+                    tooltipMessage = 'tip_meet_doctor'.tr();
                   }
                   return Dismissible(
                     child: Padding(
@@ -178,18 +179,18 @@ class _DextrostixPageState extends State<DextrostixPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("ยืนยันลบข้อมูล?"),
+                              title: Text('confirm_delete_info'.tr()),
                               actions: [
                                 TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(false);
                                     },
-                                    child: Text("ไม่ลบ")),
+                                    child: Text('do_not_delete'.tr())),
                                 ElevatedButton(
                                     onPressed: () {
                                       Navigator.of(context).pop(true);
                                     },
-                                    child: Text("ลบ"))
+                                    child: Text('delete'.tr()))
                               ],
                             );
                           },
@@ -255,7 +256,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
     String formattedDate = DateFormat('dd MMM', "th").format(selectedDate);
     print(DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute));
     return AlertDialog(
-      title: new Text("บันทึกใหม่"),
+      title: new Text('new_record'.tr()),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -264,7 +265,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             mainAxisSize: MainAxisSize.min,
 
             children: <Widget>[
-              Text("ประเภท", style: TextStyle(fontWeight: FontWeight.bold),),
+              Text('record_type'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
               SizedBox(height: 8.0),
               Container(
                 decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -274,7 +275,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Expanded(child: Text("น้ำตาลในเลือด", style: TextStyle(fontSize: 12.0),)),
+                      Expanded(child: Text('dextrostix'.tr(), style: TextStyle(fontSize: 12.0),)),
                       Icon(Icons.arrow_drop_down_sharp, color: Colors.black12),
                     ],
                   ),
@@ -287,7 +288,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("วันที่", style: TextStyle(fontWeight: FontWeight.bold,),),
+                        Text('date'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -331,7 +332,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("เวลา", style: TextStyle(fontWeight: FontWeight.bold),),
+                        Text('time'.tr(), style: TextStyle(fontWeight: FontWeight.bold),),
                         SizedBox(height: 4.0),
                         Container(
                           decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(8.0)),
@@ -369,7 +370,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                 ],
               ),
               SizedBox(height: 8.0),
-              Text("น้ำตาลในเลือด", style: TextStyle(fontWeight: FontWeight.bold,),),
+              Text('dextrostix'.tr(), style: TextStyle(fontWeight: FontWeight.bold,),),
               SizedBox(height: 4.0,),
               Row(
                 children: [
@@ -423,7 +424,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
             // Validate returns true if the form is valid, or false otherwise.
             if (dateTime.millisecondsSinceEpoch > DateTime.now().millisecondsSinceEpoch) {
               setState(() {
-                errorMessage = "กรุณาระบุเวลาที่ถูกต้อง";
+                errorMessage = 'incorrect_time'.tr();
               });
             }
             else if (dextrostix > 0) {
@@ -433,10 +434,10 @@ class _NewRecordPageState extends State<NewRecordPage> {
             else {
               //show red text that says invalid value
               setState(() {
-                errorMessage = "กรุณากรอกค่าค่ี่ถูกต้อง";
+                errorMessage = 'incorrect_value'.tr();
               });
             }
-          }, child: Text("เพิ่ม"),
+          }, child: Text('add'.tr()),
         ),
       ],
     );

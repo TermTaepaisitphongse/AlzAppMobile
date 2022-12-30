@@ -6,6 +6,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LineChartPage extends StatefulWidget {
   final String title;
@@ -149,7 +150,7 @@ class _LineChartPageState extends State<LineChartPage> {
                         // Either the permission was already granted before or the user just granted it.
                       }
                     },
-                    child: Text("บันทึกภาพ")),
+                    child: Text('save_image'.tr())),
               )
             ],
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -167,7 +168,7 @@ class _LineChartPageState extends State<LineChartPage> {
                 title: Text('บันทึกภาพสำเร็จ'),
                 actions: [
                   ElevatedButton(
-                    child: Text('ปิด'),
+                    child: Text('close'.tr()),
                     onPressed: () => Navigator.pop(context),
                   )
                 ],

@@ -299,7 +299,7 @@ class _NewRecordPageState extends State<NewRecordPage> {
                               onTap: () async {
                                 final chosenDate = await showRoundedDatePicker(
                                   context: context,
-                                  locale: const Locale("th", "TH"),
+                                  locale: context.locale,
                                   era: EraMode.BUDDHIST_YEAR,
                                   initialDate: selectedDate,
                                   initialDatePickerMode: DatePickerMode.day,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:alzapp/SettingsPage.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -21,18 +22,31 @@ import 'package:alzapp/WeightPage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-
-  runApp(EasyLocalization(
-      path: 'locales',
-      supportedLocales: [Locale('en', 'US'), Locale('th', 'TH')],
-      child: MyApp()));
+  final stringlocale = await getLocale();
+  print(stringlocale);
+  runApp(MyApp(stringLocale : 'TH'));
 }
 
 // #docregion MyApp
 class MyApp extends StatelessWidget {
+  final String stringLocale;
+
+  const MyApp({Key? key, required this.stringLocale}) : super(key: key);
   // #docregion build
   @override
   Widget build(BuildContext context) {
+    print('myapp');
+    Locale locale;
+    if (stringLocale == "US") {
+      locale = Locale('en', 'US');
+    }
+    else {
+      locale = Locale('th', 'TH');
+    }
+    print(locale);
+    print(context);
+    print(context.supportedLocales);
+
     return MaterialApp(
       title: 'AlzApp Health Records',
       theme: ThemeData(
@@ -40,9 +54,13 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: PatientItem(),
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      locale: context.locale,
+      // home: EasyLocalization(
+      //     path: 'locales',
+      //     supportedLocales: [Locale('en', 'US'), Locale('th', 'TH')],
+      //     child: PatientItem()),
+      // localizationsDelegates: context.localizationDelegates,
+      // supportedLocales: context.supportedLocales,
+      // locale: locale,
     );
   }
 // #enddocregion build
@@ -71,6 +89,7 @@ class _PatientItemState extends State<PatientItem> {
 
   // #docregion _buildRow
   Widget _buildRow(Patient p) {
+    print('buildrow');
     return ListTile(
       title: Material(
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -241,47 +260,6 @@ class _PatientItemState extends State<PatientItem> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
       ),
-      leading: IconButton(
-        icon: Icon(Icons.info_outline),
-        onPressed: () {
-          showAboutDialog(
-              context: context,
-              applicationName: 'infodialog_title'.tr(),
-              applicationIcon: SizedBox(
-                child: Image.asset('assets/AlzAppIcon.png'),
-                width: 32,
-                height: 32,
-              ),
-              applicationVersion: "",
-              children: [
-                Text(
-                    'infodialog_desc'.tr()),
-                SizedBox(
-                  height: 16,
-                ),
-                Text('infodialog_term_fullname_prefix'.tr()),
-                Text('infodialog_term_fullname'.tr()),
-                Row(
-                  children: [
-                    Text('infodialog_email_prefix'.tr()),
-                    GestureDetector(
-                      child: Text('infodialog_email'.tr(),
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.blue)),
-                      onTap: () async {
-                        final Uri url =
-                            Uri.parse('mailto:termpt2222@gmail.com');
-                        if (await canLaunchUrl(url)) launchUrl(url);
-                      },
-                    )
-                  ],
-                ),
-                SizedBox(height: 16),
-                Text('infodialog_thank_you'.tr())
-              ]);
-        },
-      ),
       actions: [searchBar.getSearchAction(context)],
     );
   }
@@ -302,6 +280,85 @@ class _PatientItemState extends State<PatientItem> {
 
     return Scaffold(
       appBar: searchBar.build(context),
+      drawer: Drawer(child: ListView(
+        // Important: Remove any padding from the ListView.
+        padding: EdgeInsets.zero,
+        children: [
+          Container(
+            height: 64,
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('app_name'.tr()),
+            ),
+          ),
+          ListTile(
+            title: Row(
+              children: [
+                Icon(Icons.info_outline),
+                SizedBox(width: 8,),
+                const Text('About the App'),
+              ],
+            ),
+            onTap: () {
+              print('tap');
+              showAboutDialog(
+                  context: context,
+                  applicationName: 'infodialog_title'.tr(),
+                  applicationIcon: SizedBox(
+                    child: Image.asset('assets/AlzAppIcon.png'),
+                    width: 32,
+                    height: 32,
+                  ),
+                  applicationVersion: "",
+                  children: [
+                    Text(
+                        'infodialog_desc'.tr()),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Text('infodialog_term_fullname_prefix'.tr()),
+                    Text('infodialog_term_fullname'.tr()),
+                    Row(
+                      children: [
+                        Text('infodialog_email_prefix'.tr()),
+                        GestureDetector(
+                          child: Text('infodialog_email'.tr(),
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue)),
+                          onTap: () async {
+                            final Uri url =
+                            Uri.parse('mailto:termpt2222@gmail.com');
+                            if (await canLaunchUrl(url)) launchUrl(url);
+                          },
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Text('infodialog_thank_you'.tr())
+                  ]);
+            },
+          ),
+          ListTile(
+            title: Row(
+              children: [
+                Icon(Icons.settings),
+                SizedBox(width: 8,),
+                const Text('Settings'),
+              ],
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SettingsPage()),
+              );
+            },
+          ),
+        ],
+      )),
       body: Container(
           child: patients.isEmpty
               ? GestureDetector(
@@ -479,13 +536,13 @@ createGenderFromString(String? gender){
 extension createStringFromGender on Gender {
   String get returnString {
     if (name == "Male") {
-      return "ชาย";
+      return 'male'.tr();
     }
     else if (name == "Female") {
-      return "หญิง";
+      return 'female'.tr();
     }
     else {
-      return "ไม่ระบุ";
+      return 'other'.tr();
     }
   }
 }

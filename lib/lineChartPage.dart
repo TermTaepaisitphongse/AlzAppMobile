@@ -76,7 +76,7 @@ class _LineChartPageState extends State<LineChartPage> {
                       onPressed: () async {
                         final chosenDate = await showDatePicker(
                           context: context,
-                          locale: const Locale("th", "TH"),
+                          locale: context.locale,
                           initialDate: minDisplayTime,
                           initialDatePickerMode: DatePickerMode.day,
                           firstDate: widget.data.first.date,
@@ -95,7 +95,7 @@ class _LineChartPageState extends State<LineChartPage> {
                       onPressed: () async {
                         final chosenDate = await showDatePicker(
                           context: context,
-                          locale: const Locale("th", "TH"),
+                          locale: context.locale,
                           initialDate: maxDisplayTime,
                           initialDatePickerMode: DatePickerMode.day,
                           firstDate: widget.data.first.date,

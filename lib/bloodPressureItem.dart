@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'main.dart';
 
-void main() => runApp(MyApp());
-
 class BloodPressureItem extends StatelessWidget {
   const BloodPressureItem({Key? key}) : super(key: key);
 

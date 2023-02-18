@@ -22,31 +22,22 @@ import 'package:alzapp/WeightPage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-  final stringlocale = await getLocale();
-  print(stringlocale);
-  runApp(MyApp(stringLocale : 'TH'));
+  runApp(
+      EasyLocalization(
+        saveLocale: true,
+          path: 'assets/locales',
+          supportedLocales: [Locale('en', 'US'), Locale('th', 'TH')],
+          child: MyApp()
+      ));
 }
 
 // #docregion MyApp
 class MyApp extends StatelessWidget {
-  final String stringLocale;
-
-  const MyApp({Key? key, required this.stringLocale}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
   // #docregion build
   @override
   Widget build(BuildContext context) {
-    print('myapp');
-    Locale locale;
-    if (stringLocale == "US") {
-      locale = Locale('en', 'US');
-    }
-    else {
-      locale = Locale('th', 'TH');
-    }
-    print(locale);
-    print(context);
-    print(context.supportedLocales);
-
+    final locale = EasyLocalization.of(context)?.currentLocale;
     return MaterialApp(
       title: 'AlzApp Health Records',
       theme: ThemeData(
@@ -54,13 +45,9 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: PatientItem(),
-      // home: EasyLocalization(
-      //     path: 'locales',
-      //     supportedLocales: [Locale('en', 'US'), Locale('th', 'TH')],
-      //     child: PatientItem()),
-      // localizationsDelegates: context.localizationDelegates,
-      // supportedLocales: context.supportedLocales,
-      // locale: locale,
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: locale,
     );
   }
 // #enddocregion build
@@ -606,9 +593,11 @@ class AddPatientForm extends State<PatientForm> {
                     value: currentGender,
                     icon: const Icon(Icons.arrow_drop_down_sharp),
                     onChanged: (Gender? changeGender) {
-                      setState(() {
-                        currentGender = changeGender!;
-                      });
+                      if(changeGender != null) {
+                        setState(() {
+                          currentGender = changeGender;
+                        });
+                      }
                     },
                     items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
                       return DropdownMenuItem<Gender>(
